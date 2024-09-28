@@ -72,11 +72,24 @@ class Request
         $route_params = explode('/', $uri);
         array_shift($route_params);
         
+        /** validate route params */
         foreach($route_args as $key => $value) {
             if ($key == 0) {continue;}
 
             if ($key %2 == 0) {
+                $param = substr($value, 1, -1);
+                if ($param !== 'id') {
+                    if ($param !== $route_params[$key-1]) {
+                        Response::json([
+                            'message' => 'Invalid route params'
+                        ], 403);
+                    }
+                }
+
                 $attribute = $route_params[$key-1];
+                if (is_numeric($route_params[array_key_last($route_params)])) {
+                    $attribute = substr($route_args[$key], 1, -1);
+                }
                 if (isset($route_params[$key]))
                     $this->$attribute = $route_params[$key];
             }
