@@ -1,0 +1,16 @@
+{
+    "name": "rosa/router",
+    "autoload": {
+        "psr-4": {
+            "Rosa\\Router\\": "src/",
+            "Rosa\\Controllers\\": "controllers/"
+        }
+    },
+    "authors": [
+        {
+            "name": "samuel.rockenbach",
+            "email": "samuel.rockenbach@universo.univates.br"
+        }
+    ],
+    "require": {}
+}
