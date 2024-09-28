@@ -60,7 +60,7 @@ class Request
                     return true;
                 }
             }
-        )[0];
+        );
         if (empty($route_match)) {
             Response::json([
                 'message' => 'No matching route'
@@ -68,28 +68,24 @@ class Request
         }
 
         /** build request object */
-        $route_args = preg_split('/(\/[\w]+\/)({[\w]+})/', $route_match, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $route_args = preg_split('/(\/[\w]+\/)({[\w]+})/', $route_match[array_key_first($route_match)], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $route_params = explode('/', $uri);
         array_shift($route_params);
-
+        
         foreach($route_args as $key => $value) {
             if ($key == 0) {continue;}
 
             if ($key %2 == 0) {
-                $attribute = substr($value, 1, -1);
+                $attribute = $route_params[$key-1];
                 if (isset($route_params[$key]))
                     $this->$attribute = $route_params[$key];
             }
         }
 
-        /** dynamically call controller instance */
-        $callstack = array_filter($routes[$method], function($r) use ($route_match) {
-            if ($r['route'] == $route_match)
-                return true;
-        })[0];
+        $call = $routes[$method][array_key_first($route_match)];
 
-        $class = $callstack['method'][0];
-        $method = $callstack['method'][1];
+        $class = $call['method'][0];
+        $method = $call['method'][1];
 
         (new $class())->$method($this);
     }
