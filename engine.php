@@ -3,7 +3,7 @@
 use Rosa\Router\Request;
 use Rosa\Router\Server;
 
-require_once "routes.php";
+require_once "routes/routes.php";
 
 $uri = Server::uri();
 $data = Request::body();

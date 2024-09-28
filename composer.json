@@ -3,7 +3,8 @@
     "autoload": {
         "psr-4": {
             "Rosa\\Router\\": "src/",
-            "Rosa\\Controllers\\": "controllers/"
+            "Rosa\\Controllers\\": "controllers/",
+            "Rosa\\Routes\\": "routes/"
         }
     },
     "authors": [
