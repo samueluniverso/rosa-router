@@ -71,7 +71,7 @@ class Request
         $route_args = preg_split('/(\/[\w]+\/)({[\w]+})/', $route_match[array_key_first($route_match)], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $route_params = explode('/', $uri);
         array_shift($route_params);
-        
+
         /** validate route params */
         foreach($route_args as $key => $value) {
             if ($key == 0) {continue;}
@@ -86,10 +86,7 @@ class Request
                     }
                 }
 
-                $attribute = $route_params[$key-1];
-                if (is_numeric($route_params[array_key_last($route_params)])) {
-                    $attribute = substr($route_args[$key], 1, -1);
-                }
+                $attribute = substr($route_args[$key], 1, -1);
                 if (isset($route_params[$key]))
                     $this->$attribute = $route_params[$key];
             }
