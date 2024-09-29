@@ -2,6 +2,7 @@
 
 namespace Rosa\Router;
 
+use Exception;
 use Rosa\Router\Helpers\GetRequest;
 use Rosa\Router\Helpers\RequestAction;
 use Rosa\Router\Utils\Json;
@@ -32,11 +33,8 @@ class Request
     public function handle($method, $uri, $data)
     {
         global $routes;
-        if (is_null($routes)) {
-            Response::json([
-                'message' => 'No registered routes'
-            ], 403);
-        }
+        if (is_null($routes))
+            throw new Exception('No registered routes');
 
         $path = UrlParser::path($uri);
         $segments = explode('/', $path);

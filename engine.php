@@ -1,5 +1,6 @@
 <?php
 
+use Rosa\Router\Utils\DotEnv;
 use Rosa\Router\Request;
 use Rosa\Router\Response;
 use Rosa\Router\Server;
@@ -13,11 +14,22 @@ $method = Server::method();
 
 try
 {
+    DotEnv::load('.env');
     $request = (new Request())->handle($method, $uri, $data);
 }
 catch(Throwable $th)
 {
+    if (DotEnv::get('APP_DEBUG'))
+    {
+        Response::json([
+            'error' => $th->getMessage(),
+            'file' => $th->getFile(),
+            'line' => $th->getLine(),
+            'stack' => $th->getTrace(),
+        ], 500);
+    }
+
     Response::json([
-        'message' => $th->getMessage()
+        'error' => $th->getMessage(),
     ], 500);
 }
