@@ -19,7 +19,7 @@ try
 }
 catch(Throwable $th)
 {
-    if (DotEnv::get('APP_DEBUG'))
+    if (DotEnv::get('API_DEBUG'))
     {
         Response::json([
             'error' => $th->getMessage(),
