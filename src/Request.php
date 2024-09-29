@@ -2,11 +2,16 @@
 
 namespace Rosa\Router;
 
+use Exception;
+use Rosa\Router\Helpers\GetRequest;
+use Rosa\Router\Helpers\RequestAction;
 use Rosa\Router\Utils\Json;
 use Rosa\Router\Utils\UrlParser;
 
 class Request
 {
+    private RequestAction $action;
+
     public static function body($parse = true)
     {
         $input = file_get_contents("php://input");
@@ -28,11 +33,8 @@ class Request
     public function handle($method, $uri, $data)
     {
         global $routes;
-        if (is_null($routes)) {
-            Response::json([
-                'message' => 'No registered routes'
-            ], 403);
-        }
+        if (is_null($routes))
+            throw new Exception('No registered routes');
 
         $path = UrlParser::path($uri);
         $segments = explode('/', $path);
@@ -44,59 +46,27 @@ class Request
             ]));
         }
 
-        /** mapping routes */
-        $routes_map = array_map(
-            fn($r) => $r['route'],
-            $routes[$method]
-        );
-
-        /** find matching route */
-        $route_match = array_filter(
-            $routes_map,
-            function($route) use ($uri) {
-                $route_args = preg_split('/({[\w]+})/', $route, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-                if (str_contains($uri, $route_args[0]))
-                {
-                    return true;
-                }
-            }
-        );
-        if (empty($route_match)) {
-            Response::json([
-                'message' => 'No matching route'
-            ], 403);
+        $request = new Request();
+        switch ($method) {
+            case 'GET':
+                $getRequest = (new GetRequest());
+                $request = $getRequest->buildRequest($routes, $method, $uri);
+            default: break;
         }
 
-        /** build request object */
-        $route_args = preg_split('/(\/[\w]+\/)({[\w]+})/', $route_match[array_key_first($route_match)], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $route_params = explode('/', $uri);
-        array_shift($route_params);
+        $class = $request->getAction()->getClass();
+        $method = $request->getAction()->getMethod();
 
-        /** validate route params */
-        foreach($route_args as $key => $value) {
-            if ($key == 0) {continue;}
+        (new $class)->$method($request);
+    }
 
-            if ($key %2 == 0) {
-                $param = substr($value, 1, -1);
-                if ($param !== 'id') {
-                    if ($param !== $route_params[$key-1]) {
-                        Response::json([
-                            'message' => 'Invalid route params'
-                        ], 403);
-                    }
-                }
+    public function setAction(RequestAction $action)
+    {
+        $this->action = $action;
+    }
 
-                $attribute = substr($route_args[$key], 1, -1);
-                if (isset($route_params[$key]))
-                    $this->$attribute = $route_params[$key];
-            }
-        }
-
-        $call = $routes[$method][array_key_first($route_match)];
-
-        $class = $call['method'][0];
-        $method = $call['method'][1];
-
-        (new $class())->$method($this);
+    public function getAction()
+    {
+        return $this->action;
     }
 }

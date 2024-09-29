@@ -6,10 +6,10 @@ use Rosa\Router\Route;
 use Rosa\Controllers\PostController;
 use Rosa\Controllers\UserController;
 
-Route::get('api/user/{id}', [
+Route::get('/user/{id}', [
     UserController::class, 'get'
 ]);
 
-Route::get('api/post/{post}/comment/{comment}', [
+Route::get('/post/{post}/comment/{comment}', [
     PostController::class, 'get'
 ]);
