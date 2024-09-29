@@ -2,7 +2,7 @@
 
 namespace Rosa\Router;
 
-use Rosa\Router\Helpers\GetRequestHelper;
+use Rosa\Router\Helpers\GetRequest;
 use Rosa\Router\Helpers\RequestAction;
 use Rosa\Router\Utils\Json;
 use Rosa\Router\Utils\UrlParser;
@@ -50,14 +50,14 @@ class Request
         $action = new RequestAction();
         switch ($method) {
             case 'GET':
-                $getRequestHelper = (new GetRequestHelper());
-                $action = $getRequestHelper->handle($routes, $method, $uri);            
-                $request = $getRequestHelper->buildRequest();
+                $getRequest = (new GetRequest());
+                $action = $getRequest->handle($routes, $method, $uri);            
+                $request = $getRequest->buildRequest();
             default: break;
         }
 
-        $class = $action->class;
-        $method = $action->method;
+        $class = $action->getClass();
+        $method = $action->getMethod();
 
         (new $class)->$method($request);
     }

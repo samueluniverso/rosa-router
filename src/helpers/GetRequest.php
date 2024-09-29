@@ -2,33 +2,29 @@
 
 namespace Rosa\Router\Helpers;
 
+use Exception;
 use Rosa\Router\Request;
-use Rosa\Router\Response;
 
-class GetRequestHelper
+class GetRequest
 {
     private RequestAction $action;
 
     private array $routes_map;
-    private array $route_match;
 
     public function handle($routes, $method, $uri)
     {
-        $this->action = new RequestAction();
-        $this->action->uri = $uri;
+        $this->action = $action = new RequestAction();
+        $action->setUri($uri);
 
         $this->routes_map = $this->map($routes, $method);
-        $this->route_match = $this->match($this->routes_map, $method, $this->action->uri);
-        if (empty($this->route_match)) {
-            Response::json([
-                'message' => 'No matching route'
-            ], 403);
-        }
+        $action->setRoute($this->match($this->routes_map, $method, $action->getUri()));
+        if (empty($action->getRoute()))
+            throw new Exception('No matching route');
 
-        $call = $routes[$method][array_key_first($this->route_match)];
+        $call = $routes[$method][array_key_first($action->getRoute())];
 
-        $this->action->class = $call['method'][0];
-        $this->action->method = $call['method'][1];
+        $action->setClass($call['method'][0]);
+        $action->setMethod($call['method'][1]);
 
         return $this->action;
     }
@@ -109,8 +105,8 @@ class GetRequestHelper
     {
         $request = new Request();
 
-        $route_args = $this->routeArgs($this->route_match);
-        $route_params = $this->routeParams($this->action->uri);
+        $route_args = $this->routeArgs($this->action->getRoute());
+        $route_params = $this->routeParams($this->action->getUri());
 
         foreach($route_args as $key => $value) {
             if ($key == 0) {continue;}
@@ -118,11 +114,8 @@ class GetRequestHelper
             if ($key %2 == 0) {
                 $param = substr($value, 1, -1);
                 if ($param !== 'id') {
-                    if ($param !== $route_params[$key-1]) {
-                        Response::json([
-                            'message' => 'Invalid route params'
-                        ], 403);
-                    }
+                    if ($param !== $route_params[$key-1])
+                        throw new Exception('Invalid route params');
                 }
 
                 $attribute = substr($route_args[$key], 1, -1);
