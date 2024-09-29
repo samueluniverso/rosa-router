@@ -4,12 +4,14 @@ namespace Rosa\Router;
 
 class Route
 {
+    const PREFIX = 'api';
+
     public static function get($route, $method)
     {
         global $routes;
 
         $routes['GET'][] = [
-            'route' => $route,
+            'route' => Route::PREFIX.$route,
             'method' => $method
         ];
     }
@@ -19,7 +21,7 @@ class Route
         global $routes;
 
         $routes['POST'][] = [
-            'route' => $route,
+            'route' => Route::PREFIX.$route,
             'method' => $method
         ];
     }
@@ -29,7 +31,7 @@ class Route
         global $routes;
 
         $routes['PUT'][] = [
-            'route' => $route,
+            'route' => Route::PREFIX.$route,
             'method' => $method
         ];
     }
@@ -39,7 +41,7 @@ class Route
         global $routes;
 
         $routes['DELETE'][] = [
-            'route' => $route,
+            'route' => Route::PREFIX.$route,
             'method' => $method
         ];
     }

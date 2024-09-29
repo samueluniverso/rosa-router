@@ -2,6 +2,8 @@
 
 namespace Rosa\Router;
 
+use Rosa\Router\Helpers\GetRequestHelper;
+use Rosa\Router\Helpers\RequestAction;
 use Rosa\Router\Utils\Json;
 use Rosa\Router\Utils\UrlParser;
 
@@ -44,59 +46,19 @@ class Request
             ]));
         }
 
-        /** mapping routes */
-        $routes_map = array_map(
-            fn($r) => $r['route'],
-            $routes[$method]
-        );
-
-        /** find matching route */
-        $route_match = array_filter(
-            $routes_map,
-            function($route) use ($uri) {
-                $route_args = preg_split('/({[\w]+})/', $route, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-                if (str_contains($uri, $route_args[0]))
-                {
-                    return true;
-                }
-            }
-        );
-        if (empty($route_match)) {
-            Response::json([
-                'message' => 'No matching route'
-            ], 403);
+        $request = new Request();
+        $action = new RequestAction();
+        switch ($method) {
+            case 'GET':
+                $getRequestHelper = (new GetRequestHelper());
+                $action = $getRequestHelper->handle($routes, $method, $uri);            
+                $request = $getRequestHelper->buildRequest();
+            default: break;
         }
 
-        /** build request object */
-        $route_args = preg_split('/(\/[\w]+\/)({[\w]+})/', $route_match[array_key_first($route_match)], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $route_params = explode('/', $uri);
-        array_shift($route_params);
+        $class = $action->class;
+        $method = $action->method;
 
-        /** validate route params */
-        foreach($route_args as $key => $value) {
-            if ($key == 0) {continue;}
-
-            if ($key %2 == 0) {
-                $param = substr($value, 1, -1);
-                if ($param !== 'id') {
-                    if ($param !== $route_params[$key-1]) {
-                        Response::json([
-                            'message' => 'Invalid route params'
-                        ], 403);
-                    }
-                }
-
-                $attribute = substr($route_args[$key], 1, -1);
-                if (isset($route_params[$key]))
-                    $this->$attribute = $route_params[$key];
-            }
-        }
-
-        $call = $routes[$method][array_key_first($route_match)];
-
-        $class = $call['method'][0];
-        $method = $call['method'][1];
-
-        (new $class())->$method($this);
+        (new $class)->$method($request);
     }
 }
