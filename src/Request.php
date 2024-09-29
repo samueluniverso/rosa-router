@@ -30,13 +30,17 @@ class Request
         return (object) $data;
     }
 
-    public function handle($method, $uri, $data)
+    public function handle($method, $uri, $query = null, $data)
     {
         global $routes;
         if (is_null($routes))
             throw new Exception('No registered routes');
 
         $path = UrlParser::path($uri);
+        if (!is_null($query)) {
+            $path = UrlParser::path($query);
+        }
+
         $segments = explode('/', $path);
         array_shift($segments);
         if ($segments[0] !== 'api') {
@@ -50,7 +54,7 @@ class Request
         switch ($method) {
             case 'GET':
                 $getRequest = (new GetRequest());
-                $request = $getRequest->buildRequest($routes, $method, $uri);
+                $request = $getRequest->buildRequest($routes, $method, $path);
             default: break;
         }
 
@@ -64,7 +68,6 @@ class Request
     {
         $this->action = $action;
     }
-
     public function getAction()
     {
         return $this->action;
