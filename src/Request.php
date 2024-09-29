@@ -9,6 +9,8 @@ use Rosa\Router\Utils\UrlParser;
 
 class Request
 {
+    private RequestAction $action;
+
     public static function body($parse = true)
     {
         $input = file_get_contents("php://input");
@@ -47,18 +49,26 @@ class Request
         }
 
         $request = new Request();
-        $action = new RequestAction();
         switch ($method) {
             case 'GET':
                 $getRequest = (new GetRequest());
-                $action = $getRequest->handle($routes, $method, $uri);            
-                $request = $getRequest->buildRequest();
+                $request = $getRequest->buildRequest($routes, $method, $uri);
             default: break;
         }
 
-        $class = $action->getClass();
-        $method = $action->getMethod();
+        $class = $request->getAction()->getClass();
+        $method = $request->getAction()->getMethod();
 
         (new $class)->$method($request);
+    }
+
+    public function setAction(RequestAction $action)
+    {
+        $this->action = $action;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
     }
 }
