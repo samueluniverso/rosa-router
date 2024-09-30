@@ -61,8 +61,8 @@ class Request
                 $postRequest = (new PostRequest());
                 $request = $postRequest->buildRequest($routes, $method, $path, $data);
             case 'PUT':
-                $pustRequest = (new PutRequest());
-                $request = $pustRequest->buildRequest($routes, $method, $path, $data);
+                $putRequest = (new PutRequest());
+                $request = $putRequest->buildRequest($routes, $method, $path, $data);
             default: break;
         }
 
