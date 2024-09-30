@@ -118,7 +118,7 @@ class Route
             function($route) {
                 $route_args = RouteHelper::routeVars($route['route']);
                 $route_params = RouteHelper::routeVars($this->route);
-                if (str_contains($route_args[0], $route_params[0]))
+                if (stripos($route_args[0], $route_params[0]) !== false)
                     return true;
             }
         );

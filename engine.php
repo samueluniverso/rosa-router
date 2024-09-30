@@ -1,10 +1,9 @@
 <?php
 
-use Rosa\Router\Auth;
-use Rosa\Router\Utils\DotEnv;
 use Rosa\Router\Request;
 use Rosa\Router\Response;
 use Rosa\Router\Server;
+use Rosa\Router\Utils\DotEnv;
 use Rosa\Router\Utils\UrlParser;
 
 require_once "vendor/autoload.php";
