@@ -3,7 +3,10 @@
 namespace Rosa\Router\Helpers;
 
 use Exception;
+use Rosa\Router\Auth;
 use Rosa\Router\Request;
+use Rosa\Router\Server;
+use Rosa\Router\Utils\DotEnv;
 
 abstract class AbstractRequest
 {
@@ -28,13 +31,19 @@ abstract class AbstractRequest
         if (empty($action->getRoute()))
             throw new Exception('No matching route');
 
+        /** handling authentication */
+        $match = $routes[$method][array_key_first($action->getRoute())];
+        if($match['public'] == false) {
+            Auth::check(DotEnv::get('API_KEY'), Server::key());
+        }
+
         if (array_key_exists(array_key_first($action->getRoute()), $routes[$method])) {
             $call = $routes[$method][array_key_first($action->getRoute())];
             $action->setClass($call['method'][0]);
             $action->setMethod($call['method'][1]);
         }
         else {
-            throw new Exception('No  method defined for route');
+            throw new Exception('No method defined for the route');
         }
 
         return $action;
@@ -132,8 +141,7 @@ abstract class AbstractRequest
             $mapped_routes,
             function($route) use ($uri) {
                 $route_args = preg_split('/({[\w]+})/', $route, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-                if (str_contains($uri, $route_args[0]))
-                {
+                if (str_contains($uri, $route_args[0])) {
                     return true;
                 }
             }
@@ -149,7 +157,7 @@ abstract class AbstractRequest
      */
     public function routeArgs($route_match) : array
     {
-        return preg_split('/(\/[\w]+\/)({[\w]+})/', $route_match[array_key_first($route_match)], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        return RouteHelper::routeArgs($route_match);
     }
 
     /**
@@ -161,9 +169,6 @@ abstract class AbstractRequest
      */
     public function routeParams($uri)
     {
-        $route_params = explode('/', $uri);
-        array_shift($route_params);
-
-        return $route_params;
+        return RouteHelper::routeParams($uri);
     }
 }
