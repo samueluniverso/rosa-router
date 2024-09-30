@@ -4,10 +4,10 @@ namespace Rosa\Router\Helpers;
 
 use Rosa\Router\Request;
 
-class GetRequest extends AbstractRequest 
+class DeleteRequest extends AbstractRequest 
 {
     /**
-     * Build the request for Get method
+     * Build the request for Delete method
      * 
      * @method buildRequest
      * @param RequestAction $action

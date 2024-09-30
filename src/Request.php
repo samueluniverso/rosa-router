@@ -52,19 +52,24 @@ class Request
             ]));
         }
 
-        $request = new Request();
+        $request = null;
         switch ($method) {
             case 'GET':
-                $getRequest = (new GetRequest());
-                $request = $getRequest->buildRequest($routes, $method, $path);
+                $request = (new GetRequest())->buildRequest($routes, $method, $path);
+                break;
             case 'POST':
-                $postRequest = (new PostRequest());
-                $request = $postRequest->buildRequest($routes, $method, $path, $data);
+                $request = (new PostRequest())->buildRequest($routes, $method, $path, $data);
+                break;
             case 'PUT':
-                $putRequest = (new PutRequest());
-                $request = $putRequest->buildRequest($routes, $method, $path, $data);
+                $request = (new PutRequest())->buildRequest($routes, $method, $path, $data);
+                break;
+            case 'DELETE':
+                $request = (new GetRequest())->buildRequest($routes, $method, $path);
+                break;
             default: break;
         }
+        if (is_null($request))
+            throw new Exception('It was not possible to match your request');
 
         $class = $request->getAction()->getClass();
         $method = $request->getAction()->getMethod();

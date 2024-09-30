@@ -15,13 +15,6 @@ class PostRequest extends AbstractRequest
      */
     public function buildRequest($routes, $method, $uri, $data) : Request
     {
-        $request = new Request();
-        $request->setAction($this->handle($routes, $method, $uri));
-
-        foreach((array) $data as $key => $value) {
-            $request->$key = $value;
-        }
-
-        return $request;
+        return parent::buildFormRequest($routes, $method, $uri, $data);
     }
 }

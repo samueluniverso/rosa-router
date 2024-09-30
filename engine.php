@@ -12,7 +12,7 @@ require_once "routes/routes.php";
 $uri = Server::uri();
 $data = Request::body();
 $method = Server::method();
-$query = UrlParser::query($uri); /// engine.php?path=/api/route
+$query = UrlParser::query($uri); /// if using: engine.php?path=/api/route
 
 try
 {
