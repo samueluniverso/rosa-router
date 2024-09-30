@@ -5,6 +5,7 @@ namespace Rosa\Router;
 use Exception;
 use Rosa\Router\Helpers\GetRequest;
 use Rosa\Router\Helpers\PostRequest;
+use Rosa\Router\Helpers\PutRequest;
 use Rosa\Router\Helpers\RequestAction;
 use Rosa\Router\Utils\Json;
 use Rosa\Router\Utils\UrlParser;
@@ -59,6 +60,9 @@ class Request
             case 'POST':
                 $postRequest = (new PostRequest());
                 $request = $postRequest->buildRequest($routes, $method, $path, $data);
+            case 'PUT':
+                $pustRequest = (new PutRequest());
+                $request = $pustRequest->buildRequest($routes, $method, $path, $data);
             default: break;
         }
 
