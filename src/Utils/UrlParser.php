@@ -2,6 +2,12 @@
 
 namespace Rosa\Router\Utils;
 
+/**
+ * @author ROSA
+ * 
+ * @version 1.0
+ * @package Rosa\Router\Helpers
+ */
 class UrlParser
 {
     public static function query($uri)

@@ -10,6 +10,12 @@ use Rosa\Router\Helpers\RequestAction;
 use Rosa\Router\Utils\Json;
 use Rosa\Router\Utils\UrlParser;
 
+/**
+ * @author ROSA
+ * 
+ * @version 1.0
+ * @package Rosa\Router\Helpers
+ */
 class Request
 {
     private RequestAction $action;
