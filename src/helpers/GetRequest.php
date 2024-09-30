@@ -10,7 +10,9 @@ class GetRequest extends AbstractRequest
      * Build the request for Get method
      * 
      * @method buildRequest
-     * @param RequestAction $action
+     * @param array $routes
+     * @param string $method
+     * @param string $uri
      * @return Request
      */
     public function buildRequest($routes, $method, $uri) : Request

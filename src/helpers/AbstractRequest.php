@@ -44,7 +44,9 @@ class AbstractRequest
      * Build the request from the URL
      * 
      * @method buildUriRequest
-     * @param RequestAction $action
+     * @param array $routes
+     * @param string $method
+     * @param string $uri
      * @return Request
      */
     public function buildUriRequest($routes, $method, $uri) : Request
@@ -78,15 +80,18 @@ class AbstractRequest
      * Build the request from form data
      * 
      * @method buildRequest
-     * @param RequestAction $action
+     * @param array $routes
+     * @param string $method
+     * @param string $uri
+     * @param array $form
      * @return Request
      */
-    public function buildFormRequest($routes, $method, $uri, $data) : Request
+    public function buildFormRequest($routes, $method, $uri, $form) : Request
     {
         $request = new Request();
         $request->setAction($this->handle($routes, $method, $uri));
 
-        foreach((array) $data as $key => $value) {
+        foreach((array) $form as $key => $value) {
             $request->$key = $value;
         }
 

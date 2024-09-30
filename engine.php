@@ -10,14 +10,14 @@ require_once "vendor/autoload.php";
 require_once "routes/routes.php";
 
 $uri = Server::uri();
-$data = Request::body();
+$form = Request::body();
 $method = Server::method();
 $query = UrlParser::query($uri); /// if using: engine.php?path=/api/route
 
 try
 {
     DotEnv::load('.env');
-    $request = (new Request())->handle($method, $uri, $query, $data);
+    $request = (new Request())->handle($method, $uri, $query, $form);
 }
 catch(Throwable $th)
 {

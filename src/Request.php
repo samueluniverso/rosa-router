@@ -32,7 +32,7 @@ class Request
         return (object) $data;
     }
 
-    public function handle($method, $uri, $query = null, $data)
+    public function handle($method, $uri, $query = null, $form)
     {
         global $routes;
         if (is_null($routes))
@@ -56,10 +56,10 @@ class Request
                 $request = (new GetRequest())->buildRequest($routes, $method, $path);
                 break;
             case 'POST':
-                $request = (new PostRequest())->buildRequest($routes, $method, $path, $data);
+                $request = (new PostRequest())->buildRequest($routes, $method, $path, $form);
                 break;
             case 'PUT':
-                $request = (new PutRequest())->buildRequest($routes, $method, $path, $data);
+                $request = (new PutRequest())->buildRequest($routes, $method, $path, $form);
                 break;
             case 'DELETE':
                 $request = (new GetRequest())->buildRequest($routes, $method, $path);
