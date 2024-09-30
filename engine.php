@@ -27,7 +27,7 @@ catch(Throwable $th)
             'error' => $th->getMessage(),
             'file' => $th->getFile(),
             'line' => $th->getLine(),
-            'stack' => $th->getTrace(),
+            'trace' => $th->getTrace(),
         ], 500);
     }
 
