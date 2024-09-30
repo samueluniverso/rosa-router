@@ -1,5 +1,6 @@
 <?php
 
+use Rosa\Router\Auth;
 use Rosa\Router\Utils\DotEnv;
 use Rosa\Router\Request;
 use Rosa\Router\Response;
@@ -17,6 +18,7 @@ $query = UrlParser::query($uri); /// if using: engine.php?path=/api/route
 try
 {
     DotEnv::load('.env');
+    Auth::check(DotEnv::get('API_KEY'), Server::key());
     $request = (new Request())->handle($method, $uri, $query, $form);
 }
 catch(Throwable $th)

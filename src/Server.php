@@ -13,4 +13,9 @@ class Server
     {
         return $_SERVER['REQUEST_METHOD'];
     }
+
+    public static function key()
+    {
+        return $_SERVER['HTTP_KEY'];
+    }
 }
