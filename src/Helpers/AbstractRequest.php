@@ -8,6 +8,12 @@ use Rosa\Router\Request;
 use Rosa\Router\Server;
 use Rosa\Router\Utils\DotEnv;
 
+/**
+ * @author ROSA
+ * 
+ * @version 1.0
+ * @package Rosa\Router\Helpers
+ */
 abstract class AbstractRequest
 {
     private array $routes_map;

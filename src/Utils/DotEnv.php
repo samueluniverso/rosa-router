@@ -5,6 +5,12 @@ namespace Rosa\Router\Utils;
 use Exception;
 use Throwable;
 
+/**
+ * @author ROSA
+ * 
+ * @version 1.0
+ * @package Rosa\Router\Helpers
+ */
 class DotEnv
 {
     public static function load($path)

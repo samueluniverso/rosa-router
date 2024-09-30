@@ -2,6 +2,12 @@
 
 namespace Rosa\Router;
 
+/**
+ * @author ROSA
+ * 
+ * @version 1.0
+ * @package Rosa\Router\Helpers
+ */
 class Auth
 {
     /**

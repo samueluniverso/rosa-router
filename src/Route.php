@@ -4,6 +4,12 @@ namespace Rosa\Router;
 
 use Rosa\Router\Helpers\RouteHelper;
 
+/**
+ * @author ROSA
+ * 
+ * @version 1.0
+ * @package Rosa\Router\Helpers
+ */
 class Route
 {
     const PREFIX = 'api';
