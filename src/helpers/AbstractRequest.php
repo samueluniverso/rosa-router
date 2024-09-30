@@ -45,10 +45,13 @@ class AbstractRequest
      * @method map
      * @param array $routes
      * @param string $method
-     * @return array
+     * @return array mapped_routes
      */
     public function map($routes, $method)
     {
+        if (!$routes[$method])
+            throw new Exception("No routes for method {$method}");
+
         return array_map(
             fn($r) => $r['route'],
             $routes[$method]
@@ -59,7 +62,7 @@ class AbstractRequest
      * Find the matching route
      * 
      * @method match
-     * @param array $routes
+     * @param array $mapped_routes
      * @param string $method
      * @param string $uri
      * @return array
