@@ -141,7 +141,7 @@ abstract class AbstractRequest
             $mapped_routes,
             function($route) use ($uri) {
                 $route_args = preg_split('/({[\w]+})/', $route, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-                if (str_contains($uri, $route_args[0])) {
+                if (stripos($uri, $route_args[0]) !== false) {
                     return true;
                 }
             }
