@@ -5,7 +5,7 @@ namespace Rosa\Router\Helpers;
 use Exception;
 use Rosa\Router\Request;
 
-class AbstractRequest
+abstract class AbstractRequest
 {
     private array $routes_map;
 
