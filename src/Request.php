@@ -11,7 +11,7 @@ use Rosa\Router\Utils\Json;
 use Rosa\Router\Utils\UrlParser;
 
 /**
- * @author ROSA
+ * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router\Helpers

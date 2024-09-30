@@ -5,7 +5,7 @@ namespace Rosa\Router;
 use Rosa\Router\Helpers\RouteHelper;
 
 /**
- * @author ROSA
+ * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router\Helpers

@@ -3,7 +3,7 @@
 namespace Rosa\Router\Utils;
 
 /**
- * @author ROSA
+ * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router\Helpers

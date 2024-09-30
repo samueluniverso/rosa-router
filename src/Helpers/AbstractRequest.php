@@ -9,7 +9,7 @@ use Rosa\Router\Server;
 use Rosa\Router\Utils\DotEnv;
 
 /**
- * @author ROSA
+ * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router\Helpers

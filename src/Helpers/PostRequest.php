@@ -5,7 +5,7 @@ namespace Rosa\Router\Helpers;
 use Rosa\Router\Request;
 
 /**
- * @author ROSA
+ * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router\Helpers
