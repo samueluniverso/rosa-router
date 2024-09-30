@@ -47,9 +47,7 @@ class Request
         array_shift($segments);
         if ($segments[0] !== 'api') {
             http_response_code(404);
-            exit(json_encode([
-                'message' => 'Not found'
-            ]));
+            throw new Exception('Not found');
         }
 
         $request = null;
