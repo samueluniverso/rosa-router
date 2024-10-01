@@ -19,6 +19,7 @@ class Route
     private $controllerMethod;
 
     /**
+     * @method get
      * @param string $route
      * @param string $method
      * @return Route
@@ -34,6 +35,7 @@ class Route
     }
 
     /**
+     * @method post
      * @param string $route
      * @param string $method
      * @return Route
@@ -49,6 +51,7 @@ class Route
     }
 
     /**
+     * @method put
      * @param string $route
      * @param string $method
      * @return Route
@@ -64,6 +67,24 @@ class Route
     }
 
     /**
+     * @method patch
+     * @param string $route
+     * @param string $method
+     * @return Route
+     */
+    public static function patch($route, $method)
+    {
+        self::$instance = new self();
+        self::$instance->route = Route::PREFIX.$route;
+        self::$instance->method = 'PATCH';
+        self::$instance->controllerMethod = $method;
+
+        return self::$instance;
+    }
+
+
+    /**
+     * @method delete
      * @param string $route
      * @param string $method
      * @return Route
