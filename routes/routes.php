@@ -8,8 +8,8 @@ use Rosa\Controllers\UserController;
 
 Route::get('/user/{id}', [
     UserController::class, 'get'
-]);
+])->public();
 
 Route::get('/post/{post}/comment/{comment}', [
     PostController::class, 'get'
-]);
+])->private();
