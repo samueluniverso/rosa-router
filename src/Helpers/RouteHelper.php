@@ -23,6 +23,18 @@ class RouteHelper
     }
 
     /**
+     * Get the route matching arguments
+     * 
+     * @method routeMatchArgs
+     * @param string $route
+     * @return array
+     */
+    public static function routeMatchArgs($route)
+    {
+        return preg_split('/({[\w]+})/', $route, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
      * Get the route params
      * 
      * @method routeParams
