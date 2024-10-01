@@ -2,8 +2,6 @@
 
 namespace Rosa\Router;
 
-use Rosa\Router\Helpers\RouteHelper;
-
 /**
  * @author Samuel Oberger Rockenbach
  * 
@@ -14,8 +12,11 @@ class Route
 {
     const PREFIX = 'api';
 
-    protected static $route;
-    protected static $method;
+    private static self $instance;
+
+    private $route;
+    private $method;
+    private $controllerMethod;
 
     /**
      * @param string $route
@@ -24,20 +25,12 @@ class Route
      */
     public static function get($route, $method)
     {
-        global $routes;
+        self::$instance = new self();
+        self::$instance->route = Route::PREFIX.$route;
+        self::$instance->method = 'GET';
+        self::$instance->controllerMethod = $method;
 
-        $instance = new self();
-
-        $instance->route = Route::PREFIX.$route;
-        $instance->method = 'GET';
-
-        $routes[$instance->method][] = [
-            'route' => $instance->route,
-            'method' => $method,
-            'public' => true,
-        ];
-
-        return $instance;
+        return self::$instance;
     }
 
     /**
@@ -47,20 +40,12 @@ class Route
      */
     public static function post($route, $method)
     {
-        global $routes;
+        self::$instance = new self();
+        self::$instance->route = Route::PREFIX.$route;
+        self::$instance->method = 'POST';
+        self::$instance->controllerMethod = $method;
 
-        $instance = new self();
-
-        $instance->route = Route::PREFIX.$route;
-        $instance->method = 'POST';
-
-        $routes[$instance->method][] = [
-            'route' => $instance->route,
-            'method' => $method,
-            'public' => true,
-        ];
-
-        return $instance;
+        return self::$instance;
     }
 
     /**
@@ -70,20 +55,12 @@ class Route
      */
     public static function put($route, $method)
     {
-        global $routes;
+        self::$instance = new self();
+        self::$instance->route = Route::PREFIX.$route;
+        self::$instance->method = 'PUT';
+        self::$instance->controllerMethod = $method;
 
-        $instance = new self();
-
-        $instance->route = Route::PREFIX.$route;
-        $instance->method = 'PUT';
-
-        $routes[$instance->method][] = [
-            'route' => $instance->route,
-            'method' => $method,
-            'public' => true,
-        ];
-
-        return $instance;
+        return self::$instance;
     }
 
     /**
@@ -93,45 +70,45 @@ class Route
      */
     public static function delete($route, $method)
     {
-        global $routes;
+        self::$instance = new self();
+        self::$instance->route = Route::PREFIX.$route;
+        self::$instance->method = 'DELETE';
+        self::$instance->controllerMethod = $method;
 
-        $instance = new self();
-
-        $instance->route = Route::PREFIX.$route;
-        $instance->method = 'DELETE';
-
-        $routes[$instance->method][] = [
-            'route' => $instance->route,
-            'method' => $method,
-            'public' => true,
-        ];
-
-        return $instance;
+        return self::$instance;
     }
 
     /**
-     * Protecting a specific route
+     * Setting a public route
      * 
-     * @method auth
+     * @method private
      * @param void
+     * @return void
      */
-    public function auth()
+    public function private()
     {
         global $routes;
+        $routes[self::$instance->method][] = [
+            'route' => self::$instance->route,
+            'method' => self::$instance->controllerMethod,
+            'public' => false,
+        ];
+    }
 
-        $exists = array_filter(
-            $routes[$this->method],
-            function($route) {
-                $route_args = RouteHelper::routeVars($route['route']);
-                $route_params = RouteHelper::routeVars($this->route);
-                if (stripos($route_args[0], $route_params[0]) !== false)
-                    return true;
-            }
-        );
-
-        /** protect route */
-        if (!empty($exists)) {
-            $routes[$this->method][array_key_first($exists)]['public'] = false;
-        }
+    /**
+     * Setting a public route
+     * 
+     * @method public
+     * @param void
+     * @return void
+     */
+    public function public()
+    {
+        global $routes;
+        $routes[self::$instance->method][] = [
+            'route' => self::$instance->route,
+            'method' => self::$instance->controllerMethod,
+            'public' => true,
+        ];
     }
 }
