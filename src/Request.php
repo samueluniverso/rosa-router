@@ -4,6 +4,7 @@ namespace Rosa\Router;
 
 use Exception;
 use Rosa\Router\Helpers\GetRequest;
+use Rosa\Router\Helpers\PatchRequest;
 use Rosa\Router\Helpers\PostRequest;
 use Rosa\Router\Helpers\PutRequest;
 use Rosa\Router\Helpers\RequestAction;
@@ -66,6 +67,9 @@ class Request
                 break;
             case 'PUT':
                 $request = (new PutRequest())->buildRequest($routes, $method, $path, $form);
+                break;
+            case 'PATCH':
+                $request = (new PatchRequest())->buildRequest($routes, $method, $path, $form);
                 break;
             case 'DELETE':
                 $request = (new GetRequest())->buildRequest($routes, $method, $path);
