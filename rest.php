@@ -10,7 +10,7 @@ require_once "vendor/autoload.php";
 require_once "routes/routes.php";
 
 $uri = Server::uri();
-$form = Request::body();
+$form = Request::form();
 $method = Server::method();
 $query = UrlParser::query($uri); /// if using: rest.php?path=/api/route
 

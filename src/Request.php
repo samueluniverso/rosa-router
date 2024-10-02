@@ -24,11 +24,13 @@ class Request
     private array $parameters;
 
     /**
-     * @method body
+     * Get the form data
+     * 
+     * @method form
      * @param bool $parse
      * @return mixed
      */
-    public static function body($parse = true)
+    public static function form($parse = true)
     {
         $input = file_get_contents("php://input");
 
