@@ -72,6 +72,11 @@ abstract class AbstractRequest
         $route_args = $this->routeArgs($request->getAction()->getRoute());
         $route_params = $this->routeParams($request->getAction()->getUri());
 
+        /** shift array when the key has no arg assigned to it */
+        if (sizeof($route_params) > sizeof($route_args)) {
+            $route_params = array_splice($route_params, (sizeof($route_params) - sizeof($route_args)));
+        }
+
         foreach($route_args as $key => $value) {
             if ($key == 0) {continue;}
 
@@ -83,8 +88,12 @@ abstract class AbstractRequest
                 }
 
                 $attribute = substr($route_args[$key], 1, -1);
-                if (isset($route_params[$key]))
-                    $request->$attribute = $route_params[$key];
+                if (isset($route_params[$key])) {
+                    if (!RouteHelper::isAlphaNumeric($route_params[$key])) {
+                        throw new Exception('Route contains invalid characters');
+                    }
+                    $request->setRoute($attribute, $route_params[$key]);
+                }
             }
         }
 

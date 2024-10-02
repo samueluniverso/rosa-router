@@ -10,7 +10,7 @@ class PostController
     public function get(Request $request)
     {
         Response::json([
-            'message' => "Post: {$request->post}, Comment: {$request->comment}"
+            'message' => "Post: {$request->route('post')}, Comment: {$request->route('comment')}"
         ], 200);
     }
 }
