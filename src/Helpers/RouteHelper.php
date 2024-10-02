@@ -60,4 +60,16 @@ class RouteHelper
     {
         return preg_split('/({[\w]+})/', $route, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
     }
+
+    /**
+     * Check if route is alphanumeric
+     * 
+     * @method isAlphaNumeric
+     * @param string $string
+     * @return bool
+     */
+    public static function isAlphaNumeric($string)
+    {
+        return preg_match('/^[a-zA-Z0-9_]*$/', $string);
+    }
 }

@@ -21,6 +21,13 @@ class Request
 {
     private RequestAction $action;
 
+    private array $vars;
+
+    /**
+     * @method body
+     * @param bool $parse
+     * @return mixed
+     */
     public static function body($parse = true)
     {
         $input = file_get_contents("php://input");
@@ -39,6 +46,13 @@ class Request
         return (object) $data;
     }
 
+    /**
+     * @method handle
+     * @param string $method
+     * @param string $uri
+     * @param string $query
+     * @param array $form
+     */
     public function handle($method, $uri, $query = null, $form)
     {
         global $routes;
@@ -85,12 +99,52 @@ class Request
         (new $class)->$method($request);
     }
 
+    /**
+     * Set the route action
+     * 
+     * @method setAction
+     * @param RequestAction $action
+     * @return void
+     */
     public function setAction(RequestAction $action)
     {
         $this->action = $action;
     }
+
+    /**
+     * Get the route action
+     * 
+     * @method getAction
+     * @return RequestAction
+     */
     public function getAction()
     {
         return $this->action;
+    }
+
+    /**
+     * Get a route variable
+     * 
+     * @method route
+     * @param string $key
+     * @param string $value
+     * @return mixed
+     */
+    public function route($key)
+    {
+        return $this->vars[$key];
+    }
+
+    /**
+     * Set a route variable
+     * 
+     * @method route
+     * @param string $key
+     * @param string $value
+     * @return mixed
+     */
+    public function setRoute($key, $value)
+    {
+        return $this->vars[$key] = $value;
     }
 }
