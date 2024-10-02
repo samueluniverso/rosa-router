@@ -92,7 +92,7 @@ abstract class AbstractRequest
                     if (!RouteHelper::isAlphaNumeric($route_params[$key])) {
                         throw new Exception('Route contains invalid characters');
                     }
-                    $request->setRoute($attribute, $route_params[$key]);
+                    $request->$attribute = $route_params[$key];
                 }
             }
         }

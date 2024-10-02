@@ -21,7 +21,7 @@ class Request
 {
     private RequestAction $action;
 
-    private array $vars;
+    private array $parameters;
 
     /**
      * @method body
@@ -132,19 +132,28 @@ class Request
      */
     public function route($key)
     {
-        return $this->vars[$key];
+        return $this->parameters[$key];
     }
 
     /**
-     * Set a route variable
+     * Set the route parameters
      * 
-     * @method route
-     * @param string $key
-     * @param string $value
-     * @return mixed
+     * @method parameters
+     * @return array
      */
-    public function setRoute($key, $value)
+    public function __set($key, $value)
     {
-        return $this->vars[$key] = $value;
+        return $this->parameters[$key] = $value;
+    }
+
+    /**
+     * Get the route parameters
+     * 
+     * @method parameters
+     * @return array
+     */
+    public function __get($key)
+    {
+        return $this->parameters[$key];
     }
 }
