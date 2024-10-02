@@ -17,7 +17,7 @@ class RouteHelper
      * @param array $route_match
      * @return array
      */
-    public static function routeArgs($route_match) : array
+    public static function routeArgs($route_match)
     {
         return preg_split('/(\/[\w]+\/)({[\w]+})/', $route_match[array_key_first($route_match)], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
     }

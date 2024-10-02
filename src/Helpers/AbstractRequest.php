@@ -170,7 +170,7 @@ abstract class AbstractRequest
      * @param array $route_match
      * @return array
      */
-    public function routeArgs($route_match) : array
+    public function routeArgs($route_match)
     {
         return RouteHelper::routeArgs($route_match);
     }
