@@ -22,6 +22,6 @@ class Server
 
     public static function key()
     {
-        return $_SERVER['HTTP_KEY'];
+        return $_SERVER['HTTP_X_API_KEY'];
     }
 }
