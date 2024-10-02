@@ -24,4 +24,14 @@ class Server
     {
         return $_SERVER['HTTP_X_API_KEY'];
     }
+
+    public static function routeArgv()
+    {
+        return explode('path=', $_SERVER['argv'][0])[1];
+    }
+
+    public static function documentRoot()
+    {
+        return $_SERVER['DOCUMENT_ROOT'];
+    }
 }

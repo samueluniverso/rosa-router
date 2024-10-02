@@ -9,10 +9,11 @@ use Rosa\Router\Utils\UrlParser;
 require_once "vendor/autoload.php";
 require_once "routes/routes.php";
 
-$uri = Server::uri();
+$uri = Server::uri(); /// if request: /api
 $form = Request::form();
 $method = Server::method();
-$query = UrlParser::query($uri); /// if using: rest.php?path=/api/route
+$route = Server::routeArgv(); /// if request: .htaccess redirect
+$query = UrlParser::query($uri); /// if request: rest.php?path=/api/route
 
 try
 {
