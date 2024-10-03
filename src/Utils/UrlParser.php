@@ -25,7 +25,7 @@ class UrlParser
     {
         $vars = [];
         parse_str(
-            parse_url($uri, PHP_URL_PATH),
+            parse_url($uri, PHP_URL_PATH) ?? '',
             $vars
         );
 
