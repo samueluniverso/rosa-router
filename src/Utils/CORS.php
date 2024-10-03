@@ -19,6 +19,7 @@ class CORS
         $origins = DotEnv::get('API_ALLOW_ORIGIN');
         if ($origins == '*') {
             header("Access-Control-Allow-Origin: *");
+            return;
         }
         $_origins = explode(',', $origins);
         $_allow = array_filter($_origins, function($origin) {
