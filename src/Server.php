@@ -22,12 +22,17 @@ class Server
 
     public static function key()
     {
-        return $_SERVER['HTTP_X_API_KEY'];
+        if (isset($_SERVER['HTTP_X_API_KEY'])) {
+            return $_SERVER['HTTP_X_API_KEY'];
+        }
+        return '';
     }
 
     public static function routeArgv()
     {
-        return explode('path=', $_SERVER['argv'][0])[1];
+        if (isset($_SERVER['argv']) && is_array(isset($_SERVER['argv']))) {
+            return explode('path=', $_SERVER['argv'][0])[1];
+        }
     }
 
     public static function documentRoot()

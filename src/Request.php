@@ -56,18 +56,18 @@ class Request
      * @param string $query
      * @param array $form
      */
-    public function handle($method, $uri, $query = null, $form)
+    public function handle($method, $uri, $query = null, $form = null)
     {
         global $routes;
         if (is_null($routes))
             throw new Exception('No registered routes');
 
         $path = UrlParser::path($uri);
-        if (!is_null($query)) {
+        if ($query) {
             $path = UrlParser::path($query);
         }
 
-        $segments = explode('/', $path);
+        $segments = explode('/', $path ?? '');
         array_shift($segments);
         if ($segments[0] !== 'api') {
             http_response_code(404);
