@@ -131,8 +131,11 @@ class Route
     public static function group($prefix, $function)
     {
         self::$groupPrefix[] = "/{$prefix}";
+
+        /** clojure call */
         $function();
 
+        /** clear stack when nesting ends */
         self::$groupPrefix = [];
     }
 
