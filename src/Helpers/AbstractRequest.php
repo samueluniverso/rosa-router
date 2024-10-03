@@ -6,9 +6,9 @@ use Exception;
 use Rosa\Router\Auth;
 use Rosa\Router\Request;
 use Rosa\Router\Server;
-use Rosa\Router\Utils\CORS;
+use Rosa\Router\Utils\Cors;
 use Rosa\Router\Utils\DotEnv;
-use Rosa\Router\Utils\SOP;
+use Rosa\Router\Utils\Sop;
 
 /**
  * @author Samuel Oberger Rockenbach
@@ -42,8 +42,8 @@ abstract class AbstractRequest
         /** handling authentication */
         $match = $routes[$method][array_key_first($action->getRoute())];
         if($match['public'] == false) {
-            SOP::check();
-            CORS::allowOrigin();
+            Sop::check();
+            Cors::allowOrigin();
             Auth::check(DotEnv::get('API_KEY'), Server::key());
         }
 

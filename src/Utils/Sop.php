@@ -13,7 +13,7 @@ use Rosa\Router\Server;
  * @version 1.0
  * @package Rosa\Router\Utils
  */
-class SOP
+class Sop
 {
     public static function check()
     {

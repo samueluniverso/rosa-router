@@ -12,7 +12,7 @@ use Rosa\Router\Server;
  * @version 1.0
  * @package Rosa\Router\Utils
  */
-class CORS
+class Cors
 {
     public static function allowOrigin()
     {
