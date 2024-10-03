@@ -25,16 +25,16 @@ class Auth
         if (!$api_key)
             Response::json([
                 'error' => 'API-Key could not be loaded'
-            ], 403);
+            ], Response::FORBIDDEN);
 
         if (!$client_key)
             Response::json([
                 'error' => 'API-Key was not provided'
-            ], 403);
+            ], Response::FORBIDDEN);
 
         if (!hash_equals($api_key, $client_key))
             Response::json([
                 'error' => 'Incorrect API-Key provided'
-            ], 403);
+            ], Response::FORBIDDEN);
     }
 }

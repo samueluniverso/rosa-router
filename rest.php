@@ -29,10 +29,10 @@ catch(Throwable $th)
             'file' => $th->getFile(),
             'line' => $th->getLine(),
             'trace' => $th->getTrace(),
-        ], 500);
+        ], Response::INTERNAL_SERVER_ERROR);
     }
 
     Response::json([
         'error' => $th->getMessage(),
-    ], 500);
+    ], Response::INTERNAL_SERVER_ERROR);
 }

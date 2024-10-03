@@ -11,6 +11,6 @@ class UserController
     {
         Response::json([
             'message' => "Hello, {$request->id}!"
-        ], 200);
+        ], Response::OK);
     }
 }
