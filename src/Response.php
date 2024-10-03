@@ -50,6 +50,7 @@ class Response
     public static function json($data, $code)
     {
         http_response_code($code);
+        header('Content-Type: application/json; charset=utf-8');
         exit(
             json_encode(
                 Encoding::encodeUTF8Deep($data)

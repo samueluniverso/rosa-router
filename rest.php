@@ -25,7 +25,7 @@ catch(Throwable $th)
     if (DotEnv::get('API_DEBUG'))
     {
         Response::json([
-            'error' => $th->getMessage(),
+            'message' => $th->getMessage(),
             'file' => $th->getFile(),
             'line' => $th->getLine(),
             'trace' => $th->getTrace(),
@@ -33,6 +33,6 @@ catch(Throwable $th)
     }
 
     Response::json([
-        'error' => $th->getMessage(),
+        'message' => $th->getMessage(),
     ], Response::INTERNAL_SERVER_ERROR);
 }
