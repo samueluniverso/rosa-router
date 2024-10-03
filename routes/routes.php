@@ -10,6 +10,8 @@ Route::get('/user/{id}', [
     UserController::class, 'get'
 ])->public();
 
-Route::get('/post/{post}/comment/{comment}', [
-    PostController::class, 'get'
-])->private();
+Route::group('v1', function() {
+    Route::get('/post/{post}/comment/{comment}', [
+        PostController::class, 'get'
+    ])->private();
+});
