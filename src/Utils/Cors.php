@@ -25,7 +25,7 @@ class Cors
         $_allow = array_filter($_origins, function($origin) {
             return Server::remoteAddress() == $origin;
         });
-        $allow = $_allow[array_key_first($_allow)];
+        $allow = end($_allow);
         if ($allow) {
             header("Access-Control-Allow-Origin: {$allow}");
         }
