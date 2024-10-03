@@ -132,6 +132,8 @@ class Route
     {
         self::$groupPrefix[] = "/{$prefix}";
         $function();
+
+        self::$groupPrefix = [];
     }
 
     /**
