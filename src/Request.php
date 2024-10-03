@@ -3,6 +3,7 @@
 namespace Rosa\Router;
 
 use Exception;
+use Rosa\Router\Helpers\DeleteRequest;
 use Rosa\Router\Helpers\GetRequest;
 use Rosa\Router\Helpers\PatchRequest;
 use Rosa\Router\Helpers\PostRequest;
@@ -88,7 +89,7 @@ class Request
                 $request = (new PatchRequest())->buildRequest($routes, $method, $path, $form);
                 break;
             case 'DELETE':
-                $request = (new GetRequest())->buildRequest($routes, $method, $path);
+                $request = (new DeleteRequest())->buildRequest($routes, $method, $path);
                 break;
             default: break;
         }
