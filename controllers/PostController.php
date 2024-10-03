@@ -11,6 +11,6 @@ class PostController
     {
         Response::json([
             'message' => "Post: {$request->route('post')}, Comment: {$request->route('comment')}"
-        ], 200);
+        ], Response::OK);
     }
 }
