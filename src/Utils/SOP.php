@@ -18,6 +18,9 @@ class SOP
     public static function check()
     {
         $origins = DotEnv::get('API_ALLOW_ORIGIN');
+        if ($origins == '*') {
+            return;
+        }
         $_origins = explode(',', $origins);
         $_allow = array_filter($_origins,function($origin) {
             return Server::remoteAddress() == $origin;
