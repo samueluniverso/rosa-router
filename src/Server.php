@@ -22,7 +22,10 @@ class Server
 
     public static function key()
     {
-        return $_SERVER['HTTP_X_API_KEY'];
+        if (isset($_SERVER['HTTP_X_API_KEY'])) {
+            return $_SERVER['HTTP_X_API_KEY'];
+        }
+        return '';
     }
 
     public static function routeArgv()
