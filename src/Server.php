@@ -34,4 +34,14 @@ class Server
     {
         return $_SERVER['DOCUMENT_ROOT'];
     }
+
+    public static function serverAddress()
+    {
+        return $_SERVER['SERVER_ADDR'];
+    }
+
+    public static function remoteAddress()
+    {
+        return $_SERVER['REMOTE_ADDR'];
+    }
 }
