@@ -6,7 +6,7 @@ namespace Rosa\Router;
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router\Helpers
+ * @package Rosa\Router
  */
 class Server
 {
