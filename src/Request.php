@@ -22,7 +22,7 @@ class Request
 {
     private RequestAction $action;
 
-    private array $parameters;
+    private array $parameters = [];
 
     /**
      * Get the form data
@@ -36,7 +36,7 @@ class Request
         $input = file_get_contents("php://input");
 
         if (Json::isJson($input))
-            return json_decode($input, true);        
+            return (array) json_decode($input, true);        
 
         if (!$parse)
             return $input;
@@ -46,7 +46,7 @@ class Request
         if (empty($data))
             return null;
 
-        return (object) $data;
+        return (array) $data;
     }
 
     /**
