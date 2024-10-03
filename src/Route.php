@@ -12,7 +12,7 @@ class Route
 {
     const PREFIX = 'api';
 
-    private static $groupPrefix;
+    private static $groupPrefix = [];
 
     private static self $instance;
 
@@ -30,7 +30,7 @@ class Route
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
-            $_route = Route::PREFIX.self::$groupPrefix.$route;
+            $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
         self::$instance->route = $_route;
@@ -50,7 +50,7 @@ class Route
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
-            $_route = Route::PREFIX.self::$groupPrefix.$route;
+            $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
         self::$instance->route = $_route;
@@ -70,7 +70,7 @@ class Route
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
-            $_route = Route::PREFIX.self::$groupPrefix.$route;
+            $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
         self::$instance->route = $_route;
@@ -90,7 +90,7 @@ class Route
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
-            $_route = Route::PREFIX.self::$groupPrefix.$route;
+            $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
         self::$instance->route = $_route;
@@ -111,7 +111,7 @@ class Route
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
-            $_route = Route::PREFIX.self::$groupPrefix.$route;
+            $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
         self::$instance->route = $_route;
@@ -130,7 +130,7 @@ class Route
      */
     public static function group($prefix, $function)
     {
-        self::$groupPrefix = "/{$prefix}";
+        self::$groupPrefix[] = "/{$prefix}";
         $function();
     }
 
