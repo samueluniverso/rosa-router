@@ -122,11 +122,15 @@ class Route
     }
 
     /**
-     * @method 
+     * Group routes under the same prefix
+     * 
+     * @method group
+     * @param string $prefix
+     * @param function $function
      */
-    public static function group($groupPrefix, $function)
+    public static function group($prefix, $function)
     {
-        self::$groupPrefix = "/{$groupPrefix}";
+        self::$groupPrefix = "/{$prefix}";
         $function();
     }
 
