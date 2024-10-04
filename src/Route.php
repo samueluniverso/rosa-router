@@ -126,14 +126,13 @@ class Route
      * 
      * @method group
      * @param string $prefix
-     * @param function $function
+     * @param function $clojure()
      */
-    public static function group($prefix, $function)
+    public static function group($prefix, $clojure)
     {
         self::$groupPrefix[] = "/{$prefix}";
 
-        /** clojure call */
-        $function();
+        $clojure();
 
         /** clear stack when nesting ends */
         self::$groupPrefix = [];
@@ -171,5 +170,18 @@ class Route
             'method' => self::$instance->controllerMethod,
             'public' => true,
         ];
+    }
+
+    /**
+     * Get all routes
+     * 
+     * @method getRoutes
+     * @param void
+     * @return array
+     */
+    public static function getRoutes()
+    {
+        global $routes;
+        return $routes;
     }
 }
