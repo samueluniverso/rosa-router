@@ -17,6 +17,9 @@ Route::get('/post/{post}/comment/{comment}', [
     PostController::class, 'get'
 ])->public();
 
+/**
+ * Grouped routes
+ */
 Route::group('v1', function() {
     Route::get('/example/{id}', [
         V1ExampleController::class, 'get'
@@ -27,9 +30,6 @@ Route::group('v1', function() {
     ])->private();
 });
 
-/**
- * Grouped routes
- */
 Route::group('v2', function() {
     Route::get('/example/{id}', [
         V2ExampleController::class, 'get'
