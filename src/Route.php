@@ -134,7 +134,7 @@ class Route
 
         $clojure();
 
-        /** removing from stack during each iteratino */
+        /** removing from stack during each iteration */
         unset(self::$groupPrefix[sizeof(self::$groupPrefix)-1]);
     }
 
