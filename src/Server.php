@@ -30,7 +30,7 @@ class Server
 
     public static function routeArgv()
     {
-        if (isset($_SERVER['argv']) && is_array(isset($_SERVER['argv']))) {
+        if (isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
             return explode('path=', $_SERVER['argv'][0])[1];
         }
     }
