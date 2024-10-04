@@ -9,7 +9,7 @@ use Rosa\Controllers\V2\ExampleController as V2ExampleController;
 /**
  * Simple routes
  */
-Route::post('/user/', [
+Route::post('/user', [
     UserController::class, 'post'
 ])->private();
 
@@ -25,7 +25,7 @@ Route::group('v1', function() {
         V1ExampleController::class, 'get'
     ])->private();
 
-    Route::post('/example/', [
+    Route::post('/example', [
         V1ExampleController::class, 'post'
     ])->private();
 });
@@ -35,7 +35,7 @@ Route::group('v2', function() {
         V2ExampleController::class, 'get'
     ])->private();
 
-    Route::post('/example/', [
+    Route::post('/example', [
         V2ExampleController::class, 'post'
     ])->private();
 });
@@ -49,7 +49,7 @@ Route::group('multilevel', function() {
             V2ExampleController::class, 'get'
         ])->private();
 
-        Route::post('/example/', [
+        Route::post('/example', [
             V2ExampleController::class, 'post'
         ])->private();
 
@@ -58,7 +58,7 @@ Route::group('multilevel', function() {
                 V2ExampleController::class, 'get'
             ])->private();
 
-            Route::post('/example/', [
+            Route::post('/example', [
                 V2ExampleController::class, 'post'
             ])->private();
         });
