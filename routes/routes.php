@@ -26,8 +26,8 @@ Route::group('v2', function() {
     ])->private();
 });
 
-Route::post('/user/{id}', [
-    UserController::class, 'get'
+Route::post('/user/', [
+    UserController::class, 'post'
 ])->private();
 
 Route::get('/post/{post}/comment/{comment}', [
