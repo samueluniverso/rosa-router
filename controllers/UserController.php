@@ -7,10 +7,10 @@ use Rosa\Router\Response;
 
 class UserController
 {
-    public function get(Request $request)
+    public function post(Request $request)
     {
         Response::json([
-            'message' => "Hello, {$request->id}!"
+            'message' => "Hello, {$request->name}!"
         ], Response::OK);
     }
 }
