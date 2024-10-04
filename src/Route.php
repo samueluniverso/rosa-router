@@ -134,8 +134,8 @@ class Route
 
         $clojure();
 
-        /** clear stack when nesting ends */
-        self::$groupPrefix = [];
+        /** removing from stack during each iteratino */
+        unset(self::$groupPrefix[sizeof(self::$groupPrefix)-1]);
     }
 
     /**
