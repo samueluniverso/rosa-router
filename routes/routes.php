@@ -62,15 +62,5 @@ Route::group('multilevel', function() {
                 V2ExampleController::class, 'post'
             ])->private();
         });
-
-        Route::group('3', function() {
-            Route::get('/example/{id}', [
-                V2ExampleController::class, 'get'
-            ])->private();
-        
-            Route::post('/example/', [
-                V2ExampleController::class, 'post'
-            ])->private();
-        });
     });
 });
