@@ -19,7 +19,7 @@ class UserController
     {
         Response::json([
             'method' => 'post',
-            'data' => $request->name
+            'id' => "User {$request->id} is created!"
         ], Response::OK);
     }
 
@@ -27,7 +27,7 @@ class UserController
     {
         Response::json([
             'method' => 'put',
-            'id' => $request->id
+            'id' => "User {$request->id} is updated!"
         ], Response::OK);
     }
 
@@ -35,7 +35,7 @@ class UserController
     {
         Response::json([
             'method' => 'patch',
-            'id' => $request->id
+            'id' => "User {$request->id} is patched!"
         ], Response::OK);
     }
 
@@ -43,7 +43,7 @@ class UserController
     {
         Response::json([
             'method' => 'delete',
-            'message' => "Hello, user number {$request->id}!"
+            'message' => "User {$request->id} is deleted!"
         ], Response::OK);
     }
 }

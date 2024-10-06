@@ -4,6 +4,7 @@ namespace Rosa\Router\Helpers;
 
 use Exception;
 use Rosa\Router\Auth;
+use Rosa\Router\Helpers\Interfaces\AbstractRequestInterface;
 use Rosa\Router\Request;
 use Rosa\Router\Server;
 use Rosa\Router\Utils\Cors;
@@ -16,7 +17,7 @@ use Rosa\Router\Utils\Sop;
  * @version 1.0
  * @package Rosa\Router\Helpers
  */
-abstract class AbstractRequest
+abstract class AbstractRequest implements AbstractRequestInterface
 {
     private array $routes_map;
 

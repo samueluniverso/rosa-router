@@ -2,13 +2,15 @@
 
 namespace Rosa\Router\Helpers;
 
+use Rosa\Router\Helpers\Interfaces\RouteHelperInterface;
+
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router\Helpers
  */
-class RouteHelper
+class RouteHelper implements RouteHelperInterface
 {
     /**
      * Get the route arguments
