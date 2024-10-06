@@ -9,8 +9,24 @@ use Rosa\Controllers\V2\ExampleController as V2ExampleController;
 /**
  * Simple routes
  */
+Route::get('/user/{id}', [
+    UserController::class, 'get'
+])->private();
+
 Route::post('/user', [
     UserController::class, 'post'
+])->private();
+
+Route::put('/user/', [
+    UserController::class, 'put'
+])->private();
+
+Route::patch('/user/', [
+    UserController::class, 'patch'
+])->private();
+
+Route::delete('/user/{id}', [
+    UserController::class, 'delete'
 ])->private();
 
 Route::get('/post/{post}/comment/{comment}', [
