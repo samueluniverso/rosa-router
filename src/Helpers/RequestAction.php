@@ -2,13 +2,15 @@
 
 namespace Rosa\Router\Helpers;
 
+use Rosa\Router\Helpers\Interfaces\RequestActionInterface;
+
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router\Helpers
  */
-class RequestAction
+class RequestAction implements RequestActionInterface
 {
     private $method;
     private $route;
