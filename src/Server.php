@@ -2,13 +2,15 @@
 
 namespace Rosa\Router;
 
+use Rosa\Router\Interfaces\ServerInterface;
+
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router
  */
-class Server
+class Server implements ServerInterface
 {
     public static function uri()
     {

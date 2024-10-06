@@ -3,6 +3,7 @@
 namespace Rosa\Router;
 
 use Exception;
+use Rosa\Router\Interfaces\RequestInterface;
 use Rosa\Router\Helpers\DeleteRequest;
 use Rosa\Router\Helpers\GetRequest;
 use Rosa\Router\Helpers\PatchRequest;
@@ -18,7 +19,7 @@ use Rosa\Router\Utils\UrlParser;
  * @version 1.0
  * @package Rosa\Router
  */
-class Request
+class Request implements RequestInterface
 {
     private RequestAction $action;
 

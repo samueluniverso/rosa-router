@@ -2,13 +2,15 @@
 
 namespace Rosa\Router;
 
+use Rosa\Router\Interfaces\RouteInterface;
+
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
  * @package Rosa\Router
  */
-class Route
+class Route implements RouteInterface
 {
     const PREFIX = 'api';
 

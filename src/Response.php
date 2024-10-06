@@ -2,6 +2,7 @@
 
 namespace Rosa\Router;
 
+use Rosa\Router\Interfaces\ResponseInterface;
 use Rosa\Router\Utils\Encoding;
 
 /**
@@ -10,7 +11,7 @@ use Rosa\Router\Utils\Encoding;
  * @version 1.0
  * @package Rosa\Router
  */
-class Response
+class Response implements ResponseInterface
 {
     const OK = 200;
     const CREATED = 201;
