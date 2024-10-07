@@ -36,7 +36,7 @@ Route::get('/post/{post}/comment/{comment}', [
 /**
  * Grouped routes
  */
-Route::group('v1', function() {
+Route::prefix('v1')->group(function() {
     Route::get('/example/{id}', [
         V1ExampleController::class, 'get'
     ])->private();
@@ -46,7 +46,7 @@ Route::group('v1', function() {
     ])->private();
 });
 
-Route::group('v2', function() {
+Route::prefix('v2')->group(function() {
     Route::get('/example/{id}', [
         V2ExampleController::class, 'get'
     ])->private();
@@ -59,8 +59,8 @@ Route::group('v2', function() {
 /**
  * Nested groups
  */
-Route::group('multilevel', function() {
-    Route::group('1', function() {
+Route::prefix('multilevel')->group(function() {
+    Route::prefix('1')->group(function() {
         Route::get('/example/{id}', [
             V2ExampleController::class, 'get'
         ])->private();
@@ -69,7 +69,7 @@ Route::group('multilevel', function() {
             V2ExampleController::class, 'post'
         ])->private();
 
-        Route::group('2', function() {
+        Route::prefix('2')->group(function() {
             Route::get('/example/{id}', [
                 V2ExampleController::class, 'get'
             ])->private();

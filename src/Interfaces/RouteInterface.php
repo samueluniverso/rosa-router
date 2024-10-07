@@ -15,7 +15,8 @@ interface RouteInterface
     public static function put($route, $method);
     public static function patch($route, $method);
     public static function delete($route, $method);
-    public static function group($prefix, $clojure);
+    public static function prefix($prefix);
+    public function group($clojure);
     public function private();
     public function public();
     public static function getRoutes();

@@ -124,21 +124,34 @@ class Route implements RouteInterface
     }
 
     /**
+     * Adds prefix to the route group
+     * 
+     * @method prefix
+     * @param $prefix
+     * @return self
+     */
+    public static function prefix($prefix)
+    {
+        self::$groupPrefix[] = "/{$prefix}";
+
+        return new self();
+    }
+
+    /**
      * Group routes under the same prefix
      * 
      * @method group
      * @param string $prefix
      * @param function $clojure()
      */
-    public static function group($prefix, $clojure)
+    public function group($clojure)
     {
-        self::$groupPrefix[] = "/{$prefix}";
-
         $clojure();
 
         /** removing from stack during each iteration */
         unset(self::$groupPrefix[sizeof(self::$groupPrefix)-1]);
     }
+
 
     /**
      * Setting a public route
