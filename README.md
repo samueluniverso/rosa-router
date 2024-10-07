@@ -54,51 +54,49 @@ Route::delete('/user/{id}', [
 
 ### Example: Grouped Routes
 ```php
-Route::group('v1', function() {
-	Route::get('/example/{id}', [
-		V1ExampleController::class, 'get'
-	])->private();
+Route::prefix('v1')->group(function() {
+    Route::get('/example/{id}', [
+        V1ExampleController::class, 'get'
+    ])->private();
 
-	Route::post('/example', [
-		V1ExampleController::class, 'post'
-	])->private();
+    Route::post('/example', [
+        V1ExampleController::class, 'post'
+    ])->private();
 });
 
-Route::group('v2', function() {
-	Route::get('/example/{id}', [
-		V2ExampleController::class, 'get'
-	])->private();
+Route::prefix('v2')->group(function() {
+    Route::get('/example/{id}', [
+        V2ExampleController::class, 'get'
+    ])->private();
 
-	Route::post('/example', [
-		V2ExampleController::class, 'post'
-	])->private();
+    Route::post('/example', [
+        V2ExampleController::class, 'post'
+    ])->private();
 });
 ```
 
 ### Example: Nested Routes
 
 ```php
-Route::group('nesting', function() {
-	/ ** level 1 * /
-	Route::group('1', function() {
-		Route::get('/example/{id}', [
-			V2ExampleController::class, 'get'
-		])->private();
+Route::prefix('multilevel')->group(function() {
+    Route::prefix('1')->group(function() {
+        Route::get('/example/{id}', [
+            V2ExampleController::class, 'get'
+        ])->private();
 
-		Route::post('/example', [
-			V2ExampleController::class, 'post'
-		])->private();
+        Route::post('/example', [
+            V2ExampleController::class, 'post'
+        ])->private();
 
-		/ ** level 2 * /
-		Route::group('2', function() {
-			Route::get('/example/{id}', [
-				V2ExampleController::class, 'get'
-			])->private();
+        Route::prefix('2')->group(function() {
+            Route::get('/example/{id}', [
+                V2ExampleController::class, 'get'
+            ])->private();
 
-			Route::post('/example', [
-				V2ExampleController::class, 'post'
-			])->private();
-		});
-	});
+            Route::post('/example', [
+                V2ExampleController::class, 'post'
+            ])->private();
+        });
+    });
 });
 ```
