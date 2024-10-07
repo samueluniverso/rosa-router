@@ -37,7 +37,7 @@ class Request implements RequestInterface
         $input = file_get_contents("php://input");
 
         if (Json::isJson($input))
-            return (array) json_decode($input, true);        
+            return (array) json_decode($input, true);
 
         if (!$parse)
             return $input;
