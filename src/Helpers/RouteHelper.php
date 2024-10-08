@@ -1,14 +1,14 @@
 <?php
 
-namespace Rosa\Router\Helpers;
+namespace Rockberpro\Router\Helpers;
 
-use Rosa\Router\Helpers\Interfaces\RouteHelperInterface;
+use Rockberpro\Router\Helpers\Interfaces\RouteHelperInterface;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router\Helpers
+ * @package Rockberpro\Router\Helpers
  */
 class RouteHelper implements RouteHelperInterface
 {

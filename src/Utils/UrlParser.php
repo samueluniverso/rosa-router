@@ -1,12 +1,12 @@
 <?php
 
-namespace Rosa\Router\Utils;
+namespace Rockberpro\Router\Utils;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router\Utils
+ * @package Rockberpro\Router\Utils
  */
 class UrlParser
 {

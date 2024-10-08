@@ -1,14 +1,14 @@
 <?php
 
-namespace Rosa\Router\Helpers\Interfaces;
+namespace Rockberpro\Router\Helpers\Interfaces;
 
-use Rosa\Router\Request;
+use Rockberpro\Router\Request;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 interface AbstractRequestInterface
 {

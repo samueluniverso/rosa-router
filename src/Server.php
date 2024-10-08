@@ -1,14 +1,14 @@
 <?php
 
-namespace Rosa\Router;
+namespace Rockberpro\Router;
 
-use Rosa\Router\Interfaces\ServerInterface;
+use Rockberpro\Router\Interfaces\ServerInterface;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 class Server implements ServerInterface
 {

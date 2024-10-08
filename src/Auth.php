@@ -1,12 +1,12 @@
 <?php
 
-namespace Rosa\Router;
+namespace Rockberpro\Router;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 class Auth
 {

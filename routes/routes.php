@@ -1,10 +1,10 @@
 <?php
 
-use Rosa\Router\Route;
-use Rosa\Controllers\PostController;
-use Rosa\Controllers\UserController;
-use Rosa\Controllers\V1\ExampleController as V1ExampleController;
-use Rosa\Controllers\V2\ExampleController as V2ExampleController;
+use Rockberpro\Router\Route;
+use Rockberpro\Controllers\PostController;
+use Rockberpro\Controllers\UserController;
+use Rockberpro\Controllers\V1\ExampleController as V1ExampleController;
+use Rockberpro\Controllers\V2\ExampleController as V2ExampleController;
 
 /**
  * Simple routes

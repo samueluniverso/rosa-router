@@ -1,15 +1,15 @@
 <?php
 
-namespace Rosa\Router;
+namespace Rockberpro\Router;
 
-use Rosa\Router\Interfaces\ResponseInterface;
-use Rosa\Router\Utils\Encoding;
+use Rockberpro\Router\Interfaces\ResponseInterface;
+use Rockberpro\Router\Utils\Encoding;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 class Response implements ResponseInterface
 {

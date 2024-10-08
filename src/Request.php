@@ -1,23 +1,23 @@
 <?php
 
-namespace Rosa\Router;
+namespace Rockberpro\Router;
 
 use Exception;
-use Rosa\Router\Interfaces\RequestInterface;
-use Rosa\Router\Helpers\DeleteRequest;
-use Rosa\Router\Helpers\GetRequest;
-use Rosa\Router\Helpers\PatchRequest;
-use Rosa\Router\Helpers\PostRequest;
-use Rosa\Router\Helpers\PutRequest;
-use Rosa\Router\Helpers\RequestAction;
-use Rosa\Router\Utils\Json;
-use Rosa\Router\Utils\UrlParser;
+use Rockberpro\Router\Interfaces\RequestInterface;
+use Rockberpro\Router\Helpers\DeleteRequest;
+use Rockberpro\Router\Helpers\GetRequest;
+use Rockberpro\Router\Helpers\PatchRequest;
+use Rockberpro\Router\Helpers\PostRequest;
+use Rockberpro\Router\Helpers\PutRequest;
+use Rockberpro\Router\Helpers\RequestAction;
+use Rockberpro\Router\Utils\Json;
+use Rockberpro\Router\Utils\UrlParser;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 class Request implements RequestInterface
 {

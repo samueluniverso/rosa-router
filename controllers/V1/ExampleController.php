@@ -1,9 +1,9 @@
 <?php
 
-namespace Rosa\Controllers\V1;
+namespace Rockberpro\Controllers\V1;
 
-use Rosa\Router\Request;
-use Rosa\Router\Response;
+use Rockberpro\Router\Request;
+use Rockberpro\Router\Response;
 
 class ExampleController
 {
