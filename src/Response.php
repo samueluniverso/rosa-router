@@ -1,15 +1,15 @@
 <?php
 
-namespace Rockberpro\Router;
+namespace Rockberpro\RestRouter;
 
-use Rockberpro\Router\Interfaces\ResponseInterface;
-use Rockberpro\Router\Utils\Encoding;
+use Rockberpro\RestRouter\Interfaces\ResponseInterface;
+use Rockberpro\RestRouter\Utils\Encoding;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router
+ * @package Rockberpro\RestRouter
  */
 class Response implements ResponseInterface
 {

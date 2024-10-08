@@ -1,21 +1,21 @@
 <?php
 
-namespace Rockberpro\Router\Helpers;
+namespace Rockberpro\RestRouter\Helpers;
 
-use Rockberpro\Router\Auth;
-use Rockberpro\Router\Helpers\Interfaces\AbstractRequestInterface;
-use Rockberpro\Router\Request;
-use Rockberpro\Router\Server;
-use Rockberpro\Router\Utils\Cors;
-use Rockberpro\Router\Utils\DotEnv;
-use Rockberpro\Router\Utils\Sop;
+use Rockberpro\RestRouter\Auth;
+use Rockberpro\RestRouter\Helpers\Interfaces\AbstractRequestInterface;
+use Rockberpro\RestRouter\Request;
+use Rockberpro\RestRouter\Server;
+use Rockberpro\RestRouter\Utils\Cors;
+use Rockberpro\RestRouter\Utils\DotEnv;
+use Rockberpro\RestRouter\Utils\Sop;
 use Exception;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router\Helpers
+ * @package Rockberpro\RestRouter\Helpers
  */
 abstract class AbstractRequest implements AbstractRequestInterface
 {

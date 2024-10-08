@@ -1,14 +1,14 @@
 <?php
 
-namespace Rockberpro\Router;
+namespace Rockberpro\RestRouter;
 
-use Rockberpro\Router\Interfaces\ServerInterface;
+use Rockberpro\RestRouter\Interfaces\ServerInterface;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router
+ * @package Rockberpro\RestRouter
  */
 class Server implements ServerInterface
 {

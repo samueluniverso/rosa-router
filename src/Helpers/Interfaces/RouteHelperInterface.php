@@ -1,12 +1,12 @@
 <?php
 
-namespace Rockberpro\Router\Helpers\Interfaces;
+namespace Rockberpro\RestRouter\Helpers\Interfaces;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router
+ * @package Rockberpro\RestRouter
  */
 interface RouteHelperInterface
 {

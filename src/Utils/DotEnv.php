@@ -1,6 +1,6 @@
 <?php
 
-namespace Rockberpro\Router\Utils;
+namespace Rockberpro\RestRouter\Utils;
 
 use Exception;
 use Throwable;
@@ -9,7 +9,7 @@ use Throwable;
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router\Utils
+ * @package Rockberpro\RestRouter\Utils
  */
 class DotEnv
 {
