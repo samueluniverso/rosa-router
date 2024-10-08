@@ -1,21 +1,21 @@
 <?php
 
-namespace Rosa\Router\Helpers;
+namespace Rockberpro\Router\Helpers;
 
+use Rockberpro\Router\Auth;
+use Rockberpro\Router\Helpers\Interfaces\AbstractRequestInterface;
+use Rockberpro\Router\Request;
+use Rockberpro\Router\Server;
+use Rockberpro\Router\Utils\Cors;
+use Rockberpro\Router\Utils\DotEnv;
+use Rockberpro\Router\Utils\Sop;
 use Exception;
-use Rosa\Router\Auth;
-use Rosa\Router\Helpers\Interfaces\AbstractRequestInterface;
-use Rosa\Router\Request;
-use Rosa\Router\Server;
-use Rosa\Router\Utils\Cors;
-use Rosa\Router\Utils\DotEnv;
-use Rosa\Router\Utils\Sop;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router\Helpers
+ * @package Rockberpro\Router\Helpers
  */
 abstract class AbstractRequest implements AbstractRequestInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Rosa\Router\Utils;
+namespace Rockberpro\Router\Utils;
 
-use Rosa\Router\Response;
-use Rosa\Router\Server;
+use Rockberpro\Router\Response;
+use Rockberpro\Router\Server;
 
 /**
  * Same Origin Policy
@@ -11,7 +11,7 @@ use Rosa\Router\Server;
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router\Utils
+ * @package Rockberpro\Router\Utils
  */
 class Sop
 {

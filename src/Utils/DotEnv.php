@@ -1,6 +1,6 @@
 <?php
 
-namespace Rosa\Router\Utils;
+namespace Rockberpro\Router\Utils;
 
 use Exception;
 use Throwable;
@@ -9,7 +9,7 @@ use Throwable;
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router\Utils
+ * @package Rockberpro\Router\Utils
  */
 class DotEnv
 {

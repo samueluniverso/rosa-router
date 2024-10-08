@@ -2,9 +2,9 @@
     "name": "rosa/router",
     "autoload": {
         "psr-4": {
-            "Rosa\\Router\\": "src/",
-            "Rosa\\Controllers\\": "controllers/",
-            "Rosa\\Routes\\": "routes/"
+            "Rockberpro\\Router\\": "src/",
+            "Rockberpro\\Controllers\\": "controllers/",
+            "Rockberpro\\Routes\\": "routes/"
         }
     },
     "authors": [

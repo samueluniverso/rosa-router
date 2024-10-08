@@ -1,14 +1,14 @@
 <?php
 
-namespace Rosa\Router\Helpers;
+namespace Rockberpro\Router\Helpers;
 
-use Rosa\Router\Request;
+use Rockberpro\Router\Request;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router\Helpers
+ * @package Rockberpro\Router\Helpers
  */
 class PostRequest extends AbstractRequest 
 {

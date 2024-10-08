@@ -1,12 +1,12 @@
 <?php
 
-namespace Rosa\Router\Helpers\Interfaces;
+namespace Rockberpro\Router\Helpers\Interfaces;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 interface RequestActionInterface
 {

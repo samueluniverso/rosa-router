@@ -1,12 +1,12 @@
 <?php
 
-namespace Rosa\Router\Interfaces;
+namespace Rockberpro\Router\Interfaces;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 interface RouteInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Rosa\Router\Utils;
+namespace Rockberpro\Router\Utils;
 
-use Rosa\Router\Server;
+use Rockberpro\Router\Server;
 
 /**
  * Cross-origin Resource Sharing
@@ -10,7 +10,7 @@ use Rosa\Router\Server;
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router\Utils
+ * @package Rockberpro\Router\Utils
  */
 class Cors
 {

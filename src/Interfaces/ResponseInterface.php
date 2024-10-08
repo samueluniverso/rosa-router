@@ -1,14 +1,14 @@
 <?php
 
-namespace Rosa\Router\Interfaces;
+namespace Rockberpro\Router\Interfaces;
 
-use Rosa\Router\Helpers\RequestAction;
+use Rockberpro\Router\Helpers\RequestAction;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 interface ResponseInterface
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace Rosa\Router;
+namespace Rockberpro\Router;
 
-use Rosa\Router\Interfaces\RouteInterface;
+use Rockberpro\Router\Interfaces\RouteInterface;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rosa\Router
+ * @package Rockberpro\Router
  */
 class Route implements RouteInterface
 {
