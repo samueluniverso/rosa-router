@@ -1,14 +1,14 @@
 <?php
 
-namespace Rockberpro\Router\Helpers;
+namespace Rockberpro\RestRouter\Helpers;
 
-use Rockberpro\Router\Request;
+use Rockberpro\RestRouter\Request;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router\Helpers
+ * @package Rockberpro\RestRouter\Helpers
  */
 class PatchRequest extends AbstractRequest 
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Rockberpro\Controllers\V2;
+namespace Rockberpro\RestRouter\Controllers\V2;
 
-use Rockberpro\Router\Request;
-use Rockberpro\Router\Response;
+use Rockberpro\RestRouter\Request;
+use Rockberpro\RestRouter\Response;
 
 class ExampleController
 {

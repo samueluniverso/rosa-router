@@ -1,14 +1,14 @@
 <?php
 
-namespace Rockberpro\Router\Helpers;
+namespace Rockberpro\RestRouter\Helpers;
 
-use Rockberpro\Router\Helpers\Interfaces\RequestActionInterface;
+use Rockberpro\RestRouter\Helpers\Interfaces\RequestActionInterface;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router\Helpers
+ * @package Rockberpro\RestRouter\Helpers
  */
 class RequestAction implements RequestActionInterface
 {

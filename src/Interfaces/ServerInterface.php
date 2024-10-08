@@ -1,12 +1,12 @@
 <?php
 
-namespace Rockberpro\Router\Interfaces;
+namespace Rockberpro\RestRouter\Interfaces;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router
+ * @package Rockberpro\RestRouter
  */
 interface ServerInterface
 {

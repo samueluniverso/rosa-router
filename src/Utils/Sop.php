@@ -1,9 +1,9 @@
 <?php
 
-namespace Rockberpro\Router\Utils;
+namespace Rockberpro\RestRouter\Utils;
 
-use Rockberpro\Router\Response;
-use Rockberpro\Router\Server;
+use Rockberpro\RestRouter\Response;
+use Rockberpro\RestRouter\Server;
 
 /**
  * Same Origin Policy
@@ -11,7 +11,7 @@ use Rockberpro\Router\Server;
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router\Utils
+ * @package Rockberpro\RestRouter\Utils
  */
 class Sop
 {

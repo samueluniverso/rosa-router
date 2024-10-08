@@ -1,10 +1,10 @@
 <?php
 
-use Rockberpro\Router\Route;
-use Rockberpro\Controllers\PostController;
-use Rockberpro\Controllers\UserController;
-use Rockberpro\Controllers\V1\ExampleController as V1ExampleController;
-use Rockberpro\Controllers\V2\ExampleController as V2ExampleController;
+use Rockberpro\RestRouter\Route;
+use Rockberpro\RestRouter\Controllers\PostController;
+use Rockberpro\RestRouter\Controllers\UserController;
+use Rockberpro\RestRouter\Controllers\V1\ExampleController as V1ExampleController;
+use Rockberpro\RestRouter\Controllers\V2\ExampleController as V2ExampleController;
 
 /**
  * Simple routes

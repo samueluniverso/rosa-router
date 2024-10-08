@@ -1,8 +1,8 @@
 <?php
 
-namespace Rockberpro\Router\Utils;
+namespace Rockberpro\RestRouter\Utils;
 
-use Rockberpro\Router\Server;
+use Rockberpro\RestRouter\Server;
 
 /**
  * Cross-origin Resource Sharing
@@ -10,7 +10,7 @@ use Rockberpro\Router\Server;
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router\Utils
+ * @package Rockberpro\RestRouter\Utils
  */
 class Cors
 {

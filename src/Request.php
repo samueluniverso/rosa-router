@@ -1,23 +1,23 @@
 <?php
 
-namespace Rockberpro\Router;
+namespace Rockberpro\RestRouter;
 
 use Exception;
-use Rockberpro\Router\Interfaces\RequestInterface;
-use Rockberpro\Router\Helpers\DeleteRequest;
-use Rockberpro\Router\Helpers\GetRequest;
-use Rockberpro\Router\Helpers\PatchRequest;
-use Rockberpro\Router\Helpers\PostRequest;
-use Rockberpro\Router\Helpers\PutRequest;
-use Rockberpro\Router\Helpers\RequestAction;
-use Rockberpro\Router\Utils\Json;
-use Rockberpro\Router\Utils\UrlParser;
+use Rockberpro\RestRouter\Interfaces\RequestInterface;
+use Rockberpro\RestRouter\Helpers\DeleteRequest;
+use Rockberpro\RestRouter\Helpers\GetRequest;
+use Rockberpro\RestRouter\Helpers\PatchRequest;
+use Rockberpro\RestRouter\Helpers\PostRequest;
+use Rockberpro\RestRouter\Helpers\PutRequest;
+use Rockberpro\RestRouter\Helpers\RequestAction;
+use Rockberpro\RestRouter\Utils\Json;
+use Rockberpro\RestRouter\Utils\UrlParser;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router
+ * @package Rockberpro\RestRouter
  */
 class Request implements RequestInterface
 {

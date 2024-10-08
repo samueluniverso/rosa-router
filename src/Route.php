@@ -1,14 +1,14 @@
 <?php
 
-namespace Rockberpro\Router;
+namespace Rockberpro\RestRouter;
 
-use Rockberpro\Router\Interfaces\RouteInterface;
+use Rockberpro\RestRouter\Interfaces\RouteInterface;
 
 /**
  * @author Samuel Oberger Rockenbach
  * 
  * @version 1.0
- * @package Rockberpro\Router
+ * @package Rockberpro\RestRouter
  */
 class Route implements RouteInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Rockberpro\Controllers;
+namespace Rockberpro\RestRouter\Controllers;
 
-use Rockberpro\Router\Request;
-use Rockberpro\Router\Response;
+use Rockberpro\RestRouter\Request;
+use Rockberpro\RestRouter\Response;
 
 class PostController
 {

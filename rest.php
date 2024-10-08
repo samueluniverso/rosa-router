@@ -1,10 +1,10 @@
 <?php
 
-use Rockberpro\Router\Request;
-use Rockberpro\Router\Response;
-use Rockberpro\Router\Server;
-use Rockberpro\Router\Utils\DotEnv;
-use Rockberpro\Router\Utils\UrlParser;
+use Rockberpro\RestRouter\Request;
+use Rockberpro\RestRouter\Response;
+use Rockberpro\RestRouter\Server;
+use Rockberpro\RestRouter\Utils\DotEnv;
+use Rockberpro\RestRouter\Utils\UrlParser;
 
 require_once "vendor/autoload.php";
 require_once "routes/routes.php";
