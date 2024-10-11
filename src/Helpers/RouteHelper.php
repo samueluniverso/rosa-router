@@ -37,21 +37,6 @@ class RouteHelper implements RouteHelperInterface
     }
 
     /**
-     * Get the route params
-     * 
-     * @method routeParams
-     * @param string $uri
-     * @return array
-     */
-    public static function routeParams($uri)
-    {
-        $route_params = explode('/', $uri);
-        array_shift($route_params);
-
-        return $route_params;
-    }
-
-    /**
      * Get the route vars
      * 
      * @method routeVars
