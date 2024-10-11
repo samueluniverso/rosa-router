@@ -7,7 +7,7 @@ use Rockberpro\RestRouter\Request;
 /**
  * @author Samuel Oberger Rockenbach
  * 
- * @version 1.0
+ * @version 1.1
  * @package Rockberpro\RestRouter
  */
 interface AbstractRequestInterface
