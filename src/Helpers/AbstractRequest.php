@@ -83,16 +83,15 @@ abstract class AbstractRequest implements AbstractRequestInterface
         }
 
         foreach($route_args as $key => $value) {
-            if ($key == 0) {continue;}
+            if ($key === 0) {continue;}
 
-            if ($key %2 == 0) {
-                $param = substr($value, 1, -1);
-                if ($param !== 'id') {
-                    if ($param !== $route_params[$key-1])
+            if ($key %2 === 0) {
+                $attribute = substr($value, 1, -1);
+                if ($attribute !== 'id') {
+                    if ($attribute !== $route_params[$key-1])
                         throw new Exception('Invalid route params');
                 }
 
-                $attribute = substr($route_args[$key], 1, -1);
                 if (isset($route_params[$key])) {
                     if (!RouteHelper::isAlphaNumeric($route_params[$key])) {
                         throw new Exception('Route contains invalid characters');
