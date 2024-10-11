@@ -14,7 +14,7 @@ use Exception;
 /**
  * @author Samuel Oberger Rockenbach
  * 
- * @version 1.0
+ * @version 1.1
  * @package Rockberpro\RestRouter\Helpers
  */
 abstract class AbstractRequest implements AbstractRequestInterface
@@ -74,30 +74,24 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $request = new Request();
         $request->setAction($this->handle($routes, $method, $uri));
 
-        $route_args = $this->routeArgs($request->getAction()->getRoute());
-        $route_params = $this->routeParams($request->getAction()->getUri());
+        $prefix = preg_split('/({\w+})/', end($request->getAction()->getRoute()))[0];
 
-        /** shift array when the key has no arg assigned to it */
-        if (sizeof($route_params) > sizeof($route_args)) {
-            $route_params = array_splice($route_params, (sizeof($route_params) - sizeof($route_args)));
-        }
+        $_uri = str_replace($prefix, '', $request->getAction()->getUri());
+        $_route = str_replace($prefix, '', end($request->getAction()->getRoute()));
 
-        foreach($route_args as $key => $value) {
-            if ($key == 0) {continue;}
+        $split_uri = explode('/', $_uri);
+        $split_route = explode('/', $_route);
 
-            if ($key %2 == 0) {
-                $param = substr($value, 1, -1);
-                if ($param !== 'id') {
-                    if ($param !== $route_params[$key-1])
-                        throw new Exception('Invalid route params');
-                }
+        foreach($split_route as $key => $value)
+        {
+            if ($key %2 === 0) {
+                $attribute = substr($value, 1, -1);
 
-                $attribute = substr($route_args[$key], 1, -1);
-                if (isset($route_params[$key])) {
-                    if (!RouteHelper::isAlphaNumeric($route_params[$key])) {
+                if (isset($split_uri[$key])) {
+                    if (!RouteHelper::isAlphaNumeric($split_uri[$key])) {
                         throw new Exception('Route contains invalid characters');
                     }
-                    $request->$attribute = $route_params[$key];
+                    $request->$attribute = $split_uri[$key];
                 }
             }
         }
@@ -166,29 +160,5 @@ abstract class AbstractRequest implements AbstractRequestInterface
                 }
             }
         );
-    }
-
-    /**
-     * Get the route arguments
-     * 
-     * @method routeArgs
-     * @param array $route_match
-     * @return array
-     */
-    public function routeArgs($route_match)
-    {
-        return RouteHelper::routeArgs($route_match);
-    }
-
-    /**
-     * Get the route params
-     * 
-     * @method routeParams
-     * @param string $uri
-     * @return array
-     */
-    public function routeParams($uri)
-    {
-        return RouteHelper::routeParams($uri);
     }
 }

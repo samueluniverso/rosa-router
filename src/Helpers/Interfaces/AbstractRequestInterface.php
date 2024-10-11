@@ -7,7 +7,7 @@ use Rockberpro\RestRouter\Request;
 /**
  * @author Samuel Oberger Rockenbach
  * 
- * @version 1.0
+ * @version 1.1
  * @package Rockberpro\RestRouter
  */
 interface AbstractRequestInterface
@@ -17,6 +17,4 @@ interface AbstractRequestInterface
     public function buildFormRequest($routes, $method, $uri, $form) : Request;
     public function map($routes, $method);
     public function match($mapped_routes, $uri);
-    public function routeArgs($route_match);
-    public function routeParams($uri);
 }

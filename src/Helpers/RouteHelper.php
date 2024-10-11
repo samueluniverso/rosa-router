@@ -7,7 +7,7 @@ use Rockberpro\RestRouter\Helpers\Interfaces\RouteHelperInterface;
 /**
  * @author Samuel Oberger Rockenbach
  * 
- * @version 1.0
+ * @version 1.1
  * @package Rockberpro\RestRouter\Helpers
  */
 class RouteHelper implements RouteHelperInterface
@@ -34,21 +34,6 @@ class RouteHelper implements RouteHelperInterface
     public static function routeMatchArgs($route)
     {
         return preg_split('/({[\w]+})/', $route, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-    }
-
-    /**
-     * Get the route params
-     * 
-     * @method routeParams
-     * @param string $uri
-     * @return array
-     */
-    public static function routeParams($uri)
-    {
-        $route_params = explode('/', $uri);
-        array_shift($route_params);
-
-        return $route_params;
     }
 
     /**
