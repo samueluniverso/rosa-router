@@ -161,28 +161,4 @@ abstract class AbstractRequest implements AbstractRequestInterface
             }
         );
     }
-
-    /**
-     * Get the route arguments
-     * 
-     * @method routeArgs
-     * @param array $route_match
-     * @return array
-     */
-    public function routeArgs($route_match)
-    {
-        return RouteHelper::routeArgs($route_match);
-    }
-
-    /**
-     * Get the route params
-     * 
-     * @method routeParams
-     * @param string $uri
-     * @return array
-     */
-    public function routeParams($uri)
-    {
-        return RouteHelper::routeParams($uri);
-    }
 }
