@@ -12,7 +12,7 @@ use Rockberpro\RestRouter\Interfaces\RouteInterface;
  */
 class Route implements RouteInterface
 {
-    const PREFIX = 'api';
+    const PREFIX = '/api';
 
     private static $groupPrefix = [];
 
