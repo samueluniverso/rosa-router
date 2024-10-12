@@ -156,12 +156,30 @@ abstract class AbstractRequest implements AbstractRequestInterface
             function($route) use ($uri) {
                 $prefix = RouteHelper::routeMatchArgs($route)[0];
 
+                $_route_sufixes = RouteHelper::routeMatchArgs($route);
+                $route_sufixes = array_slice($_route_sufixes, 1);
+
+                $_uri_sufixes = explode($prefix, $uri)[1];
+                $uri_sufixes = explode('/', $_uri_sufixes);
+                // var_dump($route_sufixes, $uri_sufixes);
+
                 if (stripos($uri, $prefix) !== false) {
                     $route_parts = explode('/', $route);
                     $uri_parts = explode('/', $uri);
 
                     if (sizeof($uri_parts) == sizeof($route_parts)) {
-                        return true;
+                        if (sizeof($uri_sufixes) == sizeof($route_sufixes)) {
+
+                            for($key = 0; $key < sizeof($uri_sufixes); $key++) {
+                                if ($key % 2 !== 0) {
+                                    if ($uri_sufixes[$key] !== substr($route_sufixes[$key], 1, -1)) {
+                                        return false;
+                                    }
+                                }
+                            }
+
+                            return true;
+                        }
                     }
 
                     return false;
