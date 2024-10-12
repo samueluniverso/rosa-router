@@ -154,8 +154,12 @@ abstract class AbstractRequest implements AbstractRequestInterface
         return array_filter(
             $mapped_routes,
             function($route) use ($uri) {
-                $route_args = RouteHelper::routeMatchArgs($route);
-                if (stripos($uri, $route_args[0]) !== false) {
+                $prefix = RouteHelper::routeMatchArgs($route)[0];
+
+                $uri_by_prefix = explode($prefix, $uri);
+                $uri_by_slash = explode('/', $uri);
+
+                if ($uri_by_prefix[1] == $uri_by_slash[array_key_last($uri_by_slash)]) {
                     return true;
                 }
             }
