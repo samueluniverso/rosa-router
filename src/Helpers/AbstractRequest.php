@@ -161,7 +161,6 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
                 $_uri_sufixes = explode($prefix, $uri)[1];
                 $uri_sufixes = explode('/', $_uri_sufixes);
-                // var_dump($route_sufixes, $uri_sufixes);
 
                 if (stripos($uri, $prefix) !== false) {
                     $route_parts = explode('/', $route);
