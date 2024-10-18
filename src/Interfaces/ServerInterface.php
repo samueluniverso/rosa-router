@@ -11,6 +11,7 @@ namespace Rockberpro\RestRouter\Interfaces;
 interface ServerInterface
 {
     public static function uri();
+    public static function query();
     public static function method();
     public static function key();
     public static function routeArgv();

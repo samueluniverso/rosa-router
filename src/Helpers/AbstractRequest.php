@@ -10,6 +10,7 @@ use Rockberpro\RestRouter\Utils\Cors;
 use Rockberpro\RestRouter\Utils\DotEnv;
 use Rockberpro\RestRouter\Utils\Sop;
 use Exception;
+use Rockberpro\RestRouter\Utils\UrlParser;
 
 /**
  * @author Samuel Oberger Rockenbach
@@ -82,6 +83,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $uri_parts = explode('/', $_uri);
         $route_parts = explode('/', $_route);
 
+        /** handle path params */
         foreach($route_parts as $key => $value)
         {
             $attribute = substr($value, 1, -1);
@@ -102,6 +104,26 @@ abstract class AbstractRequest implements AbstractRequestInterface
                 }
 
                 $request->$attribute = $uri_parts[$key];
+            }
+        }
+
+        /** handle query params */
+        if (stripos(Server::query(), 'path=') !== false) {
+            $parts = UrlParser::query(Server::query());
+            if (!empty($parts)) {
+                foreach($parts as $key => $value) {
+                    $request->$key = $value;
+                }
+            }
+        }
+        else if (stripos(Server::uri(), '?') !== false) {
+            $parts = [];
+            $query = Server::query();
+            parse_str($query, $parts);
+            if (!empty($query)) {
+                foreach($parts as $key => $value) {
+                    $request->$key = $value;
+                }
             }
         }
 

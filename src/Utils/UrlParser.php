@@ -10,7 +10,7 @@ namespace Rockberpro\RestRouter\Utils;
  */
 class UrlParser
 {
-    public static function query($uri)
+    public static function pathQuery($uri)
     {
         $vars = [];
         parse_str(
@@ -19,6 +19,17 @@ class UrlParser
         );
 
         return $vars['path'] ?? '';
+    }
+
+    public static function query($uri)
+    {
+        $vars = [];
+        parse_str(
+            parse_url($uri, PHP_URL_QUERY) ?? '',
+            $vars
+        );
+
+        return $vars;
     }
 
     public static function path($uri)
