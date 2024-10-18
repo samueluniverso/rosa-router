@@ -156,8 +156,8 @@ abstract class AbstractRequest implements AbstractRequestInterface
             function($route) use ($uri) {
                 $prefix = RouteHelper::routeMatchArgs($route)[0];
 
-                $_route_sufixes = RouteHelper::routeMatchArgs($route);
-                $route_sufixes = array_slice($_route_sufixes, 1);
+                $_route_sufixes = explode($prefix, $route);
+                $route_sufixes = explode('/', end($_route_sufixes));
 
                 $_uri_sufixes = explode($prefix, $uri)[1];
                 $uri_sufixes = explode('/', $_uri_sufixes);
@@ -168,18 +168,10 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
                     if (sizeof($uri_parts) == sizeof($route_parts)) {
                         if (sizeof($uri_sufixes) == sizeof($route_sufixes)) {
-
-                            /** handling different sufixes with same prefix */
-                            for($key = 0; $key < sizeof($uri_sufixes); $key++) {
-                                if ($key % 2 !== 0) {
-                                    if ($uri_sufixes[$key] !== substr($route_sufixes[$key], 1, -1)) {
-                                        return false;
-                                    }
-                                }
-                            }
-
                             return true;
                         }
+
+                        return false;
                     }
 
                     return false;
