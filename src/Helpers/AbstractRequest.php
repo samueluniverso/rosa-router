@@ -91,6 +91,12 @@ abstract class AbstractRequest implements AbstractRequestInterface
                     continue;
                 }
 
+                if (stripos($value, '{') === false || stripos($value, '}') === false) {
+                    if ($value !== $uri_parts[$key]) {
+                        throw new Exception('Route does not match');
+                    }
+                }
+
                 if (!RouteHelper::isAlphaNumeric($uri_parts[$key])) {
                     throw new Exception('Route contains invalid characters');
                 }
