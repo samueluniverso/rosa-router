@@ -74,25 +74,28 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $request = new Request();
         $request->setAction($this->handle($routes, $method, $uri));
 
-        $prefix = preg_split('/({\w+})/', end($request->getAction()->getRoute()))[0];
+        $prefix = RouteHelper::routeMatchArgs(end($request->getAction()->getRoute()))[0];
 
         $_uri = str_replace($prefix, '', $request->getAction()->getUri());
         $_route = str_replace($prefix, '', end($request->getAction()->getRoute()));
 
-        $split_uri = explode('/', $_uri);
-        $split_route = explode('/', $_route);
+        $uri_parts = explode('/', $_uri);
+        $route_parts = explode('/', $_route);
 
-        foreach($split_route as $key => $value)
+        foreach($route_parts as $key => $value)
         {
-            if ($key %2 === 0) {
-                $attribute = substr($value, 1, -1);
+            $attribute = substr($value, 1, -1);
 
-                if (isset($split_uri[$key])) {
-                    if (!RouteHelper::isAlphaNumeric($split_uri[$key])) {
-                        throw new Exception('Route contains invalid characters');
-                    }
-                    $request->$attribute = $split_uri[$key];
+            if (isset($uri_parts[$key])) {
+                if ($value === $uri_parts[$key]) {
+                    continue;
                 }
+
+                if (!RouteHelper::isAlphaNumeric($uri_parts[$key])) {
+                    throw new Exception('Route contains invalid characters');
+                }
+
+                $request->$attribute = $uri_parts[$key];
             }
         }
 
