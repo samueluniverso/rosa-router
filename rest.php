@@ -13,7 +13,7 @@ $uri = Server::uri(); /// if request: /api
 $form = Request::form();
 $method = Server::method();
 $route = Server::routeArgv(); /// if request: .htaccess redirect
-$query = UrlParser::query($uri); /// if request: rest.php?path=/api/route
+$query = UrlParser::pathQuery($uri); /// if request: rest.php?path=/api/route
 
 try
 {
