@@ -74,25 +74,34 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $request = new Request();
         $request->setAction($this->handle($routes, $method, $uri));
 
-        $prefix = preg_split('/({\w+})/', end($request->getAction()->getRoute()))[0];
+        $prefix = RouteHelper::routeMatchArgs(end($request->getAction()->getRoute()))[0];
 
         $_uri = str_replace($prefix, '', $request->getAction()->getUri());
         $_route = str_replace($prefix, '', end($request->getAction()->getRoute()));
 
-        $split_uri = explode('/', $_uri);
-        $split_route = explode('/', $_route);
+        $uri_parts = explode('/', $_uri);
+        $route_parts = explode('/', $_route);
 
-        foreach($split_route as $key => $value)
+        foreach($route_parts as $key => $value)
         {
-            if ($key %2 === 0) {
-                $attribute = substr($value, 1, -1);
+            $attribute = substr($value, 1, -1);
 
-                if (isset($split_uri[$key])) {
-                    if (!RouteHelper::isAlphaNumeric($split_uri[$key])) {
-                        throw new Exception('Route contains invalid characters');
-                    }
-                    $request->$attribute = $split_uri[$key];
+            if (isset($uri_parts[$key])) {
+                if ($value === $uri_parts[$key]) {
+                    continue;
                 }
+
+                if (stripos($value, '{') === false || stripos($value, '}') === false) {
+                    if ($value !== $uri_parts[$key]) {
+                        throw new Exception('Route does not match');
+                    }
+                }
+
+                if (!RouteHelper::isAlphaNumeric($uri_parts[$key])) {
+                    throw new Exception('Route contains invalid characters');
+                }
+
+                $request->$attribute = $uri_parts[$key];
             }
         }
 
@@ -156,8 +165,8 @@ abstract class AbstractRequest implements AbstractRequestInterface
             function($route) use ($uri) {
                 $prefix = RouteHelper::routeMatchArgs($route)[0];
 
-                $_route_sufixes = RouteHelper::routeMatchArgs($route);
-                $route_sufixes = array_slice($_route_sufixes, 1);
+                $_route_sufixes = explode($prefix, $route);
+                $route_sufixes = explode('/', end($_route_sufixes));
 
                 $_uri_sufixes = explode($prefix, $uri)[1];
                 $uri_sufixes = explode('/', $_uri_sufixes);
@@ -166,20 +175,12 @@ abstract class AbstractRequest implements AbstractRequestInterface
                     $route_parts = explode('/', $route);
                     $uri_parts = explode('/', $uri);
 
-                    if (sizeof($uri_parts) == sizeof($route_parts)) {
-                        if (sizeof($uri_sufixes) == sizeof($route_sufixes)) {
-
-                            /** handling different sufixes with same prefix */
-                            for($key = 0; $key < sizeof($uri_sufixes); $key++) {
-                                if ($key % 2 !== 0) {
-                                    if ($uri_sufixes[$key] !== substr($route_sufixes[$key], 1, -1)) {
-                                        return false;
-                                    }
-                                }
-                            }
-
+                    if (sizeof($uri_parts) === sizeof($route_parts)) {
+                        if (sizeof($uri_sufixes) === sizeof($route_sufixes)) {
                             return true;
                         }
+
+                        return false;
                     }
 
                     return false;
