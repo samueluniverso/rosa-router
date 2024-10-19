@@ -3,14 +3,15 @@
 namespace Rockberpro\RestRouter\Helpers;
 
 use Rockberpro\RestRouter\Auth;
+use Rockberpro\RestRouter\Jwt;
 use Rockberpro\RestRouter\Helpers\Interfaces\AbstractRequestInterface;
 use Rockberpro\RestRouter\Request;
 use Rockberpro\RestRouter\Server;
 use Rockberpro\RestRouter\Utils\Cors;
 use Rockberpro\RestRouter\Utils\DotEnv;
 use Rockberpro\RestRouter\Utils\Sop;
-use Exception;
 use Rockberpro\RestRouter\Utils\UrlParser;
+use Exception;
 
 /**
  * @author Samuel Oberger Rockenbach
@@ -38,15 +39,24 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
         $this->routes_map = $this->map($routes, $method);
         $action->setRoute($this->match($this->routes_map, $action->getUri()));
-        if (empty($action->getRoute()))
+        if (empty($action->getRoute())) {
             throw new Exception('No matching route');
+        }
 
         /** handling authentication */
         $match = $routes[$method][array_key_first($action->getRoute())];
         if($match['public'] == false) {
             Sop::check();
+
+            if (DotEnv::get('API_AUTH_METHOD') == 'JWT') {
+                Jwt::validate(Server::authorization());
+            }
+
+            if (DotEnv::get('API_AUTH_METHOD') == 'KEY') {
+                Auth::check(DotEnv::get('API_KEY'), Server::key());
+            }
+
             Cors::allowOrigin();
-            Auth::check(DotEnv::get('API_KEY'), Server::key());
         }
 
         if (array_key_exists(array_key_first($action->getRoute()), $routes[$method])) {

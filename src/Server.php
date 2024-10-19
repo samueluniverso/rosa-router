@@ -35,6 +35,14 @@ class Server implements ServerInterface
         return '';
     }
 
+    public static function authorization()
+    {
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            return $_SERVER['HTTP_AUTHORIZATION'];
+        }
+        return '';
+    }
+
     public static function routeArgv()
     {
         if (isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
