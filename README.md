@@ -23,7 +23,7 @@ Rosa-Router listens for HTTP requests and maps them to the correct route handler
 ```php
 / ** Public GET route * /
 Route::get('/post/{post}/comment/{comment}', [
-PostController::class, 'get'
+	PostController::class, 'get'
 ])->public();
 
 / ** GET route * /
