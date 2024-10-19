@@ -47,15 +47,12 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $match = $routes[$method][array_key_first($action->getRoute())];
         if($match['public'] == false) {
             Sop::check();
-
             if (DotEnv::get('API_AUTH_METHOD') == 'JWT') {
                 Jwt::validate(Server::authorization());
             }
-
             if (DotEnv::get('API_AUTH_METHOD') == 'KEY') {
                 Auth::check(DotEnv::get('API_KEY'), Server::key());
             }
-
             Cors::allowOrigin();
         }
 
