@@ -20,21 +20,15 @@ class Auth
     public static function check($api_key, $client_key)
     {
         if (!$api_key) {
-            Response::json([
-                'message' => 'API-Key could not be loaded'
-            ], Response::FORBIDDEN);
+            Response::json(['message' => 'API-Key could not be loaded'], Response::FORBIDDEN);
         }
 
         if (!$client_key) {
-            Response::json([
-                'message' => 'API-Key was not provided'
-            ], Response::FORBIDDEN);
+            Response::json(['message' => 'API-Key was not provided'], Response::FORBIDDEN);
         }
 
         if (!hash_equals($api_key, $client_key)) {
-            Response::json([
-                'message' => 'Incorrect API-Key provided'
-            ], Response::FORBIDDEN);
+            Response::json(['message' => 'Incorrect API-Key provided'], Response::FORBIDDEN);
         }
     }
 }

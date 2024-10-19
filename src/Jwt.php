@@ -15,6 +15,13 @@ use DateTime;
  */
 class Jwt
 {
+    /**
+     * Validate JWT token
+     * 
+     * @method validate
+     * @param string $token
+     * @return void
+     */
     public static function validate($token)
     {
         $instance = new self();
@@ -33,21 +40,21 @@ class Jwt
 
         /** header */
         if ($header['alg'] !== 'HS256') {
-            Response::json(['message' => 'Invalid algorithm'], 401);
+            Response::json(['message' => 'Invalid algorithm'], Response::UNAUTHORIZED);
         }
         if ($header['typ'] !== 'JWT') {
-            Response::json(['message' => 'Invalid token type'], 401);
+            Response::json(['message' => 'Invalid token type'], Response::UNAUTHORIZED);
         }
 
         /** payload */
         if ($payload['exp'] < (new DateTime())->getTimestamp()) {
-            Response::json(['message' => 'Token is expired'], 401);
+            Response::json(['message' => 'Token is expired'], Response::UNAUTHORIZED);
         }
         if ($payload['iss'] !== DotEnv::get('JWT_ISSUER')) {
-            Response::json(['message' => 'Invalid token issuer'], 401);
+            Response::json(['message' => 'Invalid token issuer'], Response::UNAUTHORIZED);
         }
         if ($payload['sub'] !== DotEnv::get('JWT_SUBJECT')) {
-            Response::json(['message' => 'Invalid token subject'], 401);
+            Response::json(['message' => 'Invalid token subject'], Response::UNAUTHORIZED);
         }
 
         /** signature */
@@ -57,10 +64,16 @@ class Jwt
         $enc_val_sig = $instance->base64UrlEncode($val_signature);
 
         if (!hash_equals($signature, $enc_val_sig)) {
-            Response::json(['message' => 'Invalid token'], 401);
+            Response::json(['message' => 'Invalid token'], Response::UNAUTHORIZED);
         }
     }
 
+    /**
+     * Get JWT token
+     * 
+     * @method getToken
+     * @return string token
+     */
     public static function getToken()
     {
         $instance = new self();
@@ -73,6 +86,12 @@ class Jwt
         return "{$header}.{$payload}.{$enc_sig}";
     }
 
+    /**
+     * Get JWT header
+     * 
+     * @method getHeader
+     * @return string header
+     */
     private function getHeader()
     {
         return json_encode([
@@ -81,6 +100,12 @@ class Jwt
         ]);
     }
 
+    /**
+     * Get JWT payload
+     * 
+     * @method getPayload
+     * @return string payload
+     */
     private function getPayload()
     {
         $expires = (new DateTime())->add(DateInterval::createFromDateString('1 day'));
@@ -92,6 +117,13 @@ class Jwt
         ]);
     }
 
+    /**
+     * Base64 URL encode
+     * 
+     * @method base64UrlEncode
+     * @param string $text
+     * @return string
+     */
     private function base64UrlEncode($text) : string
     {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
