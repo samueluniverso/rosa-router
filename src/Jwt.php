@@ -51,10 +51,10 @@ class Jwt
         }
 
         /** signature */
-        $val_header = $instance->base64_url_encode($json_header);
-        $val_payload = $instance->base64_url_encode($json_payload);
+        $val_header = $instance->base64UrlEncode($json_header);
+        $val_payload = $instance->base64UrlEncode($json_payload);
         $val_signature = hash_hmac('sha256', ($val_header.'.'.$val_payload), DotEnv::get('JWT_SECRET'), true);
-        $enc_val_sig = $instance->base64_url_encode($val_signature);
+        $enc_val_sig = $instance->base64UrlEncode($val_signature);
 
         if (!hash_equals($signature, $enc_val_sig)) {
             Response::json(['message' => 'Invalid token'], 401);
@@ -65,10 +65,10 @@ class Jwt
     {
         $instance = new self();
 
-        $header = $instance->base64_url_encode($instance->getHeader());
-        $payload = $instance->base64_url_encode($instance->getPayload());
+        $header = $instance->base64UrlEncode($instance->getHeader());
+        $payload = $instance->base64UrlEncode($instance->getPayload());
         $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
-        $enc_sig = $instance->base64_url_encode($signature);
+        $enc_sig = $instance->base64UrlEncode($signature);
 
         return "{$header}.{$payload}.{$enc_sig}";
     }
@@ -92,7 +92,7 @@ class Jwt
         ]);
     }
 
-    private function base64_url_encode($text) : string
+    private function base64UrlEncode($text) : string
     {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
     }
