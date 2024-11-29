@@ -154,7 +154,7 @@ class Route implements RouteInterface
 
 
     /**
-     * Setting a public route
+     * Setting a private route
      * 
      * @method private
      * @param void
