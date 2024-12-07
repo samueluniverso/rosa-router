@@ -57,6 +57,9 @@ abstract class AbstractRequest implements AbstractRequestInterface
             if (DotEnv::get('API_AUTH_METHOD') == 'KEY') {
                 $sysApiKey = new SysApiKeys();
                 $hash = hash('sha256', Server::key());
+                if (!$sysApiKey->exists($hash)) {
+                    Response::json(['message' => 'Invalid key'], Response::UNAUTHORIZED);
+                }
                 if ($sysApiKey->isRevoked($hash)) {
                     Response::json(['message' => 'Key revoked'], Response::UNAUTHORIZED);
                 }
