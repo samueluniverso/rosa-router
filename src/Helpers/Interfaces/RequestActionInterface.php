@@ -12,6 +12,8 @@ interface RequestActionInterface
 {
     public function getMethod();
     public function setMethod($method);
+    public function getClojure();
+    public function setClojure($clojure);
     public function getRoute();
     public function setRoute($route);
     public function getClass();

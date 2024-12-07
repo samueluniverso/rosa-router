@@ -13,6 +13,7 @@ use Rockberpro\RestRouter\Helpers\Interfaces\RequestActionInterface;
 class RequestAction implements RequestActionInterface
 {
     private $method;
+    private $clojure;
     private $route;
     private $class;
     private $uri;
@@ -22,6 +23,13 @@ class RequestAction implements RequestActionInterface
     }
     public function setMethod($method) {
         $this->method = $method;
+    }
+
+    public function getClojure() {
+        return $this->clojure;
+    }
+    public function setClojure($clojure) {
+        $this->clojure = $clojure;
     }
 
     public function getRoute() {
