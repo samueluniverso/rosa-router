@@ -7,7 +7,7 @@ use Rockberpro\RestRouter\Utils\DotEnv;
 use Rockberpro\RestRouter\Utils\UrlParser;
 
 require_once "vendor/autoload.php";
-require_once "routes/routes.php";
+require_once "routes/api.php";
 
 $uri = Server::uri(); /// if request: /api
 $form = Request::form();
