@@ -2,7 +2,6 @@
 
 namespace Rockberpro\RestRouter\Helpers;
 
-use Rockberpro\RestRouter\Auth;
 use Rockberpro\RestRouter\Jwt;
 use Rockberpro\RestRouter\Helpers\Interfaces\AbstractRequestInterface;
 use Rockberpro\RestRouter\Request;
@@ -11,6 +10,8 @@ use Rockberpro\RestRouter\Utils\Cors;
 use Rockberpro\RestRouter\Utils\DotEnv;
 use Rockberpro\RestRouter\Utils\Sop;
 use Rockberpro\RestRouter\Utils\UrlParser;
+use Rockberpro\RestRouter\Database\Models\SysApiKeys;
+use Rockberpro\RestRouter\Response;
 use Exception;
 
 /**
@@ -47,19 +48,35 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $match = $routes[$method][array_key_first($action->getRoute())];
         if($match['public'] == false) {
             Sop::check();
+
             if (DotEnv::get('API_AUTH_METHOD') == 'JWT') {
-                Jwt::validate(Server::authorization());
+                Jwt::validate(Server::authorization(), 'access');
             }
+
             if (DotEnv::get('API_AUTH_METHOD') == 'KEY') {
-                Auth::check(DotEnv::get('API_KEY'), Server::key());
+                $sysApiKey = new SysApiKeys();
+                $hash = hash('sha256', Server::key());
+                if (!$sysApiKey->exists($hash)) {
+                    Response::json(['message' => 'Invalid key'], Response::UNAUTHORIZED);
+                }
+                if ($sysApiKey->isRevoked($hash)) {
+                    Response::json(['message' => 'Key revoked'], Response::UNAUTHORIZED);
+                }
             }
+
             Cors::allowOrigin();
         }
 
         if (array_key_exists(array_key_first($action->getRoute()), $routes[$method])) {
             $call = $routes[$method][array_key_first($action->getRoute())];
-            $action->setClass($call['method'][0]);
-            $action->setMethod($call['method'][1]);
+
+            if (gettype($call['method']) == 'object') { /// clojure
+                $action->setClojure($call['method']);
+            }
+            else {
+                $action->setClass($call['method'][0]);
+                $action->setMethod($call['method'][1]);
+            }
         }
         else {
             throw new Exception('No method defined for the route');
