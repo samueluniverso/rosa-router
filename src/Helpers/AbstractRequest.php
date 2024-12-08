@@ -50,7 +50,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
             Sop::check();
 
             if (DotEnv::get('API_AUTH_METHOD') == 'JWT') {
-                Jwt::validate(Server::authorization());
+                Jwt::validate(Server::authorization(), 'access');
             }
 
             if (DotEnv::get('API_AUTH_METHOD') == 'KEY') {

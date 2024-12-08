@@ -2,8 +2,8 @@
 
 namespace Rockberpro\RestRouter;
 
-use Rockberpro\RestRouter\Response;
 use Rockberpro\RestRouter\Utils\DotEnv;
+use Rockberpro\RestRouter\Response;
 use DateInterval;
 use DateTime;
 
@@ -20,9 +20,10 @@ class Jwt
      * 
      * @method validate
      * @param string $token
+     * @param string $type
      * @return void
      */
-    public static function validate($token)
+    public static function validate($token, $type)
     {
         $instance = new self();
 
@@ -56,6 +57,9 @@ class Jwt
         if ($payload['sub'] !== DotEnv::get('JWT_SUBJECT')) {
             Response::json(['message' => 'Invalid token subject'], Response::UNAUTHORIZED);
         }
+        if ($payload['typ'] !== $type) {
+            Response::json(['message' => 'Invalid token type'], Response::UNAUTHORIZED);
+        }
 
         /** signature */
         $val_header = $instance->base64UrlEncode($json_header);
@@ -72,16 +76,17 @@ class Jwt
      * Get JWT refresh token
      * 
      * @method getToken
+     * @param string $audience
      * @return string token
      */
-    public static function getRefreshToken()
+    public static function getRefreshToken($audience)
     {
         $expires = (new DateTime())->add(DateInterval::createFromDateString('30 days'));
 
         $instance = new self();
 
         $header = $instance->base64UrlEncode($instance->getHeader());
-        $payload = $instance->base64UrlEncode($instance->getPayload($expires));
+        $payload = $instance->base64UrlEncode($instance->getPayload($expires, 'refresh', $audience));
         $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
         $enc_sig = $instance->base64UrlEncode($signature);
 
@@ -101,7 +106,7 @@ class Jwt
         $instance = new self();
 
         $header = $instance->base64UrlEncode($instance->getHeader());
-        $payload = $instance->base64UrlEncode($instance->getPayload($expires));
+        $payload = $instance->base64UrlEncode($instance->getPayload($expires, 'access'));
         $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
         $enc_sig = $instance->base64UrlEncode($signature);
 
@@ -126,15 +131,25 @@ class Jwt
      * Get JWT payload
      * 
      * @method getPayload
+     * @param DateTime $expires
+     * @param string $type
+     * @param string $audience
      * @return string payload
      */
-    private function getPayload($expires)
+    private function getPayload($expires, $type, $audience = null)
     {
-        return json_encode([
+        $payload = [
             'iss' => DotEnv::get('JWT_ISSUER'),
             'sub' => DotEnv::get('JWT_SUBJECT'),
-            'exp' => $expires->getTimestamp()
-        ]);
+            'exp' => $expires->getTimestamp(),
+            'typ' => $type
+        ];
+
+        if ($audience) {
+            $payload['aud'] = $audience;
+        }
+
+        return json_encode($payload);
     }
 
     /**

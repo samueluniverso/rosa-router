@@ -67,7 +67,7 @@ class AuthController
             Response::json(['message' => 'Token revoked'], Response::UNAUTHORIZED);
         }
 
-        Jwt::validate(Server::authorization());
+        Jwt::validate(Server::authorization(), 'refresh');
 
         $access_token = Jwt::getAccessToken();
         Response::json([

@@ -2,6 +2,7 @@
 
 use Rockberpro\RestRouter\Route;
 use Rockberpro\RestRouter\Controllers\AuthController;
+use Rockberpro\RestRouter\Controllers\HelloWorld;
 
 Route::prefix('auth')->group(function() {
     Route::get('/refresh', [
@@ -12,3 +13,7 @@ Route::prefix('auth')->group(function() {
         AuthController::class, 'access'
     ])->public();
 });
+
+Route::get('/hello', [
+    HelloWorld::class, 'hello'
+])->private();
