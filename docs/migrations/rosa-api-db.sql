@@ -16,6 +16,7 @@ CREATE INDEX idx_sys_api_keys_key ON sys_api_keys(key);
 CREATE TABLE sys_api_tokens(
 	id SERIAL NOT NULL PRIMARY KEY,
 	audience TEXT NOT NULL,
+	type TEXT NOT NULL,
 	token TEXT NOT NULL,
 	created_at TIMESTAMP NOT NULL,
 	revoked_at TIMESTAMP
