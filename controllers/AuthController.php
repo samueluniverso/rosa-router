@@ -2,13 +2,19 @@
 
 namespace Rockberpro\RestRouter\Controllers;
 
-use Exception;
 use Rockberpro\RestRouter\Database\Models\SysApiTokens;
 use Rockberpro\RestRouter\Jwt;
 use Rockberpro\RestRouter\Response;
 use Rockberpro\RestRouter\Server;
 use Rockberpro\RestRouter\Utils\DotEnv;
+use Exception;
 
+/**
+ * @author Samuel Oberger Rockenbach
+ * 
+ * @version 1.0
+ * @package Rockberpro\RestRouter
+ */
 class AuthController
 {
     public function refresh()
