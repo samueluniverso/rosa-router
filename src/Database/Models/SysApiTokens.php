@@ -8,89 +8,90 @@ use PDO;
 use stdClass;
 use Exception;
 
-class SysApiKeys
+class SysApiTokens
 {
-    private const ENTITY = 'sys_api_keys';
+    private const ENTITY = 'sys_api_tokens';
 
     private static ?PDOConnection $connection = null;
 
     /**
-     * Get the key
+     * Get the token
      * 
      * @method get
-     * @param string $key
+     * @param string $token
      * @return stdClass
      */
-    public function get($key)
+    public function get($token)
     {
         $con = self::getConnection();
 
-        $sysApiKey = new stdClass();
-        $sysApiKey->key = ['=', $key];
+        $sysApiToken = new stdClass();
+        $sysApiToken->token = ['=', $token];
 
-        return $con->fetchObject($sysApiKey, SysApiKeys::ENTITY);
+        return $con->fetchObject($sysApiToken, SysApiTokens::ENTITY);
     }
 
     /**
-     * Get the last valid key
+     * Get the last valid token
      * 
-     * @method getLastValidKey
+     * @method getLastValidToken
      * @param string $audience
      * @return string
      */
-    public function getLastValidKey($audience)
+    public function getLastValidToken($audience)
     {
         $con = self::getConnection();
 
         $con->createPreparedStatement("
-            SELECT key FROM sys_api_keys WHERE audience = :audience AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1
+            SELECT token FROM sys_api_tokens WHERE audience = :audience AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1
         ");
         $con->bindParameter(':audience', $audience, PDO::PARAM_STR);
 
-        return $con->fetch()->key;
+        return $con->fetch()->token;
     }
 
     /**
-     * Add a new key
+     * Add a new token
      * 
      * @method add
-     * @param string $key
+     * @param string $token
      * @param string $audience
      * @return void
      */
-    public function add($key, $audience)
+    public function add($token, $audience)
     {
-        if ($this->exists($key)) {
-            throw new Exception('Key already in use');
+        if ($this->exists($token)) {
+            throw new Exception('Token already in use');
         }
 
         $con = self::getConnection();
 
-        $sysApiKey = new stdClass();
-        $sysApiKey->key = $key;
-        $sysApiKey->audience = $audience;
-        $sysApiKey->created_at = date('Y-m-d H:i:s');
+        $sysApiToken = new stdClass();
+        $sysApiToken->token = $token;
+        $sysApiToken->type = 'Bearer';
+        $sysApiToken->audience = $audience;
+        $sysApiToken->created_at = date('Y-m-d H:i:s');
 
         $con->beginTransaction();
-        $con->insertObject($sysApiKey, SysApiKeys::ENTITY);
+        $con->insertObject($sysApiToken, SysApiTokens::ENTITY);
         $con->commitTransaction();
     }
 
     /**
-     * Check if the key exists
+     * Check if the token exists
      * 
      * @method exists
-     * @param string $key
+     * @param string $tokens
      * @return bool
      */
-    public function exists($key)
+    public function exists($tokens)
     {
         $con = self::getConnection();
 
         $con->createPreparedStatement("
-            SELECT 1 FROM sys_api_keys WHERE key = :key
+            SELECT 1 FROM sys_api_tokens WHERE token = :token
         ");
-        $con->bindParameter(':key', $key, PDO::PARAM_STR);
+        $con->bindParameter(':token', $tokens, PDO::PARAM_STR);
 
         return (bool) $con->rowCount();
     }
@@ -99,38 +100,38 @@ class SysApiKeys
      * Revoke the key
      * 
      * @method revoke
-     * @param string $key
+     * @param string $token
      * @return void
      */
-    public function revoke($key)
+    public function revoke($token)
     {
         $con = self::getConnection();
         
         $con->beginTransaction();
         $con->createPreparedStatement("
-            UPDATE sys_api_keys SET revoked_at = :revoked_at WHERE key = :key
+            UPDATE sys_api_tokens SET revoked_at = :revoked_at WHERE token = :token
         ");
-        $con->bindParameter(':key', $key, PDO::PARAM_STR);
+        $con->bindParameter(':token', $token, PDO::PARAM_STR);
         $con->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
         $con->update();
         $con->commitTransaction();
     }
 
     /**
-     * Check if the key is revoked
+     * Check if the token is revoked
      * 
      * @method isRevoked
-     * @param string $key
+     * @param string $token
      * @return bool
      */
-    public function isRevoked($key)
+    public function isRevoked($token)
     {
         $con = self::getConnection();
 
         $con->createPreparedStatement("
-            SELECT 1 FROM sys_api_keys WHERE key = :key AND revoked_at IS NULL
+            SELECT 1 FROM sys_api_tokens WHERE token = :token AND revoked_at IS NULL
         ");
-        $con->bindParameter(':key', $key, PDO::PARAM_STR);
+        $con->bindParameter(':token', $token, PDO::PARAM_STR);
 
         if ($con->fetch()) {
             return false;

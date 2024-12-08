@@ -69,17 +69,39 @@ class Jwt
     }
 
     /**
-     * Get JWT token
+     * Get JWT refresh token
      * 
      * @method getToken
      * @return string token
      */
-    public static function getToken()
+    public static function getRefreshToken()
     {
+        $expires = (new DateTime())->add(DateInterval::createFromDateString('30 days'));
+
         $instance = new self();
 
         $header = $instance->base64UrlEncode($instance->getHeader());
-        $payload = $instance->base64UrlEncode($instance->getPayload());
+        $payload = $instance->base64UrlEncode($instance->getPayload($expires));
+        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
+        $enc_sig = $instance->base64UrlEncode($signature);
+
+        return "{$header}.{$payload}.{$enc_sig}";
+    }
+
+    /**
+     * Get JWT access token
+     * 
+     * @method getAccessToken
+     * @return string token
+     */
+    public static function getAccessToken()
+    {
+        $expires = (new DateTime())->add(DateInterval::createFromDateString('30 minutes'));
+
+        $instance = new self();
+
+        $header = $instance->base64UrlEncode($instance->getHeader());
+        $payload = $instance->base64UrlEncode($instance->getPayload($expires));
         $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
         $enc_sig = $instance->base64UrlEncode($signature);
 
@@ -106,10 +128,8 @@ class Jwt
      * @method getPayload
      * @return string payload
      */
-    private function getPayload()
+    private function getPayload($expires)
     {
-        $expires = (new DateTime())->add(DateInterval::createFromDateString('1 day'));
-
         return json_encode([
             'iss' => DotEnv::get('JWT_ISSUER'),
             'sub' => DotEnv::get('JWT_SUBJECT'),
