@@ -8,6 +8,12 @@ use PDO;
 use stdClass;
 use Exception;
 
+/**
+ * @author Samuel Oberger Rockenbach
+ * 
+ * @version 1.0
+ * @package Rockberpro\RestRouter
+ */
 class SysApiKeys
 {
     private const ENTITY = 'sys_api_keys';
