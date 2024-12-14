@@ -38,10 +38,10 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
         $routes_map = $this->map($routes, $method, $uri);
         $match = $this->match($routes_map, $action->getUri());
-        $action->setRoute($match);
-        if (empty($action->getRoute())) {
+        if (empty($match)) {
             throw new Exception('No matching route');
         }
+        $action->setRoute($match);
 
         /** handling authentication */
         $match = $routes[$method][array_key_first($action->getRoute())];
