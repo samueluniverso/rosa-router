@@ -154,12 +154,12 @@ class Request implements RequestInterface
     /**
      * Get a route variable
      * 
-     * @method route
+     * @method get
      * @param string $key
      * @param string $value
      * @return mixed
      */
-    public function route($key)
+    public function get($key)
     {
         return $this->parameters[$key];
     }

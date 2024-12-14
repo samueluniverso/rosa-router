@@ -16,5 +16,5 @@ interface RequestInterface
     public function handle($method, $uri, $query = null, $form = null);
     public function setAction(RequestAction $action);
     public function getAction();
-    public function route($key);
+    public function get($key);
 }
