@@ -36,7 +36,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
-        self::$instance->prefix = explode('/{', $_route)[0];
+        self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'GET';
         self::$instance->controllerMethod = $method;
@@ -57,7 +57,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
-        self::$instance->prefix = explode('/{', $_route)[0];
+        self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'POST';
         self::$instance->controllerMethod = $method;
@@ -78,7 +78,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
-        self::$instance->prefix = explode('/{', $_route)[0];
+        self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PUT';
         self::$instance->controllerMethod = $method;
@@ -99,7 +99,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
-        self::$instance->prefix = explode('/{', $_route)[0];
+        self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PATCH';
         self::$instance->controllerMethod = $method;
@@ -121,7 +121,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
-        self::$instance->prefix = explode('/{', $_route)[0];
+        self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'DELETE';
         self::$instance->controllerMethod = $method;

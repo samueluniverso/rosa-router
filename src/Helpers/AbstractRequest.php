@@ -10,8 +10,8 @@ use Rockberpro\RestRouter\Utils\DotEnv;
 use Rockberpro\RestRouter\Utils\Sop;
 use Rockberpro\RestRouter\Utils\UrlParser;
 use Rockberpro\RestRouter\Response;
-use Rockberpro\RestRouter\Helpers\Interfaces\AbstractRequestInterface;
 use Rockberpro\RestRouter\Database\Models\SysApiKeys;
+use Rockberpro\RestRouter\Helpers\Interfaces\AbstractRequestInterface;
 use Exception;
 
 /**
@@ -22,8 +22,6 @@ use Exception;
  */
 abstract class AbstractRequest implements AbstractRequestInterface
 {
-    private array $routes_map;
-
     /**
      * Handle the Request
      * 
@@ -38,8 +36,9 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $action = new RequestAction();
         $action->setUri($uri);
 
-        $this->routes_map = $this->map($routes, $method);
-        $action->setRoute($this->match($this->routes_map, $action->getUri()));
+        $routes_map = $this->map($routes, $method, $uri);
+        $match = $this->match($routes_map, $action->getUri());
+        $action->setRoute($match);
         if (empty($action->getRoute())) {
             throw new Exception('No matching route');
         }
@@ -182,17 +181,32 @@ abstract class AbstractRequest implements AbstractRequestInterface
      * @method map
      * @param array $routes
      * @param string $method
+     * * @param string $uri
      * @return array mapped_routes
      */
-    public function map($routes, $method)
+    public function map($routes, $method, $uri)
     {
         if (!$routes[$method])
             throw new Exception("No routes for method {$method}");
 
-        return array_map(
-            fn($r) => $r['route'],
-            $routes[$method]
+        $filter = array_filter(
+            $routes[$method],
+            function($route) use (&$uri) {
+                $parts = explode($route['prefix'], $uri);
+                if ($parts[0] === '') {
+                    return $route['route'];
+                }
+            }
         );
+
+        $map = array_map(
+            function($route) {
+                return $route['route'];
+            },
+            $filter
+        );
+   
+        return $map;
     }
 
     /**
@@ -222,6 +236,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
                     $uri_parts = explode('/', $uri);
 
                     if (sizeof($uri_parts) === sizeof($route_parts)) {
+
                         if (sizeof($uri_sufixes) === sizeof($route_sufixes)) {
                             return true;
                         }
