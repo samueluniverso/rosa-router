@@ -59,6 +59,11 @@ class Server implements ServerInterface
         return '';
     }
 
+    public static function userAgent()
+    {
+        return $_SERVER['HTTP_USER_AGENT'];
+    }
+
     public static function routeArgv()
     {
         if (isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
@@ -71,6 +76,11 @@ class Server implements ServerInterface
         return $_SERVER['DOCUMENT_ROOT'];
     }
 
+    public static function serverName()
+    {
+        return $_SERVER['SERVER_NAME'];
+    }
+
     public static function serverAddress()
     {
         return $_SERVER['SERVER_ADDR'];
@@ -79,5 +89,20 @@ class Server implements ServerInterface
     public static function remoteAddress()
     {
         return $_SERVER['REMOTE_ADDR'];
+    }
+
+    public static function targetAddress()
+    {
+        return $_SERVER['HTTP_HOST'];
+    }
+
+    public static function requestMethod()
+    {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    public static function requestUri()
+    {
+        return $_SERVER['REQUEST_URI'];
     }
 }

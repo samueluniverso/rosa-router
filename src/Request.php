@@ -2,7 +2,7 @@
 
 namespace Rockberpro\RestRouter;
 
-use Exception;
+use Rockberpro\RestRouter\Database\Models\SysApiLogs;
 use Rockberpro\RestRouter\Interfaces\RequestInterface;
 use Rockberpro\RestRouter\Helpers\DeleteRequest;
 use Rockberpro\RestRouter\Helpers\GetRequest;
@@ -10,8 +10,9 @@ use Rockberpro\RestRouter\Helpers\PatchRequest;
 use Rockberpro\RestRouter\Helpers\PostRequest;
 use Rockberpro\RestRouter\Helpers\PutRequest;
 use Rockberpro\RestRouter\Helpers\RequestAction;
-use Rockberpro\RestRouter\Utils\Json;
 use Rockberpro\RestRouter\Utils\UrlParser;
+use Rockberpro\RestRouter\Utils\Json;
+use Exception;
 
 /**
  * @author Samuel Oberger Rockenbach
@@ -106,6 +107,13 @@ class Request implements RequestInterface
         $class = $request->getAction()->getClass();
         $method = $request->getAction()->getMethod();
 
+        try {
+            SysApiLogs::write($request);
+        }
+        catch(Exception $e) {
+            throw new Exception("It was not possible to write the request log: {$e->getMessage()}");
+        }
+
         (new $class)->$method($request);
     }
 
@@ -130,6 +138,17 @@ class Request implements RequestInterface
     public function getAction()
     {
         return $this->action;
+    }
+
+    /**
+     * Get all route parameters
+     * 
+     * @method getParameters
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
     /**
