@@ -536,7 +536,7 @@ class PDOConnection
 
         array_walk($binds, function($value, $key) use (&$binds)
         {
-            if(gettype($value) == 'boolean') {
+            if(gettype($value) === 'boolean') {
                 $binds[$key] = (int) $value;
             }
         });
