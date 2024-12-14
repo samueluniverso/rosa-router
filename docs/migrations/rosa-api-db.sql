@@ -31,7 +31,7 @@ CREATE TABLE sys_api_logs(
     client_key TEXT,
     remote_address TEXT NOT NULL,
     target_address TEXT NOT NULL,
-    user_agent TEXT NOT NULL,
+    user_agent TEXT,
     request_method TEXT NOT NULL,
     request_uri TEXT NOT NULL,
     request_body TEXT,
