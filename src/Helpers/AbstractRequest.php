@@ -45,14 +45,14 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
         /** handling authentication */
         $match = $routes[$method][array_key_first($action->getRoute())];
-        if($match['public'] == false) {
+        if($match['public'] === false) {
             Sop::check();
 
-            if (DotEnv::get('API_AUTH_METHOD') == 'JWT') {
+            if (DotEnv::get('API_AUTH_METHOD') === 'JWT') {
                 Jwt::validate(Server::authorization(), 'access');
             }
 
-            if (DotEnv::get('API_AUTH_METHOD') == 'KEY') {
+            if (DotEnv::get('API_AUTH_METHOD') === 'KEY') {
                 $sysApiKey = new SysApiKeys();
                 $hash = hash('sha256', Server::key());
                 if (!$sysApiKey->exists($hash)) {
@@ -69,7 +69,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
         if (array_key_exists(array_key_first($action->getRoute()), $routes[$method])) {
             $call = $routes[$method][array_key_first($action->getRoute())];
 
-            if (gettype($call['method']) == 'object') { /// clojure
+            if (gettype($call['method']) === 'object') { /// clojure
                 $action->setClojure($call['method']);
             }
             else {
