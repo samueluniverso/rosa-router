@@ -48,8 +48,15 @@ class Jwt
         }
 
         /** payload */
-        if ($payload['exp'] < (new DateTime())->getTimestamp()) {
-            Response::json(['message' => 'Token is expired'], Response::UNAUTHORIZED);
+        if ($type === 'access') {
+            if ($payload['exp'] < (new DateTime())->getTimestamp()) {
+                Response::json(['message' => 'Token is expired'], Response::UNAUTHORIZED);
+            }
+        }
+        if ($type === 'refresh') {
+            if (isset($payload['exp']) && $payload['exp'] < (new DateTime())->getTimestamp()) {
+                Response::json(['message' => 'Token is expired'], Response::UNAUTHORIZED);
+            }
         }
         if ($payload['iss'] !== DotEnv::get('JWT_ISSUER')) {
             Response::json(['message' => 'Invalid token issuer'], Response::UNAUTHORIZED);
@@ -64,7 +71,7 @@ class Jwt
         /** signature */
         $val_header = $instance->base64UrlEncode($json_header);
         $val_payload = $instance->base64UrlEncode($json_payload);
-        $val_signature = hash_hmac('sha256', ($val_header.'.'.$val_payload), DotEnv::get('JWT_SECRET'), true);
+        $val_signature = hash_hmac('sha256', ($val_header.'.'.$val_payload), DotEnv::get('JWT_TOKEN_SECRET'), true);
         $enc_val_sig = $instance->base64UrlEncode($val_signature);
 
         if (!hash_equals($signature, $enc_val_sig)) {
@@ -77,17 +84,20 @@ class Jwt
      * 
      * @method getToken
      * @param string $audience
+     * @param DateTime|null $expires
      * @return string token
      */
-    public static function getRefreshToken($audience)
+    public static function getRefreshToken($audience, $expires = null)
     {
-        $expires = (new DateTime())->add(DateInterval::createFromDateString('30 days'));
+        if (!$expires) {
+            $expires = (new DateTime())->add(DateInterval::createFromDateString('7 days'));
+        }
 
         $instance = new self();
 
         $header = $instance->base64UrlEncode($instance->getHeader());
         $payload = $instance->base64UrlEncode($instance->getPayload($expires, 'refresh', $audience));
-        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
+        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_TOKEN_SECRET'), true);
         $enc_sig = $instance->base64UrlEncode($signature);
 
         return "{$header}.{$payload}.{$enc_sig}";
@@ -97,17 +107,20 @@ class Jwt
      * Get JWT access token
      * 
      * @method getAccessToken
+     * @param DateTime|null $expires
      * @return string token
      */
-    public static function getAccessToken()
+    public static function getAccessToken($expires = null)
     {
-        $expires = (new DateTime())->add(DateInterval::createFromDateString('30 minutes'));
+        if (!$expires) {
+            $expires = (new DateTime())->add(DateInterval::createFromDateString('30 minutes'));
+        }
 
         $instance = new self();
 
         $header = $instance->base64UrlEncode($instance->getHeader());
         $payload = $instance->base64UrlEncode($instance->getPayload($expires, 'access'));
-        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
+        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_TOKEN_SECRET'), true);
         $enc_sig = $instance->base64UrlEncode($signature);
 
         return "{$header}.{$payload}.{$enc_sig}";
@@ -131,19 +144,23 @@ class Jwt
      * Get JWT payload
      * 
      * @method getPayload
-     * @param DateTime $expires
+     * @param DateTime|null $expires
      * @param string $type
      * @param string $audience
      * @return string payload
      */
-    private function getPayload($expires, $type, $audience = null)
+    private function getPayload($expires = null, $type, $audience = null)
     {
         $payload = [
             'iss' => DotEnv::get('JWT_ISSUER'),
             'sub' => DotEnv::get('JWT_SUBJECT'),
-            'exp' => $expires->getTimestamp(),
-            'typ' => $type
+            'typ' => $type,
+            'iat' => date('Y-m-d H:i:s'),
         ];
+
+        if ($expires) {
+            $payload['exp'] = $expires->getTimestamp();
+        }
 
         if ($audience) {
             $payload['aud'] = $audience;

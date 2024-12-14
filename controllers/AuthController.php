@@ -17,6 +17,12 @@ use Exception;
  */
 class AuthController
 {
+    /**
+     * Refresh token
+     * 
+     * @method refresh
+     * @return void Response
+     */
     public function refresh()
     {
         if (DotEnv::get('API_AUTH_METHOD') != 'JWT') {
@@ -32,7 +38,7 @@ class AuthController
         }
 
         $hash = hash('sha256', Server::secret());
-        if (hash_equals(DotEnv::get('JWT_API_KEY'), $hash)) {
+        if (hash_equals(DotEnv::get('JWT_SECRET'), $hash)) {
 
             $sysApiTokens = new SysApiTokens();
             $last_token = $sysApiTokens->getLastValidToken(Server::audience());
@@ -56,6 +62,12 @@ class AuthController
         Response::json(['message' => 'Invalid secret'], Response::UNAUTHORIZED);
     }
 
+    /**
+     * Access token
+     * 
+     * @method access
+     * @return void Response
+     */
     public function access()
     {
         if (DotEnv::get('API_AUTH_METHOD') != 'JWT') {
