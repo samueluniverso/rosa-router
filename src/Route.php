@@ -18,9 +18,10 @@ class Route implements RouteInterface
 
     private static self $instance;
 
-    private $route;
-    private $method;
-    private $controllerMethod;
+    private string $prefix;
+    private string $route;
+    private string $method;
+    private mixed  $controllerMethod;
 
     /**
      * @method get
@@ -35,6 +36,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
+        self::$instance->prefix = explode('/{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'GET';
         self::$instance->controllerMethod = $method;
@@ -55,6 +57,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
+        self::$instance->prefix = explode('/{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'POST';
         self::$instance->controllerMethod = $method;
@@ -75,6 +78,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
+        self::$instance->prefix = explode('/{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PUT';
         self::$instance->controllerMethod = $method;
@@ -95,6 +99,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
+        self::$instance->prefix = explode('/{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PATCH';
         self::$instance->controllerMethod = $method;
@@ -116,6 +121,7 @@ class Route implements RouteInterface
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
         self::$instance = new self();
+        self::$instance->prefix = explode('/{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'DELETE';
         self::$instance->controllerMethod = $method;
@@ -164,6 +170,7 @@ class Route implements RouteInterface
     {
         global $routes;
         $routes[self::$instance->method][] = [
+            'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
             'method' => self::$instance->controllerMethod,
             'public' => false,
@@ -181,6 +188,7 @@ class Route implements RouteInterface
     {
         global $routes;
         $routes[self::$instance->method][] = [
+            'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
             'method' => self::$instance->controllerMethod,
             'public' => true,
