@@ -13,6 +13,7 @@ use Rockberpro\RestRouter\Helpers\RequestAction;
 use Rockberpro\RestRouter\Utils\UrlParser;
 use Rockberpro\RestRouter\Utils\Json;
 use Exception;
+use Rockberpro\RestRouter\Utils\DotEnv;
 
 /**
  * @author Samuel Oberger Rockenbach
@@ -107,11 +108,14 @@ class Request implements RequestInterface
         $class = $request->getAction()->getClass();
         $method = $request->getAction()->getMethod();
 
-        try {
-            SysApiLogs::write($request);
-        }
-        catch(Exception $e) {
-            throw new Exception("It was not possible to write the request log: {$e->getMessage()}");
+        if (DotEnv::get('API_LOGS'))
+        {
+            try {
+                SysApiLogs::write($request);
+            }
+            catch(Exception $e) {
+                throw new Exception("It was not possible to write the request log: {$e->getMessage()}");
+            }
         }
 
         (new $class)->$method($request);
