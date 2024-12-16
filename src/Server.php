@@ -35,22 +35,6 @@ class Server implements ServerInterface
         return '';
     }
 
-    public static function secret()
-    {
-        if (isset($_SERVER['HTTP_X_API_SECRET'])) {
-            return $_SERVER['HTTP_X_API_SECRET'];
-        }
-        return '';
-    }
-
-    public static function audience()
-    {
-        if (isset($_SERVER['HTTP_X_API_AUDIENCE'])) {
-            return $_SERVER['HTTP_X_API_AUDIENCE'];
-        }
-        return '';
-    }
-
     public static function authorization()
     {
         if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
