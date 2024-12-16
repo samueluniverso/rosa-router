@@ -3,6 +3,18 @@ CREATE DATABASE rosa_api;
 ALTER DATABASE rosa_api OWNER TO rosa;
 GRANT ALL ON DATABASE rosa_api TO rosa;
 
+CREATE TABLE sys_api_users(
+	id SERIAL NOT NULL PRIMARY KEY,
+	username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    hash_alg TEXT NOT NULL,
+	audience TEXT NOT NULL,
+	created_at TIMESTAMP NOT NULL,
+	revoked_at TIMESTAMP
+);
+CREATE INDEX CONCURRENTLY idx_sys_api_users_username ON sys_api_users(username);
+CREATE INDEX CONCURRENTLY idx_sys_api_users_audience ON sys_api_users(audience);
+
 CREATE TABLE sys_api_keys(
 	id SERIAL NOT NULL PRIMARY KEY,
 	audience TEXT NOT NULL,
