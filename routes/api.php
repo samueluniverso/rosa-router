@@ -9,7 +9,7 @@ Route::prefix('auth')->group(function() {
         AuthController::class, 'refresh'
     ])->public();
 
-    Route::get('/access', [
+    Route::post('/access', [
         AuthController::class, 'access'
     ])->public();
 });
