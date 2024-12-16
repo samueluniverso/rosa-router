@@ -5,7 +5,7 @@ use Rockberpro\RestRouter\Controllers\AuthController;
 use Rockberpro\RestRouter\Controllers\HelloWorldController;
 
 Route::prefix('auth')->group(function() {
-    Route::get('/refresh', [
+    Route::post('/refresh', [
         AuthController::class, 'refresh'
     ])->public();
 
@@ -14,6 +14,6 @@ Route::prefix('auth')->group(function() {
     ])->public();
 });
 
-Route::post('/hello', [
+Route::get('/hello', [
     HelloWorldController::class, 'hello'
 ])->private();

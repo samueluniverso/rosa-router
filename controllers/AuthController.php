@@ -2,11 +2,13 @@
 
 namespace Rockberpro\RestRouter\Controllers;
 
-use Rockberpro\RestRouter\Database\Models\SysApiTokens;
 use Rockberpro\RestRouter\Jwt;
 use Rockberpro\RestRouter\Response;
 use Rockberpro\RestRouter\Server;
 use Rockberpro\RestRouter\Utils\DotEnv;
+use Rockberpro\RestRouter\Database\Models\SysApiTokens;
+use Rockberpro\RestRouter\Database\Models\SysApiUsers;
+use Rockberpro\RestRouter\Request;
 use Exception;
 
 /**
@@ -23,43 +25,39 @@ class AuthController
      * @method refresh
      * @return void Response
      */
-    public function refresh()
+    public function refresh(Request $request)
     {
         if (DotEnv::get('API_AUTH_METHOD') != 'JWT') {
             Response::json(['message' => 'Invalid auth method'], Response::UNAUTHORIZED);
         }
 
-        /** validate */
-        if (!Server::secret()) {
-            Response::json(['message' => 'Secret not provided'], Response::BAD_REQUEST);
-        }
-        if (!Server::audience()) {
-            Response::json(['message' => 'Audience not provided'], Response::BAD_REQUEST);
-        }
+        $username = $request->get('username');
+        $password = $request->get('password');
 
-        $hash = hash('sha256', Server::secret());
-        if (hash_equals(DotEnv::get('JWT_SECRET'), $hash)) {
-
-            $sysApiTokens = new SysApiTokens();
-            $last_token = $sysApiTokens->getLastValidToken(Server::audience());
-            if ($last_token) {
-                $sysApiTokens->revoke($last_token);
-            }
-
-            $refresh_token = Jwt::getRefreshToken(Server::audience());
-            try {
-                $sysApiTokens->add($refresh_token, Server::audience());
-            }
-            catch (Exception $e) {
-                Response::json(['message' => $e->getMessage()], Response::INTERNAL_SERVER_ERROR);
-            }
-
-            Response::json([
-                'refresh-token' => "Bearer {$refresh_token}"
-            ], Response::OK);
+        $sysApiUsers = new SysApiUsers();
+        $user = $sysApiUsers->get($username);
+        if (!hash_equals($user->password, hash('sha256', $password))) {
+            Response::json(['message' => 'Invalid credentials'], Response::UNAUTHORIZED);
+            exit();
         }
 
-        Response::json(['message' => 'Invalid secret'], Response::UNAUTHORIZED);
+        $sysApiTokens = new SysApiTokens();
+        $last_token = $sysApiTokens->getLastValidToken($user->audience);
+        if ($last_token) {
+            $sysApiTokens->revoke($last_token);
+        }
+
+        $refresh_token = Jwt::getRefreshToken($user->audience);
+        try {
+            $sysApiTokens->add($refresh_token, $user->audience);
+        }
+        catch (Exception $e) {
+            Response::json(['message' => $e->getMessage()], Response::INTERNAL_SERVER_ERROR);
+        }
+
+        Response::json([
+            'refresh-token' => "Bearer {$refresh_token}"
+        ], Response::OK);
     }
 
     /**
@@ -81,6 +79,9 @@ class AuthController
 
         $token = explode(' ', Server::authorization())[1];
         $sysApiTokens = new SysApiTokens();
+        if (!$sysApiTokens->exists($token)) {
+            Response::json(['message' => 'Token is invalid'], Response::UNAUTHORIZED);
+        }
         if ($sysApiTokens->isRevoked($token)) {
             Response::json(['message' => 'Token revoked'], Response::UNAUTHORIZED);
         }
