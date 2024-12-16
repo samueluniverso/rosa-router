@@ -71,7 +71,7 @@ class Jwt
         /** signature */
         $val_header = $instance->base64UrlEncode($json_header);
         $val_payload = $instance->base64UrlEncode($json_payload);
-        $val_signature = hash_hmac('sha256', ($val_header.'.'.$val_payload), DotEnv::get('JWT_TOKEN_SECRET'), true);
+        $val_signature = hash_hmac('sha256', ($val_header.'.'.$val_payload), DotEnv::get('JWT_SECRET'), true);
         $enc_val_sig = $instance->base64UrlEncode($val_signature);
 
         if (!hash_equals($signature, $enc_val_sig)) {
@@ -97,7 +97,7 @@ class Jwt
 
         $header = $instance->base64UrlEncode($instance->getHeader());
         $payload = $instance->base64UrlEncode($instance->getPayload($expires, 'refresh', $audience));
-        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_TOKEN_SECRET'), true);
+        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
         $enc_sig = $instance->base64UrlEncode($signature);
 
         return "{$header}.{$payload}.{$enc_sig}";
@@ -120,7 +120,7 @@ class Jwt
 
         $header = $instance->base64UrlEncode($instance->getHeader());
         $payload = $instance->base64UrlEncode($instance->getPayload($expires, 'access'));
-        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_TOKEN_SECRET'), true);
+        $signature = hash_hmac('sha256', ($header.'.'.$payload), DotEnv::get('JWT_SECRET'), true);
         $enc_sig = $instance->base64UrlEncode($signature);
 
         return "{$header}.{$payload}.{$enc_sig}";
