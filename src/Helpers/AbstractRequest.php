@@ -132,10 +132,14 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
         /** handle query params */
         if (stripos(Server::query(), 'path=') !== false) {
-            $parts = UrlParser::query(Server::query());
+            $parts = [];
+            $query = Server::query();
+            parse_str($query, $parts);
             if (!empty($parts)) {
                 foreach($parts as $key => $value) {
-                    $request->$key = $value;
+                    if ($key !== 'path') {
+                        $request->$key = $value;
+                    }
                 }
             }
         }
