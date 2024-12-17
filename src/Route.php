@@ -154,8 +154,8 @@ class Route implements RouteInterface
     {
         $clojure();
 
-        /** removing from stack during each iteration */
-        unset(self::$groupPrefix[sizeof(self::$groupPrefix)-1]);
+        /** removing prefix from group */
+        array_pop(self::$groupPrefix);
     }
 
 
