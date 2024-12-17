@@ -4,4 +4,6 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^api/(.*)$ <custom/path>/rest.php?path=/api/$1 [L]
+RewriteRule ^api/(.*)$ class/app.router/rest.php?path=/api/$1 [QSA]
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
