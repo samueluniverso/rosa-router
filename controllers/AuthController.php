@@ -36,9 +36,11 @@ class AuthController
 
         $sysApiUsers = new SysApiUsers();
         $user = $sysApiUsers->get($username);
+        if (!$user) {
+            Response::json(['message' => 'User does not exist'], Response::UNAUTHORIZED);
+        }
         if (!hash_equals($user->password, hash('sha256', $password))) {
             Response::json(['message' => 'Invalid credentials'], Response::UNAUTHORIZED);
-            exit();
         }
 
         $sysApiTokens = new SysApiTokens();

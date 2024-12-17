@@ -21,7 +21,7 @@ class Route implements RouteInterface
     private string $prefix;
     private string $route;
     private string $method;
-    private mixed  $controllerMethod;
+    private $controllerMethod;
 
     /**
      * @method get
