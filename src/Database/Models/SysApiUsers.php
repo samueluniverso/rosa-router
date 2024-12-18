@@ -18,7 +18,7 @@ class SysApiUsers
 {
     const ENTITY = 'sys_api_users';
 
-    private static ?PDOConnection $connection = null;
+    private static ?PDOConnection $pdonection = null;
    
     /**
      * Get an api-client (user)
@@ -29,12 +29,12 @@ class SysApiUsers
      */
     public function get($username)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
         $sysApiUser = new stdClass();
         $sysApiUser->username = ['=', $username];
 
-        return $con->fetchObject($sysApiUser, SysApiUsers::ENTITY);
+        return $pdo->fetchObject($sysApiUser, SysApiUsers::ENTITY);
     }
 
     /**
@@ -52,7 +52,7 @@ class SysApiUsers
             throw new Exception('User already exists');
         }
 
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
         $sysApiUser = new stdClass();
         $sysApiUser->username = $username;
@@ -61,9 +61,9 @@ class SysApiUsers
         $sysApiUser->audience = $audience;
         $sysApiUser->created_at = date('Y-m-d H:i:s');
 
-        $con->beginTransaction();
-        $con->insertObject($sysApiUser, SysApiUsers::ENTITY);
-        $con->commitTransaction();
+        $pdo->beginTransaction();
+        $pdo->insertObject($sysApiUser, SysApiUsers::ENTITY);
+        $pdo->commitTransaction();
     }
 
     /**
@@ -75,14 +75,14 @@ class SysApiUsers
      */
     public function exists($username)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
-        $con->createPreparedStatement("
+        $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_users WHERE username = :username
         ");
-        $con->bindParameter(':username', $username, PDO::PARAM_STR);
+        $pdo->bindParameter(':username', $username, PDO::PARAM_STR);
 
-        return (bool) $con->rowCount();
+        return (bool) $pdo->rowCount();
     }
 
     /**
@@ -94,16 +94,16 @@ class SysApiUsers
      */
     public function revoke($username)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
         
-        $con->beginTransaction();
-        $con->createPreparedStatement("
+        $pdo->beginTransaction();
+        $pdo->createPreparedStatement("
             UPDATE sys_api_users SET revoked_at = :revoked_at WHERE username = :username
         ");
-        $con->bindParameter(':username', $username, PDO::PARAM_STR);
-        $con->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-        $con->update();
-        $con->commitTransaction();
+        $pdo->bindParameter(':username', $username, PDO::PARAM_STR);
+        $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $pdo->update();
+        $pdo->commitTransaction();
     }
 
     /**
@@ -115,14 +115,14 @@ class SysApiUsers
      */
     public function isRevoked($username)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
-        $con->createPreparedStatement("
+        $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_users WHERE username = :username AND revoked_at IS NULL
         ");
-        $con->bindParameter(':username', $username, PDO::PARAM_STR);
+        $pdo->bindParameter(':username', $username, PDO::PARAM_STR);
 
-        if ($con->fetch()) {
+        if ($pdo->fetch()) {
             return false;
         }
 
@@ -136,10 +136,10 @@ class SysApiUsers
      * @return PDOConnection
      */
     private static  function getConnection() : PDOConnection {
-        if (is_null(self::$connection)) {
-            self::$connection = new PDOConnection();
+        if (is_null(self::$pdonection)) {
+            self::$pdonection = new PDOConnection();
         }
 
-        return self::$connection;
+        return self::$pdonection;
     }
 }
