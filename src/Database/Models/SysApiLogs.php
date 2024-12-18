@@ -19,7 +19,7 @@ class SysApiLogs
 
     private const SUBJECT = 'rosa-router';
 
-    private static ?PDOConnection $connection = null;
+    private static ?PDOConnection $pdonection = null;
 
     /**
      * Adds a new log
@@ -47,9 +47,9 @@ class SysApiLogs
 
         $access_at = date('Y-m-d H:i:s');
 
-        $con = self::getConnection();
-        $con->beginTransaction();
-        $con->createPreparedStatement("
+        $pdo = self::getConnection();
+        $pdo->beginTransaction();
+        $pdo->createPreparedStatement("
             INSERT INTO sys_api_logs
             (
                 subject,
@@ -83,21 +83,21 @@ class SysApiLogs
                 :access_at
             )
         ");
-        $con->bindParameter(':subject', $subject, PDO::PARAM_STR);
-        $con->bindParameter(':client_token', $client_token, PDO::PARAM_STR);
-        $con->bindParameter(':client_key', $client_key, PDO::PARAM_STR);
-        $con->bindParameter(':remote_address', $remote_address, PDO::PARAM_STR);
-        $con->bindParameter(':target_address', $target_address, PDO::PARAM_STR);
-        $con->bindParameter(':user_agent', $user_agent, PDO::PARAM_STR);
-        $con->bindParameter(':request_method', $request_method, PDO::PARAM_STR);
-        $con->bindParameter(':request_uri', $request_uri, PDO::PARAM_STR);
-        $con->bindParameter(':request_body', $request_body, PDO::PARAM_STR);
-        $con->bindParameter(':endpoint', $endpoint, PDO::PARAM_STR);
-        $con->bindParameter(':class', $class, PDO::PARAM_STR);
-        $con->bindParameter(':method', $method, PDO::PARAM_STR);
-        $con->bindParameter(':access_at', $access_at, PDO::PARAM_STR);
-        $con->insert();
-        $con->commitTransaction();
+        $pdo->bindParameter(':subject', $subject, PDO::PARAM_STR);
+        $pdo->bindParameter(':client_token', $client_token, PDO::PARAM_STR);
+        $pdo->bindParameter(':client_key', $client_key, PDO::PARAM_STR);
+        $pdo->bindParameter(':remote_address', $remote_address, PDO::PARAM_STR);
+        $pdo->bindParameter(':target_address', $target_address, PDO::PARAM_STR);
+        $pdo->bindParameter(':user_agent', $user_agent, PDO::PARAM_STR);
+        $pdo->bindParameter(':request_method', $request_method, PDO::PARAM_STR);
+        $pdo->bindParameter(':request_uri', $request_uri, PDO::PARAM_STR);
+        $pdo->bindParameter(':request_body', $request_body, PDO::PARAM_STR);
+        $pdo->bindParameter(':endpoint', $endpoint, PDO::PARAM_STR);
+        $pdo->bindParameter(':class', $class, PDO::PARAM_STR);
+        $pdo->bindParameter(':method', $method, PDO::PARAM_STR);
+        $pdo->bindParameter(':access_at', $access_at, PDO::PARAM_STR);
+        $pdo->insert();
+        $pdo->commitTransaction();
     }
 
     /**
@@ -107,10 +107,10 @@ class SysApiLogs
      * @return PDOConnection
      */
     private static  function getConnection() : PDOConnection {
-        if (is_null(self::$connection)) {
-            self::$connection = new PDOConnection();
+        if (is_null(self::$pdonection)) {
+            self::$pdonection = new PDOConnection();
         }
 
-        return self::$connection;
+        return self::$pdonection;
     }
 }

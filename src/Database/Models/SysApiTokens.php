@@ -18,7 +18,7 @@ class SysApiTokens
 {
     private const ENTITY = 'sys_api_tokens';
 
-    private static ?PDOConnection $connection = null;
+    private static ?PDOConnection $pdonection = null;
 
     /**
      * Get the token
@@ -29,12 +29,12 @@ class SysApiTokens
      */
     public function get($token)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
         $sysApiToken = new stdClass();
         $sysApiToken->token = ['=', $token];
 
-        return $con->fetchObject($sysApiToken, SysApiTokens::ENTITY);
+        return $pdo->fetchObject($sysApiToken, SysApiTokens::ENTITY);
     }
 
     /**
@@ -46,14 +46,14 @@ class SysApiTokens
      */
     public function getLastValidToken($audience)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
-        $con->createPreparedStatement("
+        $pdo->createPreparedStatement("
             SELECT token FROM sys_api_tokens WHERE audience = :audience AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1
         ");
-        $con->bindParameter(':audience', $audience, PDO::PARAM_STR);
+        $pdo->bindParameter(':audience', $audience, PDO::PARAM_STR);
 
-        return $con->fetch()->token;
+        return $pdo->fetch()->token;
     }
 
     /**
@@ -70,7 +70,7 @@ class SysApiTokens
             throw new Exception('Token already in use');
         }
 
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
         $sysApiToken = new stdClass();
         $sysApiToken->token = $token;
@@ -78,9 +78,9 @@ class SysApiTokens
         $sysApiToken->audience = $audience;
         $sysApiToken->created_at = date('Y-m-d H:i:s');
 
-        $con->beginTransaction();
-        $con->insertObject($sysApiToken, SysApiTokens::ENTITY);
-        $con->commitTransaction();
+        $pdo->beginTransaction();
+        $pdo->insertObject($sysApiToken, SysApiTokens::ENTITY);
+        $pdo->commitTransaction();
     }
 
     /**
@@ -92,14 +92,14 @@ class SysApiTokens
      */
     public function exists($tokens)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
-        $con->createPreparedStatement("
+        $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_tokens WHERE token = :token
         ");
-        $con->bindParameter(':token', $tokens, PDO::PARAM_STR);
+        $pdo->bindParameter(':token', $tokens, PDO::PARAM_STR);
 
-        return (bool) $con->rowCount();
+        return (bool) $pdo->rowCount();
     }
 
     /**
@@ -111,16 +111,16 @@ class SysApiTokens
      */
     public function revoke($token)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
         
-        $con->beginTransaction();
-        $con->createPreparedStatement("
+        $pdo->beginTransaction();
+        $pdo->createPreparedStatement("
             UPDATE sys_api_tokens SET revoked_at = :revoked_at WHERE token = :token
         ");
-        $con->bindParameter(':token', $token, PDO::PARAM_STR);
-        $con->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-        $con->update();
-        $con->commitTransaction();
+        $pdo->bindParameter(':token', $token, PDO::PARAM_STR);
+        $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $pdo->update();
+        $pdo->commitTransaction();
     }
 
     /**
@@ -132,14 +132,14 @@ class SysApiTokens
      */
     public function isRevoked($token)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
-        $con->createPreparedStatement("
+        $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_tokens WHERE token = :token AND revoked_at IS NULL
         ");
-        $con->bindParameter(':token', $token, PDO::PARAM_STR);
+        $pdo->bindParameter(':token', $token, PDO::PARAM_STR);
 
-        if ($con->fetch()) {
+        if ($pdo->fetch()) {
             return false;
         }
 
@@ -153,10 +153,10 @@ class SysApiTokens
      * @return PDOConnection
      */
     private static  function  getConnection() : PDOConnection {
-        if (is_null(self::$connection)) {
-            self::$connection = new PDOConnection();
+        if (is_null(self::$pdonection)) {
+            self::$pdonection = new PDOConnection();
         }
 
-        return self::$connection;
+        return self::$pdonection;
     }
 }

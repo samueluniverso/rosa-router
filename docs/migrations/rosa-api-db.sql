@@ -9,7 +9,7 @@ CREATE TABLE sys_api_users(
     password TEXT NOT NULL,
     hash_alg TEXT NOT NULL,
 	audience TEXT NOT NULL,
-	created_at TIMESTAMP NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	revoked_at TIMESTAMP
 );
 CREATE INDEX CONCURRENTLY idx_sys_api_users_username ON sys_api_users(username);
@@ -19,7 +19,8 @@ CREATE TABLE sys_api_keys(
 	id SERIAL NOT NULL PRIMARY KEY,
 	audience TEXT NOT NULL,
 	key TEXT NOT NULL,
-	created_at TIMESTAMP NOT NULL,
+    hash_alg TEXT NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	revoked_at TIMESTAMP
 );
 CREATE INDEX CONCURRENTLY idx_sys_api_keys_audience ON sys_api_keys(audience);
@@ -30,7 +31,7 @@ CREATE TABLE sys_api_tokens(
 	audience TEXT NOT NULL,
 	type TEXT NOT NULL,
 	token TEXT NOT NULL,
-	created_at TIMESTAMP NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	revoked_at TIMESTAMP
 );
 CREATE INDEX CONCURRENTLY sys_api_tokens_audience ON sys_api_tokens(audience);
@@ -50,7 +51,7 @@ CREATE TABLE sys_api_logs(
     endpoint TEXT NOT NULL,
     class TEXT NOT NULL,
     method TEXT NOT NULL,
-    access_at TIMESTAMP NOT NULL
+    access_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX CONCURRENTLY sys_api_logs_subject ON sys_api_logs(subject);
 CREATE INDEX CONCURRENTLY sys_api_logs_remote_address ON sys_api_logs(remote_address);

@@ -18,7 +18,7 @@ class SysApiKeys
 {
     private const ENTITY = 'sys_api_keys';
 
-    private static ?PDOConnection $connection = null;
+    private static ?PDOConnection $pdonection = null;
 
     /**
      * Get the key
@@ -29,12 +29,12 @@ class SysApiKeys
      */
     public function get($key)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
         $sysApiKey = new stdClass();
         $sysApiKey->key = ['=', $key];
 
-        return $con->fetchObject($sysApiKey, SysApiKeys::ENTITY);
+        return $pdo->fetchObject($sysApiKey, SysApiKeys::ENTITY);
     }
 
     /**
@@ -46,14 +46,14 @@ class SysApiKeys
      */
     public function getLastValidKey($audience)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
-        $con->createPreparedStatement("
+        $pdo->createPreparedStatement("
             SELECT key FROM sys_api_keys WHERE audience = :audience AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1
         ");
-        $con->bindParameter(':audience', $audience, PDO::PARAM_STR);
+        $pdo->bindParameter(':audience', $audience, PDO::PARAM_STR);
 
-        return $con->fetch()->key;
+        return $pdo->fetch()->key;
     }
 
     /**
@@ -70,16 +70,17 @@ class SysApiKeys
             throw new Exception('Key already in use');
         }
 
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
         $sysApiKey = new stdClass();
         $sysApiKey->key = $key;
+        $sysApiKey->hash_alg = 'sha256';
         $sysApiKey->audience = $audience;
         $sysApiKey->created_at = date('Y-m-d H:i:s');
 
-        $con->beginTransaction();
-        $con->insertObject($sysApiKey, SysApiKeys::ENTITY);
-        $con->commitTransaction();
+        $pdo->beginTransaction();
+        $pdo->insertObject($sysApiKey, SysApiKeys::ENTITY);
+        $pdo->commitTransaction();
     }
 
     /**
@@ -91,14 +92,14 @@ class SysApiKeys
      */
     public function exists($key)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
-        $con->createPreparedStatement("
+        $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_keys WHERE key = :key
         ");
-        $con->bindParameter(':key', $key, PDO::PARAM_STR);
+        $pdo->bindParameter(':key', $key, PDO::PARAM_STR);
 
-        return (bool) $con->rowCount();
+        return (bool) $pdo->rowCount();
     }
 
     /**
@@ -110,16 +111,16 @@ class SysApiKeys
      */
     public function revoke($key)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
         
-        $con->beginTransaction();
-        $con->createPreparedStatement("
+        $pdo->beginTransaction();
+        $pdo->createPreparedStatement("
             UPDATE sys_api_keys SET revoked_at = :revoked_at WHERE key = :key
         ");
-        $con->bindParameter(':key', $key, PDO::PARAM_STR);
-        $con->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-        $con->update();
-        $con->commitTransaction();
+        $pdo->bindParameter(':key', $key, PDO::PARAM_STR);
+        $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $pdo->update();
+        $pdo->commitTransaction();
     }
 
     /**
@@ -131,14 +132,14 @@ class SysApiKeys
      */
     public function isRevoked($key)
     {
-        $con = self::getConnection();
+        $pdo = self::getConnection();
 
-        $con->createPreparedStatement("
+        $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_keys WHERE key = :key AND revoked_at IS NULL
         ");
-        $con->bindParameter(':key', $key, PDO::PARAM_STR);
+        $pdo->bindParameter(':key', $key, PDO::PARAM_STR);
 
-        if ($con->fetch()) {
+        if ($pdo->fetch()) {
             return false;
         }
 
@@ -152,10 +153,10 @@ class SysApiKeys
      * @return PDOConnection
      */
     private static  function  getConnection() : PDOConnection {
-        if (is_null(self::$connection)) {
-            self::$connection = new PDOConnection();
+        if (is_null(self::$pdonection)) {
+            self::$pdonection = new PDOConnection();
         }
 
-        return self::$connection;
+        return self::$pdonection;
     }
 }
