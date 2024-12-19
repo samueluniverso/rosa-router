@@ -66,14 +66,15 @@ class SysApiKeys
      */
     public function add($key, $audience)
     {
-        if ($this->exists($key)) {
+        $hash = hash('sha256', $key);
+        if ($this->exists($hash)) {
             throw new Exception('Key already in use');
         }
 
         $pdo = self::getConnection();
 
         $sysApiKey = new stdClass();
-        $sysApiKey->key = $key;
+        $sysApiKey->key = $hash;
         $sysApiKey->hash_alg = 'sha256';
         $sysApiKey->audience = $audience;
         $sysApiKey->created_at = date('Y-m-d H:i:s');
