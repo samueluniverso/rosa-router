@@ -1,7 +1,7 @@
 services:
     db:
         image: postgres:17.2
-        container_name: postgres
+        container_name: rosa-router
         restart: unless-stopped
         ports:
             - "${POSTGRES_PORT}:5432"
