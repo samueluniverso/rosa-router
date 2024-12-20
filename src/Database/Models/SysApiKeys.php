@@ -21,42 +21,6 @@ class SysApiKeys
     private static ?PDOConnection $pdonection = null;
 
     /**
-     * Get the key
-     * 
-     * @method get
-     * @param string $key
-     * @return stdClass
-     */
-    public function get($key)
-    {
-        $pdo = self::getConnection();
-
-        $sysApiKey = new stdClass();
-        $sysApiKey->key = ['=', $key];
-
-        return $pdo->fetchObject($sysApiKey, SysApiKeys::ENTITY);
-    }
-
-    /**
-     * Get the last valid key
-     * 
-     * @method getLastValidKey
-     * @param string $audience
-     * @return string
-     */
-    public function getLastValidKey($audience)
-    {
-        $pdo = self::getConnection();
-
-        $pdo->createPreparedStatement("
-            SELECT key FROM sys_api_keys WHERE audience = :audience AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1
-        ");
-        $pdo->bindParameter(':audience', $audience, PDO::PARAM_STR);
-
-        return $pdo->fetch()->key;
-    }
-
-    /**
      * Add a new key
      * 
      * @method add
@@ -104,27 +68,6 @@ class SysApiKeys
     }
 
     /**
-     * Revoke the key
-     * 
-     * @method revoke
-     * @param string $key
-     * @return void
-     */
-    public function revoke($key)
-    {
-        $pdo = self::getConnection();
-        
-        $pdo->beginTransaction();
-        $pdo->createPreparedStatement("
-            UPDATE sys_api_keys SET revoked_at = :revoked_at WHERE key = :key
-        ");
-        $pdo->bindParameter(':key', $key, PDO::PARAM_STR);
-        $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-        $pdo->update();
-        $pdo->commitTransaction();
-    }
-
-    /**
      * Check if the key is revoked
      * 
      * @method isRevoked
@@ -145,6 +88,29 @@ class SysApiKeys
         }
 
         return true;
+    }
+
+    /**
+     * Revoke the key
+     * 
+     * @method revoke
+     * @param string $key
+     * @return void
+     */
+    public function revoke($key)
+    {
+        $hash = hash('sha256', $key);
+
+        $pdo = self::getConnection();
+
+        $pdo->beginTransaction();
+        $pdo->createPreparedStatement("
+            UPDATE sys_api_keys SET revoked_at = :revoked_at WHERE key = :key
+        ");
+        $pdo->bindParameter(':key', $hash, PDO::PARAM_STR);
+        $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $pdo->update();
+        $pdo->commitTransaction();
     }
 
     /**

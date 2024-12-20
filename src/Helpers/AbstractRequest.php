@@ -55,10 +55,10 @@ abstract class AbstractRequest implements AbstractRequestInterface
                 $sysApiKey = new SysApiKeys();
                 $hash = hash('sha256', Server::key());
                 if (!$sysApiKey->exists($hash)) {
-                    Response::json(['message' => 'Invalid key'], Response::UNAUTHORIZED);
+                    Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
                 }
                 if ($sysApiKey->isRevoked($hash)) {
-                    Response::json(['message' => 'Key revoked'], Response::UNAUTHORIZED);
+                    Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
                 }
             }
 
