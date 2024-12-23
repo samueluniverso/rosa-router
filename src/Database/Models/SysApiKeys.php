@@ -30,15 +30,13 @@ class SysApiKeys
      */
     public function add($key, $audience)
     {
-        $hash = hash('sha256', $key);
-        if ($this->exists($hash)) {
+        if ($this->exists($key)) {
             throw new Exception('Key already in use');
         }
 
         $pdo = self::getConnection();
-
         $sysApiKey = new stdClass();
-        $sysApiKey->key = $hash;
+        $sysApiKey->key = hash('sha256', $key);
         $sysApiKey->hash_alg = 'sha256';
         $sysApiKey->audience = $audience;
         $sysApiKey->created_at = date('Y-m-d H:i:s');
@@ -58,11 +56,10 @@ class SysApiKeys
     public function exists($key)
     {
         $pdo = self::getConnection();
-
         $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_keys WHERE key = :key
         ");
-        $pdo->bindParameter(':key', $key, PDO::PARAM_STR);
+        $pdo->bindParameter(':key', hash('sha256', $key), PDO::PARAM_STR);
 
         return (bool) $pdo->rowCount();
     }
@@ -77,11 +74,10 @@ class SysApiKeys
     public function isRevoked($key)
     {
         $pdo = self::getConnection();
-
         $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_keys WHERE key = :key AND revoked_at IS NULL
         ");
-        $pdo->bindParameter(':key', $key, PDO::PARAM_STR);
+        $pdo->bindParameter(':key', hash('sha256', $key), PDO::PARAM_STR);
 
         if ($pdo->fetch()) {
             return false;
@@ -99,15 +95,12 @@ class SysApiKeys
      */
     public function revoke($key)
     {
-        $hash = hash('sha256', $key);
-
         $pdo = self::getConnection();
-
         $pdo->beginTransaction();
         $pdo->createPreparedStatement("
             UPDATE sys_api_keys SET revoked_at = :revoked_at WHERE key = :key
         ");
-        $pdo->bindParameter(':key', $hash, PDO::PARAM_STR);
+        $pdo->bindParameter(':key', hash('sha256', $key), PDO::PARAM_STR);
         $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
         $pdo->update();
         $pdo->commitTransaction();
