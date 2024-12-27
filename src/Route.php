@@ -3,6 +3,7 @@
 namespace Rockberpro\RestRouter;
 
 use Rockberpro\RestRouter\Interfaces\RouteInterface;
+use Closure;
 use Exception;
 
 /**
@@ -235,6 +236,9 @@ class Route implements RouteInterface
      */
     private static function buildTarget($target)
     {
+        if ($target instanceof Closure) {
+            return $target;
+        }
         if (gettype($target) === 'string') {
             if (!isset(self::$instance->namespace)) {
                 throw new Exception('Namespace not set');
