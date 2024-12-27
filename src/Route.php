@@ -252,7 +252,7 @@ class Route implements RouteInterface
             return [$controller, $method];
         }
 
-        throw new Exception('Error trying to determinte the route target');
+        throw new Exception('Error trying to determine the route target');
     }
 
     /**
