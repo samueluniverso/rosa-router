@@ -73,8 +73,16 @@ abstract class AbstractRequest implements AbstractRequestInterface
                 $action->setClojure($call['target']);
             }
             else if (gettype($call['target']) === 'array') {
-                $action->setClass($call['target'][0]);
-                $action->setMethod($call['target'][1]);
+                $class = $call['target'][0];
+                $method = $call['target'][1];
+                if (!class_exists($class)) {
+                    throw new Exception("Class not found: {$class}");
+                }
+                if (!method_exists($class, $method)) {
+                    throw new Exception("Method not found: {$method}");
+                }
+                $action->setClass($class);
+                $action->setMethod($method);
             }
             else {
                 throw new Exception('Invalid target');
