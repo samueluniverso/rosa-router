@@ -101,7 +101,7 @@ Route::prefix('multilevel')->group(function() {
 });
 ```
 
-### Namepsaces
+### Namespaces
 
 ```php
 Route::prefix('v1')
