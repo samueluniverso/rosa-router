@@ -3,6 +3,7 @@
 namespace Rockberpro\RestRouter;
 
 use Rockberpro\RestRouter\Interfaces\RouteInterface;
+use Exception;
 
 /**
  * @author Samuel Oberger Rockenbach
@@ -18,6 +19,7 @@ class Route implements RouteInterface
 
     private static self $instance;
 
+    private ?string $namespace;
     private string $prefix;
     private string $route;
     private string $method;
@@ -35,11 +37,13 @@ class Route implements RouteInterface
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
-        self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'GET';
-        self::$instance->target = $target;
+        self::$instance->target = self::buildTarget($target);
 
         return self::$instance;
     }
@@ -56,7 +60,9 @@ class Route implements RouteInterface
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
-        self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'POST';
@@ -77,7 +83,9 @@ class Route implements RouteInterface
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
-        self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PUT';
@@ -98,7 +106,9 @@ class Route implements RouteInterface
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
-        self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PATCH';
@@ -119,6 +129,9 @@ class Route implements RouteInterface
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
+        }
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
         }
         self::$instance = new self();
         self::$instance->prefix = explode('{', $_route)[0];
@@ -144,6 +157,23 @@ class Route implements RouteInterface
     }
 
     /**
+     * Adds prefix to the route group
+     * 
+     * @method namespace
+     * @param string $namespace
+     * @return self
+     */
+    public static function namespace($namespace)
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
+        self::$instance->namespace = $namespace;
+
+        return self::$instance;
+    }
+
+    /**
      * Group routes under the same prefix
      * 
      * @method group
@@ -156,6 +186,7 @@ class Route implements RouteInterface
 
         /** removing prefix from group */
         array_pop(self::$groupPrefix);
+        self::namespace(null);
     }
 
 
@@ -193,6 +224,29 @@ class Route implements RouteInterface
             'target' => self::$instance->target,
             'public' => true,
         ];
+    }
+
+    /**
+     * Build the target for the route
+     * 
+     * @method buildTarget
+     * @param string|array $target
+     * @return array
+     */
+    private static function buildTarget($target)
+    {
+        if (gettype($target) === 'string') {
+            if (!isset(self::$instance->namespace)) {
+                throw new Exception('Namespace not set');
+            }
+            $parts = explode('@', $target);
+            $controller = self::$instance->namespace.'\\'.$parts[0];
+            $method = $parts[1];
+            return [$controller, $method];
+        }
+        if (gettype($target) === 'array') {
+            return $target;
+        }
     }
 
     /**
