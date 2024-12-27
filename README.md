@@ -1,7 +1,7 @@
-# Rosa-Router: A REST API Engine Built in PHP
+# ROSA-Router: A REST API Engine Built in PHP
 
 ## Introduction
-**Rosa-Router** is a lightweight and efficient REST API engine built using PHP. It is designed to handle HTTP requests and route them to the appropriate controllers or functions based on the defined API endpoints. With a focus on simplicity and performance, Rosa-Router enables developers to quickly create and deploy RESTful web services.
+**ROSA-Router** is a lightweight and efficient REST API engine built using PHP. It is designed to handle HTTP requests and route them to the appropriate controllers or functions based on the defined API endpoints. With a focus on simplicity and performance, Rosa-Router enables developers to quickly create and deploy RESTful web services.
 
 ---
 
@@ -18,7 +18,7 @@
 
 Rosa-Router listens for HTTP requests and maps them to the correct route handler based on the request's method and URI. It supports both static and dynamic routes and is fully customizable to fit different project needs.
 
-### Example: Simple Routes
+### Simple Routes
 
 ```php
 / ** Public GET route * /
@@ -52,7 +52,7 @@ Route::delete('/user/{id}', [
 ])->private(); 
 ```
 
-### Example: Grouped Routes
+### Grouped Routes
 ```php
 Route::prefix('v1')->group(function() {
     Route::get('/example/{id}', [
@@ -75,7 +75,7 @@ Route::prefix('v2')->group(function() {
 });
 ```
 
-### Example: Nested Routes
+### Nested Routes
 
 ```php
 Route::prefix('multilevel')->group(function() {
@@ -99,4 +99,24 @@ Route::prefix('multilevel')->group(function() {
         });
     });
 });
+```
+
+### Namepsaces
+
+```php
+Route::prefix('v1')
+    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->group(function() {
+        Route::get('/hello1', 'HelloWorldController@hello1')
+            ->private();
+    }
+);
+
+Route::prefix('v2')
+    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->group(function() {
+        Route::get('/hello2', 'HelloWorldController@hello2')
+            ->private();
+    }
+);
 ```

@@ -3,6 +3,8 @@
 namespace Rockberpro\RestRouter;
 
 use Rockberpro\RestRouter\Interfaces\RouteInterface;
+use Closure;
+use Exception;
 
 /**
  * @author Samuel Oberger Rockenbach
@@ -18,28 +20,31 @@ class Route implements RouteInterface
 
     private static self $instance;
 
+    private ?string $namespace;
     private string $prefix;
     private string $route;
     private string $method;
-    private $controllerMethod;
+    private $target;
 
     /**
      * @method get
      * @param string $route
-     * @param string $method
+     * @param string $target
      * @return Route
      */
-    public static function get($route, $method)
+    public static function get($route, $target)
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
-        self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'GET';
-        self::$instance->controllerMethod = $method;
+        self::$instance->target = self::buildTarget($target);
 
         return self::$instance;
     }
@@ -47,20 +52,22 @@ class Route implements RouteInterface
     /**
      * @method post
      * @param string $route
-     * @param string $method
+     * @param string $target
      * @return Route
      */
-    public static function post($route, $method)
+    public static function post($route, $target)
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
-        self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'POST';
-        self::$instance->controllerMethod = $method;
+        self::$instance->target = $target;
 
         return self::$instance;
     }
@@ -68,20 +75,22 @@ class Route implements RouteInterface
     /**
      * @method put
      * @param string $route
-     * @param string $method
+     * @param string $target
      * @return Route
      */
-    public static function put($route, $method)
+    public static function put($route, $target)
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
-        self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PUT';
-        self::$instance->controllerMethod = $method;
+        self::$instance->target = $target;
 
         return self::$instance;
     }
@@ -89,20 +98,22 @@ class Route implements RouteInterface
     /**
      * @method patch
      * @param string $route
-     * @param string $method
+     * @param string $target
      * @return Route
      */
-    public static function patch($route, $method)
+    public static function patch($route, $target)
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
-        self::$instance = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PATCH';
-        self::$instance->controllerMethod = $method;
+        self::$instance->target = $target;
 
         return self::$instance;
     }
@@ -111,20 +122,23 @@ class Route implements RouteInterface
     /**
      * @method delete
      * @param string $route
-     * @param string $method
+     * @param string $target
      * @return Route
      */
-    public static function delete($route, $method)
+    public static function delete($route, $target)
     {
         $_route = Route::PREFIX.$route;
         if (self::$groupPrefix) {
             $_route = Route::PREFIX.implode(self::$groupPrefix).$route;
         }
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
         self::$instance = new self();
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'DELETE';
-        self::$instance->controllerMethod = $method;
+        self::$instance->target = $target;
 
         return self::$instance;
     }
@@ -144,6 +158,23 @@ class Route implements RouteInterface
     }
 
     /**
+     * Adds prefix to the route group
+     * 
+     * @method namespace
+     * @param string $namespace
+     * @return self
+     */
+    public static function namespace($namespace)
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
+        self::$instance->namespace = $namespace;
+
+        return self::$instance;
+    }
+
+    /**
      * Group routes under the same prefix
      * 
      * @method group
@@ -156,6 +187,7 @@ class Route implements RouteInterface
 
         /** removing prefix from group */
         array_pop(self::$groupPrefix);
+        self::namespace(null);
     }
 
 
@@ -172,7 +204,7 @@ class Route implements RouteInterface
         $routes[self::$instance->method][] = [
             'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
-            'method' => self::$instance->controllerMethod,
+            'target' => self::$instance->target,
             'public' => false,
         ];
     }
@@ -190,9 +222,35 @@ class Route implements RouteInterface
         $routes[self::$instance->method][] = [
             'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
-            'method' => self::$instance->controllerMethod,
+            'target' => self::$instance->target,
             'public' => true,
         ];
+    }
+
+    /**
+     * Build the target for the route
+     * 
+     * @method buildTarget
+     * @param string|array $target
+     * @return array
+     */
+    private static function buildTarget($target)
+    {
+        if ($target instanceof Closure) {
+            return $target;
+        }
+        if (gettype($target) === 'string') {
+            if (!isset(self::$instance->namespace)) {
+                throw new Exception('Namespace not set');
+            }
+            $parts = explode('@', $target);
+            $controller = self::$instance->namespace.'\\'.$parts[0];
+            $method = $parts[1];
+            return [$controller, $method];
+        }
+        if (gettype($target) === 'array') {
+            return $target;
+        }
     }
 
     /**

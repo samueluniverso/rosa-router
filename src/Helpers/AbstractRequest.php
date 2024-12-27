@@ -11,6 +11,7 @@ use Rockberpro\RestRouter\Utils\Sop;
 use Rockberpro\RestRouter\Response;
 use Rockberpro\RestRouter\Database\Models\SysApiKeys;
 use Rockberpro\RestRouter\Helpers\Interfaces\AbstractRequestInterface;
+use Closure;
 use Exception;
 
 /**
@@ -68,12 +69,23 @@ abstract class AbstractRequest implements AbstractRequestInterface
         if (array_key_exists(array_key_first($action->getRoute()), $routes[$method])) {
             $call = $routes[$method][array_key_first($action->getRoute())];
 
-            if (gettype($call['method']) === 'object') { /// clojure
-                $action->setClojure($call['method']);
+            if ($call['target'] instanceof Closure) {
+                $action->setClojure($call['target']);
+            }
+            else if (gettype($call['target']) === 'array') {
+                $class = $call['target'][0];
+                $method = $call['target'][1];
+                if (!class_exists($class)) {
+                    throw new Exception("Class not found: {$class}");
+                }
+                if (!method_exists($class, $method)) {
+                    throw new Exception("Method not found: {$method}");
+                }
+                $action->setClass($class);
+                $action->setMethod($method);
             }
             else {
-                $action->setClass($call['method'][0]);
-                $action->setMethod($call['method'][1]);
+                throw new Exception('Invalid target');
             }
         }
         else {
