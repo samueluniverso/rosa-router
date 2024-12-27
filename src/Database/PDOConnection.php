@@ -257,53 +257,18 @@ class PDOConnection
     }
 
     /**
-     * @since 1.0
-     * 
-     * @method insert
-     * @return boolean
-     */
-    public function insert()
-    {
-        return $this->execute();
-    }
-
-    /**
-     * @since 1.0
-     * 
-     * @method update
-     * @return boolean
-     */
-    public function update()
-    {
-        return $this->execute();
-    }
-
-    /**
-     * @since 1.0
-     * 
-     * @method delete
-     * @return boolean
-     */
-    public function delete()
-    {
-        return $this->execute();
-    }
-
-    /**
      * Executes statement
-     * * [INSERT, UPDATE, DELETE]
      *
      * @since 1.0
      * 
      * @method insert
      * @return boolean
      */
-    private function execute()
+    public function execute()
     {
         if($this->getStandardStatement())
         {
-            return $this->getPdo()->prepare($this->getStandardStatement())
-                                  ->execute();
+            return $this->getPdo()->exec($this->getStandardStatement());
         }
 
         if($this->getPreparedStatement())
