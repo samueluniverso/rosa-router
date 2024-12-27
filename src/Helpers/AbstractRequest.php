@@ -68,12 +68,12 @@ abstract class AbstractRequest implements AbstractRequestInterface
         if (array_key_exists(array_key_first($action->getRoute()), $routes[$method])) {
             $call = $routes[$method][array_key_first($action->getRoute())];
 
-            if (gettype($call['method']) === 'object') { /// clojure
-                $action->setClojure($call['method']);
+            if (gettype($call['target']) === 'object') { /// clojure
+                $action->setClojure($call['target']);
             }
             else {
-                $action->setClass($call['method'][0]);
-                $action->setMethod($call['method'][1]);
+                $action->setClass($call['target'][0]);
+                $action->setMethod($call['target'][1]);
             }
         }
         else {

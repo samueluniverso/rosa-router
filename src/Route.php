@@ -172,7 +172,7 @@ class Route implements RouteInterface
         $routes[self::$instance->method][] = [
             'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
-            'method' => self::$instance->target,
+            'target' => self::$instance->target,
             'public' => false,
         ];
     }
@@ -190,7 +190,7 @@ class Route implements RouteInterface
         $routes[self::$instance->method][] = [
             'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
-            'method' => self::$instance->target,
+            'target' => self::$instance->target,
             'public' => true,
         ];
     }
