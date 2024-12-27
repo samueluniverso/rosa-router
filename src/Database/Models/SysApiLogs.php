@@ -96,7 +96,7 @@ class SysApiLogs
         $pdo->bindParameter(':class', $class, PDO::PARAM_STR);
         $pdo->bindParameter(':method', $method, PDO::PARAM_STR);
         $pdo->bindParameter(':access_at', $access_at, PDO::PARAM_STR);
-        $pdo->insert();
+        $pdo->execute();
         $pdo->commitTransaction();
     }
 
