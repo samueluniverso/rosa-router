@@ -119,7 +119,7 @@ class SysApiTokens
         ");
         $pdo->bindParameter(':token', $token, PDO::PARAM_STR);
         $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-        $pdo->update();
+        $pdo->execute();
         $pdo->commitTransaction();
     }
 
