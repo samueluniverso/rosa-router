@@ -67,7 +67,7 @@ class Route implements RouteInterface
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'POST';
-        self::$instance->target = $target;
+        self::$instance->target = self::buildTarget($target);
 
         return self::$instance;
     }
@@ -90,7 +90,7 @@ class Route implements RouteInterface
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PUT';
-        self::$instance->target = $target;
+        self::$instance->target = self::buildTarget($target);
 
         return self::$instance;
     }
@@ -113,7 +113,7 @@ class Route implements RouteInterface
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'PATCH';
-        self::$instance->target = $target;
+        self::$instance->target = self::buildTarget($target);
 
         return self::$instance;
     }
@@ -138,7 +138,7 @@ class Route implements RouteInterface
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'DELETE';
-        self::$instance->target = $target;
+        self::$instance->target = self::buildTarget($target);
 
         return self::$instance;
     }
@@ -239,6 +239,9 @@ class Route implements RouteInterface
         if ($target instanceof Closure) {
             return $target;
         }
+        if (gettype($target) === 'array') {
+            return $target;
+        }
         if (gettype($target) === 'string') {
             if (!isset(self::$instance->namespace)) {
                 throw new Exception('Namespace not set');
@@ -248,9 +251,8 @@ class Route implements RouteInterface
             $method = $parts[1];
             return [$controller, $method];
         }
-        if (gettype($target) === 'array') {
-            return $target;
-        }
+
+        throw new Exception('Error trying to determinte the route target');
     }
 
     /**

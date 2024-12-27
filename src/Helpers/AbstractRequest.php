@@ -85,7 +85,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
                 $action->setMethod($method);
             }
             else {
-                throw new Exception('Invalid target');
+                throw new Exception('Invalid route target');
             }
         }
         else {
