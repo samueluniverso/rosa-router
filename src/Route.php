@@ -223,7 +223,7 @@ class Route implements RouteInterface
             'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
             'target' => self::$instance->target,
-            'public' => true,
+            'public' => false,
         ];
         if (isset(self::$instance->middleware)) {
             $route['middleware'] = self::$instance->middleware;

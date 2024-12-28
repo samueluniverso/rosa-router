@@ -55,6 +55,11 @@ abstract class AbstractRequest implements AbstractRequestInterface
             $this->middleware($middleware, $request);
         }
 
+        /** handle security */
+        if ($request->getAction()->getPrivate()) {
+            $this->secure();
+        }
+
         return $request;
     }
 
@@ -81,6 +86,11 @@ abstract class AbstractRequest implements AbstractRequestInterface
         /** handle middleware */
         if ($middleware = $request->getAction()->getMiddleware()) {
             $this->middleware($middleware, $request);
+        }
+
+        /** handle security */
+        if ($request->getAction()->getPrivate()) {
+            $this->secure();
         }
 
         return $request;
@@ -113,7 +123,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
         /** authentication */
         if($match['public'] === false) {
-            $this->secure();
+            $action->setPrivate(true);
         }
 
         return $action;
