@@ -12,11 +12,19 @@ use Rockberpro\RestRouter\Helpers\Interfaces\RequestActionInterface;
  */
 class RequestAction implements RequestActionInterface
 {
+    private $middleware;
     private $method;
     private $clojure;
     private $route;
     private $class;
     private $uri;
+
+    public function getMiddleware() {
+        return $this->middleware;
+    }
+    public function setMiddleware($middleware) {
+        $this->middleware = $middleware;
+    }
 
     public function getMethod() {
         return $this->method;
