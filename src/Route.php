@@ -20,6 +20,7 @@ class Route implements RouteInterface
 
     private static self $instance;
 
+    private ?string $middleware;
     private ?string $namespace;
     private string $prefix;
     private string $route;
@@ -175,6 +176,23 @@ class Route implements RouteInterface
     }
 
     /**
+     * Adds middleware to the route
+     * 
+     * @method middleware
+     * @param string $middleware classname
+     * @return self
+     */
+    public static function middleware($middleware)
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
+        self::$instance->middleware = $middleware;
+
+        return self::$instance;
+    }
+
+    /**
      * Group routes under the same prefix
      * 
      * @method group
@@ -188,6 +206,7 @@ class Route implements RouteInterface
         /** removing prefix from group */
         array_pop(self::$groupPrefix);
         self::namespace(null);
+        self::middleware(null);
     }
 
 
@@ -200,13 +219,18 @@ class Route implements RouteInterface
      */
     public function private()
     {
-        global $routes;
-        $routes[self::$instance->method][] = [
+        $route = [
             'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
             'target' => self::$instance->target,
-            'public' => false,
+            'public' => true,
         ];
+        if (isset(self::$instance->middleware)) {
+            $route['middleware'] = self::$instance->middleware;
+        }
+
+        global $routes;
+        $routes[self::$instance->method][] = $route;
     }
 
     /**
@@ -218,13 +242,18 @@ class Route implements RouteInterface
      */
     public function public()
     {
-        global $routes;
-        $routes[self::$instance->method][] = [
+        $route = [
             'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
             'target' => self::$instance->target,
             'public' => true,
         ];
+        if (isset(self::$instance->middleware)) {
+            $route['middleware'] = self::$instance->middleware;
+        }
+
+        global $routes;
+        $routes[self::$instance->method][] = $route;
     }
 
     /**

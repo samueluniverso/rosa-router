@@ -43,8 +43,22 @@ abstract class AbstractRequest implements AbstractRequestInterface
         }
         $action->setRoute($match);
 
-        /** handling authentication */
         $match = $routes[$method][array_key_first($action->getRoute())];
+
+        /** middleware */
+        if (isset($match['middleware'])) {
+            $middleware = $match['middleware'];
+            if (!class_exists($middleware)) {
+                throw new Exception("Middleware not found: {$middleware}");
+            }
+            if (!method_exists($middleware, 'handle')) {
+                throw new Exception("Method 'handle' nod implemented for middleware: {$middleware}");
+            }
+            $middleware = new $middleware();
+            $middleware->handle();
+        }
+
+        /** authentication */
         if($match['public'] === false) {
             Sop::check();
 
