@@ -45,52 +45,14 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $route_parts = explode('/', $_route);
 
         /** handle path params */
-        foreach($route_parts as $key => $value)
-        {
-            $attribute = substr($value, 1, -1);
-            if (isset($uri_parts[$key])) {
-                if ($value === $uri_parts[$key]) {
-                    continue;
-                }
-                if (stripos($value, '{') === false || stripos($value, '}') === false) {
-                    if ($value !== $uri_parts[$key]) {
-                        throw new Exception('Route does not match');
-                    }
-                }
-                if (!RouteHelper::isAlphaNumeric($uri_parts[$key])) {
-                    throw new Exception('Route contains invalid characters');
-                }
-                $request->$attribute = $uri_parts[$key];
-            }
-        }
+        $request = $this->pathParams($request, $route_parts, $uri_parts);
 
         /** handle query params */
-        if (stripos(Server::query(), 'path=') !== false) {
-            $parts = [];
-            $query = Server::query();
-            parse_str($query, $parts);
-            if (!empty($parts)) {
-                foreach($parts as $key => $value) {
-                    if ($key !== 'path') {
-                        $request->$key = $value;
-                    }
-                }
-            }
-        }
-        else if (stripos(Server::uri(), '?') !== false) {
-            $parts = [];
-            $query = Server::query();
-            parse_str($query, $parts);
-            if (!empty($query)) {
-                foreach($parts as $key => $value) {
-                    $request->$key = $value;
-                }
-            }
-        }
+        $request = $this->queryParams($request);
 
         /** handle middleware */
         if ($middleware = $request->getAction()->getMiddleware()) {
-            $this->middleware($middleware);
+            $this->middleware($middleware, $request);
         }
 
         return $request;
@@ -111,8 +73,14 @@ abstract class AbstractRequest implements AbstractRequestInterface
         $request = new Request();
         $request->setAction($this->handle($routes, $method, $uri));
 
+        /** handle form params */
         foreach((array) $form as $key => $value) {
             $request->$key = $value;
+        }
+
+        /** handle middleware */
+        if ($middleware = $request->getAction()->getMiddleware()) {
+            $this->middleware($middleware, $request);
         }
 
         return $request;
@@ -149,6 +117,74 @@ abstract class AbstractRequest implements AbstractRequestInterface
         }
 
         return $action;
+    }
+
+    /**
+     * Handle the path params
+     * 
+     * @method pathParams
+     * @param Request $request
+     * @param array $route_parts
+     * @param array $uri_parts
+     * @return Request
+     */
+    private function pathParams(Request &$request, $route_parts, $uri_parts)
+    {
+        foreach($route_parts as $key => $value)
+        {
+            $attribute = substr($value, 1, -1);
+            if (isset($uri_parts[$key])) {
+                if ($value === $uri_parts[$key]) {
+                    continue;
+                }
+                if (stripos($value, '{') === false || stripos($value, '}') === false) {
+                    if ($value !== $uri_parts[$key]) {
+                        throw new Exception('Route does not match');
+                    }
+                }
+                if (!RouteHelper::isAlphaNumeric($uri_parts[$key])) {
+                    throw new Exception('Route contains invalid characters');
+                }
+                $request->$attribute = $uri_parts[$key];
+            }
+        }
+
+        return $request;
+    }
+
+    /**
+     * Handle the query params
+     * 
+     * @method queryParams
+     * @param Request $request
+     * @return Request
+     */
+    private function queryParams(Request &$request)
+    {
+        if (stripos(Server::query(), 'path=') !== false) {
+            $parts = [];
+            $query = Server::query();
+            parse_str($query, $parts);
+            if (!empty($parts)) {
+                foreach($parts as $key => $value) {
+                    if ($key !== 'path') {
+                        $request->$key = $value;
+                    }
+                }
+            }
+        }
+        else if (stripos(Server::uri(), '?') !== false) {
+            $parts = [];
+            $query = Server::query();
+            parse_str($query, $parts);
+            if (!empty($query)) {
+                foreach($parts as $key => $value) {
+                    $request->$key = $value;
+                }
+            }
+        }
+
+        return $request;
     }
 
     /**
@@ -229,9 +265,10 @@ abstract class AbstractRequest implements AbstractRequestInterface
      * 
      * @method middleware
      * @param string $middleware
+     * @param Request $request
      * @return void
      */
-    private function middleware($middleware)
+    private function middleware($middleware, Request $request)
     {
         if (!class_exists($middleware)) {
             throw new Exception("Middleware not found: {$middleware}");
@@ -240,7 +277,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
             throw new Exception("Method 'handle' nod implemented for middleware: {$middleware}");
         }
         $middleware = new $middleware();
-        $middleware->handle();
+        $middleware->handle($request);
     }
 
     /**
