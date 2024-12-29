@@ -12,8 +12,8 @@ use Rockberpro\RestRouter\Helpers\PutRequest;
 use Rockberpro\RestRouter\Helpers\RequestAction;
 use Rockberpro\RestRouter\Utils\UrlParser;
 use Rockberpro\RestRouter\Utils\Json;
-use Exception;
 use Rockberpro\RestRouter\Utils\DotEnv;
+use Exception;
 
 /**
  * @author Samuel Oberger Rockenbach
@@ -73,8 +73,7 @@ class Request implements RequestInterface
         $segments = explode('/', $path ?? '');
         array_shift($segments);
         if ($segments[0] !== 'api') {
-            http_response_code(404);
-            throw new Exception('Not found');
+            Response::json(['message' => 'Not found'], Response::NOT_FOUND);
         }
 
         $request = null;
