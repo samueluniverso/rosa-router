@@ -120,7 +120,9 @@ Route::prefix('v2')
     }
 );
 ```
+
 ### Middleware
+
 ```php
 Route::get('/hello', 'HelloWorldController@hello')
     ->middleware(ExampleMiddleware::class)
