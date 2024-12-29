@@ -130,7 +130,7 @@ Route::get('/hello', 'HelloWorldController@hello')
 
 Route::prefix('v1')
     ->middleware(ExampleMiddleware::class)
-    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
         Route::get('/hello', 'HelloWorldController@hello')
             ->private();
