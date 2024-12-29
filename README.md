@@ -107,7 +107,7 @@ Route::prefix('multilevel')->group(function() {
 Route::prefix('v1')
     ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
-        Route::get('/hello1', 'HelloWorldController@hello1')
+        Route::get('/example1', 'V1ExampleController@example')
             ->private();
     }
 );
@@ -115,7 +115,7 @@ Route::prefix('v1')
 Route::prefix('v2')
     ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
-        Route::get('/hello2', 'HelloWorldController@hello2')
+        Route::get('/example2', 'V2ExampleController@example')
             ->private();
     }
 );
@@ -124,9 +124,10 @@ Route::prefix('v2')
 ### Middleware
 
 ```php
-Route::get('/hello', 'HelloWorldController@hello')
-    ->middleware(ExampleMiddleware::class)
-    ->private();
+Route::get('/hello', [
+    HelloWorldController::class, 'hello'
+])->middleware(ExampleMiddleware::class)
+->private();
 
 Route::prefix('v1')
     ->middleware(ExampleMiddleware::class)
