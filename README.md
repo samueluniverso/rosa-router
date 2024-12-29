@@ -120,3 +120,18 @@ Route::prefix('v2')
     }
 );
 ```
+### Middleware
+```php
+Route::get('/hello', 'HelloWorldController@hello')
+    ->middleware(ExampleMiddleware::class)
+    ->private();
+
+Route::prefix('v1')
+    ->middleware(ExampleMiddleware::class)
+    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->group(function() {
+        Route::get('/hello', 'HelloWorldController@hello')
+            ->private();
+    }
+);
+```
