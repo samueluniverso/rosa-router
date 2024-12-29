@@ -23,6 +23,80 @@ use Exception;
 abstract class AbstractRequest implements AbstractRequestInterface
 {
     /**
+     * Build the request from the URL
+     * 
+     * @method buildUriRequest
+     * @param array $routes
+     * @param string $method
+     * @param string $uri
+     * @return Request
+     */
+    public function buildUriRequest($routes, $method, $uri) : Request
+    {
+        $request = new Request();
+        $request->setAction($this->handle($routes, $method, $uri));
+
+        $prefix = RouteHelper::routeMatchArgs(end($request->getAction()->getRoute()))[0];
+
+        $_uri = str_replace($prefix, '', $request->getAction()->getUri());
+        $_route = str_replace($prefix, '', end($request->getAction()->getRoute()));
+
+        $uri_parts = explode('/', $_uri);
+        $route_parts = explode('/', $_route);
+
+        /** handle path params */
+        $request = $this->pathParams($request, $route_parts, $uri_parts);
+
+        /** handle query params */
+        $request = $this->queryParams($request);
+
+        /** handle middleware */
+        if ($middleware = $request->getAction()->getMiddleware()) {
+            $this->middleware($middleware, $request);
+        }
+
+        /** handle security */
+        if ($request->getAction()->getPrivate()) {
+            $this->secure();
+        }
+
+        return $request;
+    }
+
+    /**
+     * Build the request from form data
+     * 
+     * @method buildRequest
+     * @param array $routes
+     * @param string $method
+     * @param string $uri
+     * @param array $form
+     * @return Request
+     */
+    public function buildFormRequest($routes, $method, $uri, $form) : Request
+    {
+        $request = new Request();
+        $request->setAction($this->handle($routes, $method, $uri));
+
+        /** handle form params */
+        foreach((array) $form as $key => $value) {
+            $request->$key = $value;
+        }
+
+        /** handle middleware */
+        if ($middleware = $request->getAction()->getMiddleware()) {
+            $this->middleware($middleware, $request);
+        }
+
+        /** handle security */
+        if ($request->getAction()->getPrivate()) {
+            $this->secure();
+        }
+
+        return $request;
+    }
+
+    /**
      * Handle the Request
      * 
      * @method handle
@@ -33,38 +107,111 @@ abstract class AbstractRequest implements AbstractRequestInterface
      */
     public function handle($routes, $method, $uri)
     {
-        $action = new RequestAction();
-        $action->setUri($uri);
-
         $routes_map = $this->map($routes, $method, $uri);
-        $match = $this->match($routes_map, $action->getUri());
+        $match = $this->match($routes_map, $uri);
         if (empty($match)) {
             throw new Exception('No matching route');
         }
-        $action->setRoute($match);
 
-        /** handling authentication */
+        $action = $this->buildAction($routes, $method, $uri, $match);
         $match = $routes[$method][array_key_first($action->getRoute())];
-        if($match['public'] === false) {
-            Sop::check();
 
-            if (DotEnv::get('API_AUTH_METHOD') === 'JWT') {
-                Jwt::validate(Server::authorization(), 'access');
-            }
-
-            if (DotEnv::get('API_AUTH_METHOD') === 'KEY') {
-                $sysApiKey = new SysApiKeys();
-                $hash = hash('sha256', Server::key());
-                if (!$sysApiKey->exists($hash)) {
-                    Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
-                }
-                if ($sysApiKey->isRevoked($hash)) {
-                    Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
-                }
-            }
-
-            Cors::allowOrigin();
+        /** middleware */
+        if (isset($match['middleware'])) {
+            $action->setMiddleware($match['middleware']);
         }
+
+        /** authentication */
+        if($match['public'] === false) {
+            $action->setPrivate(true);
+        }
+
+        return $action;
+    }
+
+    /**
+     * Handle the path params
+     * 
+     * @method pathParams
+     * @param Request $request
+     * @param array $route_parts
+     * @param array $uri_parts
+     * @return Request
+     */
+    private function pathParams(Request &$request, $route_parts, $uri_parts)
+    {
+        foreach($route_parts as $key => $value)
+        {
+            $attribute = substr($value, 1, -1);
+            if (isset($uri_parts[$key])) {
+                if ($value === $uri_parts[$key]) {
+                    continue;
+                }
+                if (stripos($value, '{') === false || stripos($value, '}') === false) {
+                    if ($value !== $uri_parts[$key]) {
+                        throw new Exception('Route does not match');
+                    }
+                }
+                if (!RouteHelper::isAlphaNumeric($uri_parts[$key])) {
+                    throw new Exception('Route contains invalid characters');
+                }
+                $request->$attribute = $uri_parts[$key];
+            }
+        }
+
+        return $request;
+    }
+
+    /**
+     * Handle the query params
+     * 
+     * @method queryParams
+     * @param Request $request
+     * @return Request
+     */
+    private function queryParams(Request &$request)
+    {
+        if (stripos(Server::query(), 'path=') !== false) {
+            $parts = [];
+            $query = Server::query();
+            parse_str($query, $parts);
+            if (!empty($parts)) {
+                foreach($parts as $key => $value) {
+                    if ($key !== 'path') {
+                        $request->$key = $value;
+                    }
+                }
+            }
+        }
+        else if (stripos(Server::uri(), '?') !== false) {
+            $parts = [];
+            $query = Server::query();
+            parse_str($query, $parts);
+            if (!empty($query)) {
+                foreach($parts as $key => $value) {
+                    $request->$key = $value;
+                }
+            }
+        }
+
+        return $request;
+    }
+
+    /**
+     * Build the action
+     * 
+     * @method buildAction
+     * @param array $routes
+     * @param string $method
+     * @param string $uri
+     * @param array $match
+     * @return RequestAction
+     */
+    private function buildAction($routes, $method, $uri, $match)
+    {
+        $action = new RequestAction();
+        $action->setUri($uri);
+        $action->setRoute($match);
 
         if (array_key_exists(array_key_first($action->getRoute()), $routes[$method])) {
             $call = $routes[$method][array_key_first($action->getRoute())];
@@ -96,98 +243,51 @@ abstract class AbstractRequest implements AbstractRequestInterface
     }
 
     /**
-     * Build the request from the URL
+     * Secure the route
      * 
-     * @method buildUriRequest
-     * @param array $routes
-     * @param string $method
-     * @param string $uri
-     * @return Request
+     * @method secure
+     * @return void
      */
-    public function buildUriRequest($routes, $method, $uri) : Request
+    private function secure()
     {
-        $request = new Request();
-        $request->setAction($this->handle($routes, $method, $uri));
+        Sop::check();
 
-        $prefix = RouteHelper::routeMatchArgs(end($request->getAction()->getRoute()))[0];
+        if (DotEnv::get('API_AUTH_METHOD') === 'JWT') {
+            Jwt::validate(Server::authorization(), 'access');
+        }
 
-        $_uri = str_replace($prefix, '', $request->getAction()->getUri());
-        $_route = str_replace($prefix, '', end($request->getAction()->getRoute()));
-
-        $uri_parts = explode('/', $_uri);
-        $route_parts = explode('/', $_route);
-
-        /** handle path params */
-        foreach($route_parts as $key => $value)
-        {
-            $attribute = substr($value, 1, -1);
-
-            if (isset($uri_parts[$key])) {
-                if ($value === $uri_parts[$key]) {
-                    continue;
-                }
-
-                if (stripos($value, '{') === false || stripos($value, '}') === false) {
-                    if ($value !== $uri_parts[$key]) {
-                        throw new Exception('Route does not match');
-                    }
-                }
-
-                if (!RouteHelper::isAlphaNumeric($uri_parts[$key])) {
-                    throw new Exception('Route contains invalid characters');
-                }
-
-                $request->$attribute = $uri_parts[$key];
+        if (DotEnv::get('API_AUTH_METHOD') === 'KEY') {
+            $sysApiKey = new SysApiKeys();
+            $hash = hash('sha256', Server::key());
+            if (!$sysApiKey->exists($hash)) {
+                Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
+            }
+            if ($sysApiKey->isRevoked($hash)) {
+                Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
             }
         }
 
-        /** handle query params */
-        if (stripos(Server::query(), 'path=') !== false) {
-            $parts = [];
-            $query = Server::query();
-            parse_str($query, $parts);
-            if (!empty($parts)) {
-                foreach($parts as $key => $value) {
-                    if ($key !== 'path') {
-                        $request->$key = $value;
-                    }
-                }
-            }
-        }
-        else if (stripos(Server::uri(), '?') !== false) {
-            $parts = [];
-            $query = Server::query();
-            parse_str($query, $parts);
-            if (!empty($query)) {
-                foreach($parts as $key => $value) {
-                    $request->$key = $value;
-                }
-            }
-        }
-
-        return $request;
+        Cors::allowOrigin();
     }
 
     /**
-     * Build the request from form data
+     * Middleware
      * 
-     * @method buildRequest
-     * @param array $routes
-     * @param string $method
-     * @param string $uri
-     * @param array $form
-     * @return Request
+     * @method middleware
+     * @param string $middleware
+     * @param Request $request
+     * @return void
      */
-    public function buildFormRequest($routes, $method, $uri, $form) : Request
+    private function middleware($middleware, Request $request)
     {
-        $request = new Request();
-        $request->setAction($this->handle($routes, $method, $uri));
-
-        foreach((array) $form as $key => $value) {
-            $request->$key = $value;
+        if (!class_exists($middleware)) {
+            throw new Exception("Middleware not found: {$middleware}");
         }
-
-        return $request;
+        if (!method_exists($middleware, 'handle')) {
+            throw new Exception("Method 'handle' nod implemented for middleware: {$middleware}");
+        }
+        $middleware = new $middleware();
+        $middleware->handle($request);
     }
 
     /**

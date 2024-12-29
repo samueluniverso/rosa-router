@@ -1,7 +1,7 @@
 # ROSA-Router: A REST API Engine Built in PHP
 
 ## Introduction
-**ROSA-Router** is a lightweight and efficient REST API engine built using PHP. It is designed to handle HTTP requests and route them to the appropriate controllers or functions based on the defined API endpoints. With a focus on simplicity and performance, Rosa-Router enables developers to quickly create and deploy RESTful web services.
+**ROSA-Router** is a lightweight and efficient REST API engine built using PHP. It is designed to handle HTTP requests and route them to the appropriate controllers or functions based on the defined API endpoints. With a focus on simplicity and performance, ROSA-Router enables developers to quickly create and deploy RESTful web services.
 
 ---
 
@@ -16,7 +16,7 @@
 
 ## How It Works
 
-Rosa-Router listens for HTTP requests and maps them to the correct route handler based on the request's method and URI. It supports both static and dynamic routes and is fully customizable to fit different project needs.
+ROSA-Router listens for HTTP requests and maps them to the correct route handler based on the request's method and URI. It supports both static and dynamic routes and is fully customizable to fit different project needs.
 
 ### Simple Routes
 
@@ -105,7 +105,7 @@ Route::prefix('multilevel')->group(function() {
 
 ```php
 Route::prefix('v1')
-    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
         Route::get('/hello1', 'HelloWorldController@hello1')
             ->private();
@@ -113,9 +113,26 @@ Route::prefix('v1')
 );
 
 Route::prefix('v2')
-    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
         Route::get('/hello2', 'HelloWorldController@hello2')
+            ->private();
+    }
+);
+```
+
+### Middleware
+
+```php
+Route::get('/hello', 'HelloWorldController@hello')
+    ->middleware(ExampleMiddleware::class)
+    ->private();
+
+Route::prefix('v1')
+    ->middleware(ExampleMiddleware::class)
+    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->group(function() {
+        Route::get('/hello', 'HelloWorldController@hello')
             ->private();
     }
 );
