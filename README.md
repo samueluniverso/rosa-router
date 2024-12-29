@@ -105,7 +105,7 @@ Route::prefix('multilevel')->group(function() {
 
 ```php
 Route::prefix('v1')
-    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
         Route::get('/hello1', 'HelloWorldController@hello1')
             ->private();
@@ -113,7 +113,7 @@ Route::prefix('v1')
 );
 
 Route::prefix('v2')
-    ->namespace('Rockberpro\RestRouter\Controllers')
+    ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
         Route::get('/hello2', 'HelloWorldController@hello2')
             ->private();
