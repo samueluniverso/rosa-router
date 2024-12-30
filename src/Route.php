@@ -22,6 +22,7 @@ class Route implements RouteInterface
 
     private ?string $middleware;
     private ?string $namespace;
+    private ?string $controller;
     private string $prefix;
     private string $route;
     private string $method;
@@ -176,6 +177,23 @@ class Route implements RouteInterface
     }
 
     /**
+     * Adds controller to the route
+     * 
+     * @method controller
+     * @param string $controller classname
+     * @return self
+     */
+    public static function controller($controller)
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
+        self::$instance->controller = $controller;
+
+        return self::$instance;
+    }
+
+    /**
      * Adds middleware to the route
      * 
      * @method middleware
@@ -272,12 +290,19 @@ class Route implements RouteInterface
             return $target;
         }
         if (gettype($target) === 'string') {
-            if (!isset(self::$instance->namespace)) {
-                throw new Exception('Namespace not set');
+            if (isset(self::$instance->controller)) {
+                $controller = self::$instance->controller;
+                $method = $target;
             }
-            $parts = explode('@', $target);
-            $controller = self::$instance->namespace.'\\'.$parts[0];
-            $method = $parts[1];
+            else if (isset(self::$instance->namespace)) {
+                $parts = explode('@', $target);
+                $controller = self::$instance->namespace.'\\'.$parts[0];
+                $method = $parts[1];
+            }
+            else {
+                throw new Exception('Error trying to determine the route target');
+            }
+
             return [$controller, $method];
         }
 

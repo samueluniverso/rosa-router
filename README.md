@@ -138,3 +138,11 @@ Route::prefix('v1')
     }
 );
 ```
+
+### Controllers
+
+```php
+Route::controller(HelloWorldController::class)->group(function() {
+    Route::get('/hello', 'hello')->public();
+});
+```
