@@ -14,7 +14,7 @@ class RequestAction implements RequestActionInterface
 {
     private $middleware;
     private $method;
-    private $clojure;
+    private $closure;
     private $route;
     private $private;
     private $class;
@@ -34,11 +34,11 @@ class RequestAction implements RequestActionInterface
         $this->method = $method;
     }
 
-    public function getClojure() {
-        return $this->clojure;
+    public function getClosure() {
+        return $this->closure;
     }
-    public function setClojure($clojure) {
-        $this->clojure = $clojure;
+    public function setClosure($closure) {
+        $this->closure = $closure;
     }
 
     public function getRoute() {

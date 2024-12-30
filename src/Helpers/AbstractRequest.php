@@ -217,7 +217,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
             $call = $routes[$method][array_key_first($action->getRoute())];
 
             if ($call['target'] instanceof Closure) {
-                $action->setClojure($call['target']);
+                $action->setClosure($call['target']);
             }
             else if (gettype($call['target']) === 'array') {
                 $class = $call['target'][0];

@@ -98,9 +98,9 @@ class Request implements RequestInterface
         if (is_null($request))
             throw new Exception('It was not possible to match your request');
 
-        $clojure = $request->getAction()->getClojure();
-        if ($clojure) {
-            $clojure($request);
+        $closure = $request->getAction()->getClosure();
+        if ($closure) {
+            $closure($request);
             return;
         }
 

@@ -197,11 +197,11 @@ class Route implements RouteInterface
      * 
      * @method group
      * @param string $prefix
-     * @param function $clojure()
+     * @param function $closure()
      */
-    public function group($clojure)
+    public function group($closure)
     {
-        $clojure();
+        $closure();
 
         /** removing prefix from group */
         array_pop(self::$groupPrefix);
