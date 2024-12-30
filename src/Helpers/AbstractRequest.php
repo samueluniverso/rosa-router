@@ -56,7 +56,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
         }
 
         /** handle security */
-        if ($request->getAction()->getPrivate()) {
+        if ($request->getAction()->isPrivate()) {
             $this->secure();
         }
 
@@ -89,7 +89,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
         }
 
         /** handle security */
-        if ($request->getAction()->getPrivate()) {
+        if ($request->getAction()->isPrivate()) {
             $this->secure();
         }
 
