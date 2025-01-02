@@ -1,6 +1,7 @@
 <?php
 
 use Rockberpro\RestRouter\Database\Models\SysApiKeys;
+use Rockberpro\RestRouter\Database\Models\SysApiUsers;
 use Rockberpro\RestRouter\Utils\DotEnv;
 use Rockberpro\RestRouter\Utils\Uuid;
 
@@ -15,3 +16,10 @@ print('X-Api-Key: ' . $key . PHP_EOL);
 
 $sysApiKey = new SysApiKeys();
 $sysApiKey->add($key, 'postman');
+
+print(PHP_EOL);
+
+$sysApiUser = new SysApiUsers();
+$sysApiUser->add('api', 'api', 'undefined');
+print('Username: api' . PHP_EOL);
+print('Password: api' . PHP_EOL);
