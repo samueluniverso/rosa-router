@@ -28,14 +28,15 @@ CREATE TABLE sys_api_keys(
 CREATE INDEX idx_sys_api_keys_audience ON sys_api_keys(audience);
 CREATE INDEX idx_sys_api_keys_key ON sys_api_keys(key);
 
-DROP IF EXISTS TABLE sys_api_tokens;
+DROP TABLE IF EXISTS sys_api_tokens;
 CREATE TABLE sys_api_tokens(
-	id SERIAL NOT NULL PRIMARY KEY,
-	audience TEXT NOT NULL,
-	type TEXT NOT NULL,
-	token TEXT NOT NULL,
-	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	revoked_at TIMESTAMP
+    id SERIAL NOT NULL PRIMARY KEY,
+    audience TEXT NOT NULL,
+    type TEXT NOT NULL,
+    token TEXT NOT NULL,
+    hash_alg TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    revoked_at TIMESTAMP
 );
 CREATE INDEX sys_api_tokens_audience ON sys_api_tokens(audience);
 CREATE INDEX sys_api_tokens_key ON sys_api_tokens(token);
