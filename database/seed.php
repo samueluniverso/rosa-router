@@ -15,7 +15,7 @@ $key = $uuid->uidv4Base64();
 print('X-Api-Key: ' . $key . PHP_EOL);
 
 $sysApiKey = new SysApiKeys();
-$sysApiKey->add($key, 'postman');
+$sysApiKey->add($key, 'generic');
 
 print(PHP_EOL);
 
