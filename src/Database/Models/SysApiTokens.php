@@ -73,9 +73,10 @@ class SysApiTokens
         $pdo = self::getConnection();
 
         $sysApiToken = new stdClass();
-        $sysApiToken->token = $token;
-        $sysApiToken->type = 'Bearer';
         $sysApiToken->audience = $audience;
+        $sysApiToken->type = 'Bearer';
+        $sysApiToken->token = hash('sha256', $token);
+        $sysApiToken->hash_alg = 'sha256';
         $sysApiToken->created_at = date('Y-m-d H:i:s');
 
         $pdo->beginTransaction();
@@ -87,47 +88,26 @@ class SysApiTokens
      * Check if the token exists
      * 
      * @method exists
-     * @param string $tokens
+     * @param string $token
      * @return bool
      */
-    public function exists($tokens)
+    public function exists($token)
     {
         $pdo = self::getConnection();
 
         $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_tokens WHERE token = :token
         ");
-        $pdo->bindParameter(':token', $tokens, PDO::PARAM_STR);
+        $pdo->bindParameter(':token', hash('sha256', $token), PDO::PARAM_STR);
 
         return (bool) $pdo->rowCount();
-    }
-
-    /**
-     * Revoke the key
-     * 
-     * @method revoke
-     * @param string $token
-     * @return void
-     */
-    public function revoke($token)
-    {
-        $pdo = self::getConnection();
-        
-        $pdo->beginTransaction();
-        $pdo->createPreparedStatement("
-            UPDATE sys_api_tokens SET revoked_at = :revoked_at WHERE token = :token
-        ");
-        $pdo->bindParameter(':token', $token, PDO::PARAM_STR);
-        $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
-        $pdo->execute();
-        $pdo->commitTransaction();
     }
 
     /**
      * Check if the token is revoked
      * 
      * @method isRevoked
-     * @param string $token
+     * @param string $token hash
      * @return bool
      */
     public function isRevoked($token)
@@ -137,13 +117,56 @@ class SysApiTokens
         $pdo->createPreparedStatement("
             SELECT 1 FROM sys_api_tokens WHERE token = :token AND revoked_at IS NULL
         ");
-        $pdo->bindParameter(':token', $token, PDO::PARAM_STR);
+        $pdo->bindParameter(':token', hash('sha256', $token), PDO::PARAM_STR);
 
         if ($pdo->fetch()) {
             return false;
         }
 
         return true;
+    }
+
+
+    /**
+     * Revoke the token
+     * 
+     * @method revokeByToken
+     * @param string hash token
+     * @return void
+     */
+    public function revokeByToken($token)
+    {
+        $pdo = self::getConnection();
+        
+        $pdo->beginTransaction();
+        $pdo->createPreparedStatement("
+            UPDATE sys_api_tokens SET revoked_at = :revoked_at WHERE token = :token
+        ");
+        $pdo->bindParameter(':token', hash('sha256', $token), PDO::PARAM_STR);
+        $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $pdo->execute();
+        $pdo->commitTransaction();
+    }
+
+    /**
+     * Revoke the token
+     * 
+     * @method revokeByHash
+     * @param string hash token
+     * @return void
+     */
+    public function revokeByHash($hash)
+    {
+        $pdo = self::getConnection();
+
+        $pdo->beginTransaction();
+        $pdo->createPreparedStatement("
+            UPDATE sys_api_tokens SET revoked_at = :revoked_at WHERE token = :token
+        ");
+        $pdo->bindParameter(':token', $hash, PDO::PARAM_STR);
+        $pdo->bindParameter(':revoked_at', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $pdo->execute();
+        $pdo->commitTransaction();
     }
 
     /**

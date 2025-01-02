@@ -41,6 +41,7 @@ $pdo->createStandardStatement(<<<SQL
         audience TEXT NOT NULL,
         type TEXT NOT NULL,
         token TEXT NOT NULL,
+        hash_alg TEXT NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         revoked_at TIMESTAMP
     );

@@ -20,6 +20,6 @@ $sysApiKey->add($key, 'postman');
 print(PHP_EOL);
 
 $sysApiUser = new SysApiUsers();
-$sysApiUser->add('api', 'api', 'undefined');
+$sysApiUser->add('api', 'api', 'generic');
 print('Username: api' . PHP_EOL);
 print('Password: api' . PHP_EOL);

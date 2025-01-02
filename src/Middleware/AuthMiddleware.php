@@ -7,6 +7,7 @@ use Rockberpro\RestRouter\Server;
 use Rockberpro\RestRouter\Utils\Cors;
 use Rockberpro\RestRouter\Utils\Sop;
 use Rockberpro\RestRouter\Utils\DotEnv;
+use Rockberpro\RestRouter\Jwt;
 use Rockberpro\RestRouter\Database\Models\SysApiKeys;
 
 /**
@@ -33,11 +34,10 @@ class AuthMiddleware
 
         if (DotEnv::get('API_AUTH_METHOD') === 'KEY') {
             $sysApiKey = new SysApiKeys();
-            $hash = hash('sha256', Server::key());
-            if (!$sysApiKey->exists($hash)) {
+            if (!$sysApiKey->exists(Server::key())) {
                 Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
             }
-            if ($sysApiKey->isRevoked($hash)) {
+            if ($sysApiKey->isRevoked(Server::key())) {
                 Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
             }
         }

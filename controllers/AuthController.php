@@ -46,7 +46,7 @@ class AuthController
         $sysApiTokens = new SysApiTokens();
         $last_token = $sysApiTokens->getLastValidToken($user->audience);
         if ($last_token) {
-            $sysApiTokens->revoke($last_token);
+            $sysApiTokens->revokeByHash($last_token);
         }
 
         $refresh_token = Jwt::getRefreshToken($user->audience);
