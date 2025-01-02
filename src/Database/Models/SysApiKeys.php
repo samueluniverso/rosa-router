@@ -113,7 +113,7 @@ class SysApiKeys
     /**
      * Revoke the key
      * 
-     * @method revokeByKey
+     * @method revokeByHash
      * @param string $key
      * @return void
      */
