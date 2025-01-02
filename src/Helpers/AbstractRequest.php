@@ -2,15 +2,10 @@
 
 namespace Rockberpro\RestRouter\Helpers;
 
-use Rockberpro\RestRouter\Jwt;
 use Rockberpro\RestRouter\Request;
 use Rockberpro\RestRouter\Server;
-use Rockberpro\RestRouter\Utils\Cors;
-use Rockberpro\RestRouter\Utils\DotEnv;
-use Rockberpro\RestRouter\Utils\Sop;
-use Rockberpro\RestRouter\Response;
-use Rockberpro\RestRouter\Database\Models\SysApiKeys;
 use Rockberpro\RestRouter\Helpers\Interfaces\AbstractRequestInterface;
+use Rockberpro\RestRouter\Middleware\AuthMiddleware;
 use Closure;
 use Exception;
 
@@ -57,7 +52,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
         /** handle security */
         if ($request->getAction()->isPrivate()) {
-            $this->secure();
+            (new AuthMiddleware())->handle();
         }
 
         return $request;
@@ -90,7 +85,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
 
         /** handle security */
         if ($request->getAction()->isPrivate()) {
-            $this->secure();
+            (new AuthMiddleware())->handle();
         }
 
         return $request;
@@ -250,24 +245,7 @@ abstract class AbstractRequest implements AbstractRequestInterface
      */
     private function secure()
     {
-        Sop::check();
 
-        if (DotEnv::get('API_AUTH_METHOD') === 'JWT') {
-            Jwt::validate(Server::authorization(), 'access');
-        }
-
-        if (DotEnv::get('API_AUTH_METHOD') === 'KEY') {
-            $sysApiKey = new SysApiKeys();
-            $hash = hash('sha256', Server::key());
-            if (!$sysApiKey->exists($hash)) {
-                Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
-            }
-            if ($sysApiKey->isRevoked($hash)) {
-                Response::json(['message' => "Access denied"], Response::UNAUTHORIZED);
-            }
-        }
-
-        Cors::allowOrigin();
     }
 
     /**
