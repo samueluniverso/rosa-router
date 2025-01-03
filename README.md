@@ -123,9 +123,10 @@ Route::prefix('v2')
 ### Middleware
 
 ```php
-Route::get('/hello', [
-    HelloWorldController::class, 'hello'
-])->middleware(AuthMiddleware::class);
+Route::middleware(AuthMiddleware::class)
+    ->get('/hello', [
+        HelloWorldController::class, 'hello'
+]);
 
 Route::prefix('v1')
     ->middleware(AuthMiddleware::class)
