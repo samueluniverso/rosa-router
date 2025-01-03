@@ -123,11 +123,6 @@ Route::prefix('v2')
 ### Middleware
 
 ```php
-Route::middleware(AuthMiddleware::class)
-    ->get('/hello', [
-        HelloWorldController::class, 'hello'
-]);
-
 Route::prefix('v1')
     ->middleware(AuthMiddleware::class)
     ->namespace('Rockberpro\\RestRouter\\Controllers')

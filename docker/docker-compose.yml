@@ -1,7 +1,7 @@
 services:
     db:
         image: postgres:17.2
-        container_name: rosa-router
+        container_name: rosa-postgres
         restart: unless-stopped
         ports:
             - "${POSTGRES_PORT}:5432"
@@ -14,7 +14,18 @@ services:
             - POSTGRES_PORT=${POSTGRES_PORT}
         networks:
             - my-network
-
+    php:
+        build:
+            context: ./php
+            dockerfile: Dockerfile
+        container_name: rosa-php
+        restart: unless-stopped
+        volumes:
+            - ${APP_PATH}:/var/www/html
+        ports:
+            - "8081:80"
+        networks:
+            - my-network
 networks:
     my-network:
         driver: bridge
