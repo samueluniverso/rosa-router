@@ -32,7 +32,7 @@ class Route implements RouteInterface
      * @method get
      * @param string $route
      * @param string $target
-     * @return Route
+     * @return void
      */
     public static function get($route, $target)
     {
@@ -48,14 +48,14 @@ class Route implements RouteInterface
         self::$instance->method = 'GET';
         self::$instance->target = self::buildTarget($target);
 
-        return self::$instance;
+        self::$instance->build();
     }
 
     /**
      * @method post
      * @param string $route
      * @param string $target
-     * @return Route
+     * @return void
      */
     public static function post($route, $target)
     {
@@ -71,14 +71,14 @@ class Route implements RouteInterface
         self::$instance->method = 'POST';
         self::$instance->target = self::buildTarget($target);
 
-        return self::$instance;
+        self::$instance->build();
     }
 
     /**
      * @method put
      * @param string $route
      * @param string $target
-     * @return Route
+     * @return void
      */
     public static function put($route, $target)
     {
@@ -94,14 +94,14 @@ class Route implements RouteInterface
         self::$instance->method = 'PUT';
         self::$instance->target = self::buildTarget($target);
 
-        return self::$instance;
+        self::$instance->build();
     }
 
     /**
      * @method patch
      * @param string $route
      * @param string $target
-     * @return Route
+     * @return void
      */
     public static function patch($route, $target)
     {
@@ -117,7 +117,7 @@ class Route implements RouteInterface
         self::$instance->method = 'PATCH';
         self::$instance->target = self::buildTarget($target);
 
-        return self::$instance;
+        self::$instance->build();
     }
 
 
@@ -125,7 +125,7 @@ class Route implements RouteInterface
      * @method delete
      * @param string $route
      * @param string $target
-     * @return Route
+     * @return void
      */
     public static function delete($route, $target)
     {
@@ -142,7 +142,7 @@ class Route implements RouteInterface
         self::$instance->method = 'DELETE';
         self::$instance->target = self::buildTarget($target);
 
-        return self::$instance;
+        self::$instance->build();
     }
 
     /**
@@ -229,42 +229,18 @@ class Route implements RouteInterface
 
 
     /**
-     * Setting a private route
+     * Building the route
      * 
      * @method private
      * @param void
      * @return void
      */
-    public function private()
+    private function build()
     {
         $route = [
             'prefix' => self::$instance->prefix,
             'route' => self::$instance->route,
-            'target' => self::$instance->target,
-            'public' => false,
-        ];
-        if (isset(self::$instance->middleware)) {
-            $route['middleware'] = self::$instance->middleware;
-        }
-
-        global $routes;
-        $routes[self::$instance->method][] = $route;
-    }
-
-    /**
-     * Setting a public route
-     * 
-     * @method public
-     * @param void
-     * @return void
-     */
-    public function public()
-    {
-        $route = [
-            'prefix' => self::$instance->prefix,
-            'route' => self::$instance->route,
-            'target' => self::$instance->target,
-            'public' => true,
+            'target' => self::$instance->target
         ];
         if (isset(self::$instance->middleware)) {
             $route['middleware'] = self::$instance->middleware;
