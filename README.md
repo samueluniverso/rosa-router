@@ -24,54 +24,55 @@ ROSA-Router listens for HTTP requests and maps them to the correct route handler
 / ** GET route * /
 Route::get('/post/{post}/comment/{comment}', [
 	PostController::class, 'get'
-])->public();
+]);
 
 / ** GET route * /
 Route::get('/user/{id}', [
 	UserController::class, 'get'
-])->private();
+]);
 
 / ** POST route * /
 Route::post('/user', [
 	UserController::class, 'post'
-])->private();
+]);
 
 / ** PUT route * /
 Route::put('/user/', [
 	UserController::class, 'put'
-])->private(); 
+]); 
 
 / ** PATCH route * /
 Route::patch('/user/', [
 	UserController::class, 'patch'
-])->private();
+]);
  
  / ** DELETE route * /
 Route::delete('/user/{id}', [
 	UserController::class, 'delete'
-])->private(); 
+]); 
 ```
 
 ### Grouped Routes
+
 ```php
 Route::prefix('v1')->group(function() {
     Route::get('/example/{id}', [
         V1ExampleController::class, 'get'
-    ])->private();
+    ]);
 
     Route::post('/example', [
         V1ExampleController::class, 'post'
-    ])->private();
+    ]);
 });
 
 Route::prefix('v2')->group(function() {
     Route::get('/example/{id}', [
         V2ExampleController::class, 'get'
-    ])->private();
+    ]);
 
     Route::post('/example', [
         V2ExampleController::class, 'post'
-    ])->private();
+    ]);
 });
 ```
 
@@ -82,20 +83,20 @@ Route::prefix('multilevel')->group(function() {
     Route::prefix('1')->group(function() {
         Route::get('/example/{id}', [
             V2ExampleController::class, 'get'
-        ])->private();
+        ]);
 
         Route::post('/example', [
             V2ExampleController::class, 'post'
-        ])->private();
+        ]);
 
         Route::prefix('2')->group(function() {
             Route::get('/example/{id}', [
                 V2ExampleController::class, 'get'
-            ])->private();
+            ]);
 
             Route::post('/example', [
                 V2ExampleController::class, 'post'
-            ])->private();
+            ]);
         });
     });
 });
@@ -107,16 +108,14 @@ Route::prefix('multilevel')->group(function() {
 Route::prefix('v1')
     ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
-        Route::get('/example1', 'V1ExampleController@example')
-            ->private();
+        Route::get('/example1', 'V1ExampleController@example');
     }
 );
 
 Route::prefix('v2')
     ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
-        Route::get('/example2', 'V2ExampleController@example')
-            ->private();
+        Route::get('/example2', 'V2ExampleController@example');
     }
 );
 ```
@@ -126,15 +125,13 @@ Route::prefix('v2')
 ```php
 Route::get('/hello', [
     HelloWorldController::class, 'hello'
-])->middleware(ExampleMiddleware::class)
-->private();
+])->middleware(AuthMiddleware::class);
 
 Route::prefix('v1')
-    ->middleware(ExampleMiddleware::class)
+    ->middleware(AuthMiddleware::class)
     ->namespace('Rockberpro\\RestRouter\\Controllers')
     ->group(function() {
-        Route::get('/hello', 'HelloWorldController@hello')
-            ->private();
+        Route::get('/hello', 'HelloWorldController@hello');
     }
 );
 ```
@@ -143,6 +140,6 @@ Route::prefix('v1')
 
 ```php
 Route::controller(HelloWorldController::class)->group(function() {
-    Route::get('/hello', 'hello')->public();
+    Route::get('/hello', 'hello');
 });
 ```
