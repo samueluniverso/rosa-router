@@ -16,11 +16,13 @@ class Route implements RouteInterface
 {
     const PREFIX = '/api';
 
+    private static $middleware;
+
     private static $groupPrefix = [];
+    private static $groupMiddleware = [];
 
     private static self $instance;
 
-    private ?string $middleware;
     private ?string $namespace;
     private ?string $controller;
     private string $prefix;
@@ -202,10 +204,11 @@ class Route implements RouteInterface
      */
     public static function middleware($middleware)
     {
+        self::$middleware = $middleware;
+
         if (!isset(self::$instance)) {
             self::$instance = new self();
         }
-        self::$instance->middleware = $middleware;
 
         return self::$instance;
     }
@@ -219,9 +222,12 @@ class Route implements RouteInterface
      */
     public function group($closure)
     {
+        self::$groupMiddleware[] = self::$middleware;
+
         $closure();
 
         array_pop(self::$groupPrefix);
+        array_pop(self::$groupMiddleware);
         self::namespace(null);
     }
 
@@ -240,8 +246,9 @@ class Route implements RouteInterface
             'target' => self::$instance->target
         ];
 
-        if (isset(self::$instance->middleware)) {
-            $route['middleware'] = self::$instance->middleware;
+        $middleware = end(self::$groupMiddleware);
+        if ($middleware) {
+            $route['middleware'] = $middleware;
         }
 
         global $routes;
