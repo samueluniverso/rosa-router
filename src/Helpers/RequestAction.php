@@ -16,7 +16,6 @@ class RequestAction implements RequestActionInterface
     private $method;
     private $closure;
     private $route;
-    private $private;
     private $class;
     private $uri;
 
@@ -46,13 +45,6 @@ class RequestAction implements RequestActionInterface
     }
     public function setRoute($route) {
         $this->route = $route;
-    }
-
-    public function isPrivate() {
-        return $this->private;
-    }
-    public function setPrivate($private) {
-        $this->private = $private;
     }
 
     public function getClass() {
