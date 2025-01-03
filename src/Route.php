@@ -226,9 +226,13 @@ class Route implements RouteInterface
 
         $closure();
 
-        array_pop(self::$groupPrefix);
-        array_pop(self::$groupMiddleware);
         self::namespace(null);
+        array_pop(self::$groupPrefix);
+
+        array_pop(self::$groupMiddleware);
+        if (empty(self::$groupMiddleware)) {
+            self::$middleware = null;
+        }
     }
 
     /**
