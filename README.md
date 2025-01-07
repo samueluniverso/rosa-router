@@ -130,6 +130,10 @@ Route::prefix('v1')
         Route::get('/hello', 'HelloWorldController@hello');
     }
 );
+
+Route::middleware(AuthMiddleware::class)
+    ->namespace('Rockberpro\\RestRouter\\Controllers')
+    ->get('/hello', 'HelloWorldController@hello');
 ```
 
 ### Controllers
