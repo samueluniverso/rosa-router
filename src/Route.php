@@ -250,9 +250,16 @@ class Route implements RouteInterface
             'target' => self::$instance->target
         ];
 
+        /** middleware for grouped routes */
         $middleware = end(self::$groupMiddleware);
         if ($middleware) {
             $route['middleware'] = $middleware;
+        }
+
+        /** middleware for individual routes */
+        if (isset(self::$middleware) && empty(self::$groupMiddleware)) {
+            $route['middleware'] = self::$middleware;
+            self::$middleware = null;
         }
 
         global $routes;
