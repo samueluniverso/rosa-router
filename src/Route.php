@@ -138,7 +138,6 @@ class Route implements RouteInterface
         if (!isset(self::$instance)) {
             self::$instance = new self();
         }
-        self::$instance = new self();
         self::$instance->prefix = explode('{', $_route)[0];
         self::$instance->route = $_route;
         self::$instance->method = 'DELETE';
