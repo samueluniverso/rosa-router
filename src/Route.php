@@ -16,16 +16,17 @@ class Route implements RouteInterface
 {
     const PREFIX = '/api';
 
+    private static $namespace;
     private static $controller;
     private static $middleware;
 
     private static $groupPrefix = [];
+    private static $groupNamespace = [];
     private static $groupController = [];
     private static $groupMiddleware = [];
 
     private static self $instance;
 
-    private ?string $namespace;
     private string $prefix;
     private string $route;
     private string $method;
@@ -170,10 +171,11 @@ class Route implements RouteInterface
      */
     public static function namespace($namespace)
     {
+        self::$namespace = $namespace;
+
         if (!isset(self::$instance)) {
             self::$instance = new self();
         }
-        self::$instance->namespace = $namespace;
 
         return self::$instance;
     }
@@ -223,12 +225,12 @@ class Route implements RouteInterface
      */
     public function group($closure)
     {
+        self::$groupNamespace[] = self::$namespace;
         self::$groupController[] = self::$controller;
         self::$groupMiddleware[] = self::$middleware;
 
         $closure();
 
-        self::namespace(null);
         self::collapseGroups();
     }
 
@@ -241,6 +243,11 @@ class Route implements RouteInterface
     private static function collapseGroups()
     {
         array_pop(self::$groupPrefix);
+
+        array_pop(self::$groupNamespace);
+        if (empty(self::$groupNamespace)) {
+            self::$namespace = null;
+        }
 
         array_pop(self::$groupController);
         if (empty(self::$groupController)) {
@@ -268,6 +275,31 @@ class Route implements RouteInterface
             'target' => self::$instance->target
         ];
 
+        self::buildGroups();
+
+        global $routes;
+        $routes[self::$instance->method][] = $route;
+    }
+
+    /**
+     * Build the grouped attributes
+     * 
+     * @method buildGroups
+     * @return void
+     */
+    private function buildGroups()
+    {
+        /** controller for grouped namespace */
+        $namespace = end(self::$groupNamespace);
+        if ($namespace) {
+            $route['namespace'] = $namespace;
+        }
+        /** controller for individual namespace */
+        if (isset(self::$namespace) && empty(self::$groupNamespace)) {
+            $route['namespace'] = self::$namespace;
+            self::$namespace = null;
+        }
+
         /** controller for grouped routes */
         $controller = end(self::$groupController);
         if ($controller) {
@@ -289,9 +321,6 @@ class Route implements RouteInterface
             $route['middleware'] = self::$middleware;
             self::$middleware = null;
         }
-
-        global $routes;
-        $routes[self::$instance->method][] = $route;
     }
 
     /**
@@ -310,13 +339,15 @@ class Route implements RouteInterface
             return $target;
         }
         if (gettype($target) === 'string') {
-            if (isset(self::$controller)) {
-                $controller = self::$controller;
+            $controller = self::$controller;
+            if (isset($controller)) {
+                $controller = $controller;
                 $method = $target;
             }
-            else if (isset(self::$instance->namespace)) {
+            else if (isset(self::$namespace)) {
+                $namespace = end(self::$groupNamespace);
                 $parts = explode('@', $target);
-                $controller = self::$instance->namespace.'\\'.$parts[0];
+                $controller = $namespace.'\\'.$parts[0];
                 $method = $parts[1];
             }
             else {
