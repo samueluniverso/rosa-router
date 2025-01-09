@@ -16,15 +16,16 @@ class Route implements RouteInterface
 {
     const PREFIX = '/api';
 
+    private static $controller;
     private static $middleware;
 
     private static $groupPrefix = [];
+    private static $groupController = [];
     private static $groupMiddleware = [];
 
     private static self $instance;
 
     private ?string $namespace;
-    private ?string $controller;
     private string $prefix;
     private string $route;
     private string $method;
@@ -186,10 +187,11 @@ class Route implements RouteInterface
      */
     public static function controller($controller)
     {
+        self::$controller = $controller;
+
         if (!isset(self::$instance)) {
             self::$instance = new self();
         }
-        self::$instance->controller = $controller;
 
         return self::$instance;
     }
@@ -221,12 +223,29 @@ class Route implements RouteInterface
      */
     public function group($closure)
     {
+        self::$groupController[] = self::$controller;
         self::$groupMiddleware[] = self::$middleware;
 
         $closure();
 
         self::namespace(null);
+        self::collapseGroups();
+    }
+
+    /**
+     * Collapse the groups
+     * 
+     * @method private
+     * @return void
+     */
+    private static function collapseGroups()
+    {
         array_pop(self::$groupPrefix);
+
+        array_pop(self::$groupController);
+        if (empty(self::$groupController)) {
+            self::$controller = null;
+        }
 
         array_pop(self::$groupMiddleware);
         if (empty(self::$groupMiddleware)) {
@@ -249,12 +268,22 @@ class Route implements RouteInterface
             'target' => self::$instance->target
         ];
 
+        /** controller for grouped routes */
+        $controller = end(self::$groupController);
+        if ($controller) {
+            $route['controller'] = $controller;
+        }
+        /** controller for individual routes */
+        if (isset(self::$controller) && empty(self::$groupController)) {
+            $route['controller'] = self::$controller;
+            self::$controller = null;
+        }
+
         /** middleware for grouped routes */
         $middleware = end(self::$groupMiddleware);
         if ($middleware) {
             $route['middleware'] = $middleware;
         }
-
         /** middleware for individual routes */
         if (isset(self::$middleware) && empty(self::$groupMiddleware)) {
             $route['middleware'] = self::$middleware;
@@ -281,8 +310,8 @@ class Route implements RouteInterface
             return $target;
         }
         if (gettype($target) === 'string') {
-            if (isset(self::$instance->controller)) {
-                $controller = self::$instance->controller;
+            if (isset(self::$controller)) {
+                $controller = self::$controller;
                 $method = $target;
             }
             else if (isset(self::$instance->namespace)) {
