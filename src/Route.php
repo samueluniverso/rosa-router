@@ -289,11 +289,11 @@ class Route implements RouteInterface
         /** controller for grouped routes */
         $controller = end(self::$groupController);
         if ($controller) {
-            $route['controller'] = $controller;
+            $route['target'][0] = $controller;
         }
         /** controller for individual routes */
         if (isset(self::$controller) && empty(self::$groupController)) {
-            $route['controller'] = self::$controller;
+            $route['target'][0] = self::$controller;
             self::$controller = null;
         }
 
@@ -334,7 +334,7 @@ class Route implements RouteInterface
                 $method = $target;
             }
             else if (isset(self::$namespace)) {
-                $namespace = end(self::$groupNamespace);
+                $namespace = self::$namespace;
                 $parts = explode('@', $target);
                 $controller = $namespace.'\\'.$parts[0];
                 $method = $parts[1];
