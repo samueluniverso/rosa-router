@@ -275,20 +275,6 @@ class Route implements RouteInterface
             'target' => self::$instance->target
         ];
 
-        self::buildGroups();
-
-        global $routes;
-        $routes[self::$instance->method][] = $route;
-    }
-
-    /**
-     * Build the grouped attributes
-     * 
-     * @method buildGroups
-     * @return void
-     */
-    private function buildGroups()
-    {
         /** controller for grouped namespace */
         $namespace = end(self::$groupNamespace);
         if ($namespace) {
@@ -321,6 +307,9 @@ class Route implements RouteInterface
             $route['middleware'] = self::$middleware;
             self::$middleware = null;
         }
+
+        global $routes;
+        $routes[self::$instance->method][] = $route;
     }
 
     /**
