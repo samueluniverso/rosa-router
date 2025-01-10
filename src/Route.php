@@ -286,17 +286,6 @@ class Route implements RouteInterface
             self::$namespace = null;
         }
 
-        /** controller for grouped routes */
-        $controller = end(self::$groupController);
-        if ($controller) {
-            $route['target'][0] = $controller;
-        }
-        /** controller for individual routes */
-        if (isset(self::$controller) && empty(self::$groupController)) {
-            $route['target'][0] = self::$controller;
-            self::$controller = null;
-        }
-
         /** middleware for grouped routes */
         $middleware = end(self::$groupMiddleware);
         if ($middleware) {
@@ -328,25 +317,28 @@ class Route implements RouteInterface
             return $target;
         }
         if (gettype($target) === 'string') {
-            $controller = self::$controller;
-            if (isset($controller)) {
-                $controller = $controller;
-                $method = $target;
+            $controller = end(self::$groupController);
+            if ($controller) {
+                $_controller = $controller;
             }
-            else if (isset(self::$namespace)) {
-                $namespace = self::$namespace;
-                $parts = explode('@', $target);
-                $controller = $namespace.'\\'.$parts[0];
-                $method = $parts[1];
+            if (isset(self::$controller) && empty(self::$groupController)) {
+                $_controller = self::$controller;
+                self::$controller = null;
             }
-            else {
-                throw new Exception('Error trying to determine the route target');
-            }
-
-            return [$controller, $method];
+            $controller = $_controller;
+            $method = $target;
+        }
+        else if (isset(self::$namespace)) {
+            $namespace = self::$namespace;
+            $parts = explode('@', $target);
+            $controller = $namespace.'\\'.$parts[0];
+            $method = $parts[1];
+        }
+        else {
+            throw new Exception('Error trying to determine the route target');
         }
 
-        throw new Exception('Error trying to determine the route target');
+        return [$controller, $method];
     }
 
     /**
