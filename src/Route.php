@@ -317,10 +317,7 @@ class Route implements RouteInterface
             return $target;
         }
         if (gettype($target) === 'string') {
-            $controller = end(self::$groupController);
-            if ($controller) {
-                $_controller = $controller;
-            }
+            $_controller = end(self::$groupController);
             if (isset(self::$controller) && empty(self::$groupController)) {
                 $_controller = self::$controller;
                 self::$controller = null;
