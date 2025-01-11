@@ -223,17 +223,6 @@ abstract class AbstractRequest implements AbstractRequestInterface
     }
 
     /**
-     * Secure the route
-     * 
-     * @method secure
-     * @return void
-     */
-    private function secure()
-    {
-
-    }
-
-    /**
      * Middleware
      * 
      * @method middleware
